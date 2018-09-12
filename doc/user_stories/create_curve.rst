@@ -1,5 +1,5 @@
-User Story "Create Curve"
-=========================
+User Story: Create Curve
+========================
 
 As a user, I want to create a curve, so that it can be displayed.
 

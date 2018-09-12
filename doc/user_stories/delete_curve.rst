@@ -1,5 +1,5 @@
-User Story "Delete Curve"
-=========================
+User Story: Delete Curve
+========================
 
 As a user, I want to delete a curve, so that it is not displayed anymore.
 

@@ -1,5 +1,5 @@
-User Story "Delete Layer"
-=========================
+User Story: Delete Layer
+========================
 
 As a user, I want to delete a layer, so that all curves belonging to it are
 deleted.

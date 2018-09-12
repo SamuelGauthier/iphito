@@ -1,5 +1,5 @@
-User Story "Edit Curve Equation"
-================================
+User Story: Edit Curve Equation
+===============================
 
 As a user, I want to edit the curve, so that it changes.
 
