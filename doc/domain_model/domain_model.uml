@@ -1,0 +1,25 @@
+@startuml
+
+skinparam monochrome true
+skinparam defaultFontName Hack
+
+class Canvas {
+    int sizeX
+    int sizeY
+}
+
+class Layer {
+    {static} int ID
+}
+
+class Curve {
+    {static} int ID
+    Point[][]  controlPoints
+}
+
+
+Canvas "1" -- "*" Layer : contains >
+Layer "1" -- "0..*" Curve : holds >
+Layer "1" o-- "0..*" Layer : contains >
+
+@enduml

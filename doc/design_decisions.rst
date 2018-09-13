@@ -11,7 +11,8 @@ Design Decisions
 Domain Model
 ~~~~~~~~~~~~
 
-.. warning:: todo
+.. image:: domain_model/domain_model.svg
+   :align: center
 
 --------------------------------------------------------------------------------
 
@@ -38,6 +39,31 @@ Use Cases
 
 Sequence Diagrams
 ~~~~~~~~~~~~~~~~~
+
+
+Create Layer
+============
+
+.. image:: cd_and_sd/sd_create_layer.svg
+   :align: center
+
+Delete Layer
+============
+
+.. warning:: todo
+
+Create Curve
+============
+
+.. warning:: todo
+
+Delete Curve
+============
+
+.. warning:: todo
+
+Edit Curve
+==========
 
 .. warning:: todo
 
