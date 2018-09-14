@@ -1,8 +1,8 @@
 find_package(OpenGL REQUIRED)
 
-set(TARGET_H)
+set(TARGET_H Layer.h Canvas.h Curve.h)
 
-set(TARGET_SRC)
+set(TARGET_SRC Layer.cpp Canvas.cpp)
 
 add_executable(iphito main.cpp ${TARGET_SRC} ${TARGET_H})
 
