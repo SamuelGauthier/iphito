@@ -1,11 +1,11 @@
 
 class Canvas {
 
-    public:
-        Canvas(int width, int height);
-        ~Canvas();
-        
+public:
+    Canvas(int width, int height);
+    ~Canvas();
+    
 
-    private:
-        /* data */
+private:
+    /* data */
 };
