@@ -2,10 +2,10 @@
 
 class Curve {
 
-    public:
-        virtual ~Curve() = 0;
-        
+public:
+    virtual ~Curve() = 0;
+    
 
-    private:
-        std::atomic<unsigned long long> id;
+private:
+    std::atomic<unsigned long long> id;
 };
