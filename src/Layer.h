@@ -1,5 +1,7 @@
 #include <atomic>
 #include <unordered_set>
+#include <memory>
+#include <vector>
 
 #include "Curve.h"
 
@@ -14,10 +16,12 @@ public:
     ~Layer();
 
     unsigned long long getID() { return this->id; };
-    bool addCurve(Curve* curve);
-    bool addCurves(std::unordered_set<std::unique_ptr<Curve>> curves);
-    bool addLayer(Layer* layer);
-    bool addLayers(std::unordered_set<std::unique_ptr<Layer>> layers);
+    bool addCurve(std::unique_ptr<Curve>& curve);
+    bool addCurves(std::vector<std::unique_ptr<Curve>> curves);
+    bool addLayer(std::unique_ptr<Layer>& layer);
+    bool addLayers(std::vector<std::unique_ptr<Layer>> layers);
+    bool containsCurve(std::unique_ptr<Curve>& curve);
+    bool containsLayer(std::unique_ptr<Layer>& layer);
         
 
 private:
