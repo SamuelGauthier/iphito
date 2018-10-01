@@ -1,9 +1,8 @@
-#set(TEST_TARGET_H )
-
 include(../main/main.cmake)
 
 set(TEST_TARGET_SRC
     Test_Layer.cpp
+    Test_Canvas.cpp
     )
 
 include_directories(${CMAKE_SOURCE_DIR}/src/main)
