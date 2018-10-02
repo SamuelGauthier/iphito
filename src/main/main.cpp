@@ -1,6 +1,9 @@
 #include <iostream>
 #include <memory>
+#include <eigen3/Eigen/Core>
+
 #include "Layer.h"
+
 
 int main(int argc, char *argv[])
 {

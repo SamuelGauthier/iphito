@@ -5,6 +5,9 @@
  * @version 1.0
  * @date 2018-09-14
  */
+#ifndef LAYERH
+#define LAYERH value
+
 #include <atomic>
 #include <unordered_map>
 #include <memory>
@@ -39,3 +42,5 @@ private:
     std::unordered_map<unsigned long long, std::unique_ptr<Layer>> children;
     std::unordered_map<unsigned long long, std::unique_ptr<Curve>> curves;
 };
+
+#endif /* ifndef LAYERH */

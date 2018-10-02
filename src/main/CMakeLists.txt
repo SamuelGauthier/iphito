@@ -15,15 +15,11 @@ endif (GLEW_FOUND)
 
 find_package(GLFW REQUIRED)
 include_directories(${GLFW_INCLUDE_DIRS})
-#set(LIBS ${LIBS} ${GLFW_LIBRARIES})
 
-message(${CMAKE_MODULE_PATH})
-find_package(Eigen3 3.3.5)
-message(${EIGEN3_INCLUDE_DIR})
-message("$ENV{EIGEN3_INCLUDE_DIR}")
-include_directories(${EIGEN3_INCLUDE_DIR})
-set(LIBS ${LIBS} ${GLFW_LIBRARIES} ${EIGEN3_INCLUDE_DIR})
+set(LIBS ${LIBS} ${GLFW_LIBRARIES})
 
+find_package(Eigen3 REQUIRED)
+include_directories(EIGEN3_INCLUDE_DIR)
 
 target_link_libraries(iphito ${OPENGL_gl_LIBRARY})
 target_link_libraries(iphito ${LIBS})

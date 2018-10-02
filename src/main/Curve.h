@@ -1,3 +1,6 @@
+#ifndef CURVEH
+#define CURVEH value
+
 #include <atomic>
 
 class Curve {
@@ -6,7 +9,14 @@ public:
     virtual ~Curve() = 0;
     virtual unsigned long long getID() = 0;
     
+    unsigned long long getNextID() { return this->nextID.fetch_add(1); }
+    
 
 private:
-    std::atomic<unsigned long long> id;
+    static std::atomic<unsigned long long> nextID;
 };
+
+inline Curve::~Curve() {}
+
+inline std::atomic<unsigned long long> Curve::nextID = 0;
+#endif /* ifndef CURVEH */

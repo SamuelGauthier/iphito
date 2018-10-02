@@ -6,6 +6,9 @@
  * @version 1.0
  * @date 2018-09-14
  */
+#ifndef CANVASH
+#define CANVASH value
+
 //#include "Layer.h"
 
 class Canvas {
@@ -23,3 +26,5 @@ private:
    unsigned int height; 
    //unique_ptr<Layer> root;
 };
+
+#endif /* ifndef CANVASH */

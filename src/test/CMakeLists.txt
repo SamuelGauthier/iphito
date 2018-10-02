@@ -3,6 +3,7 @@ include(../main/main.cmake)
 set(TEST_TARGET_SRC
     Test_Layer.cpp
     Test_Canvas.cpp
+    Test_Hermite3.cpp
     )
 
 include_directories(${CMAKE_SOURCE_DIR}/src/main)
