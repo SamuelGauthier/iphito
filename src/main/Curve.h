@@ -2,12 +2,14 @@
 #define CURVEH value
 
 #include <atomic>
+#include <eigen3/Eigen/Core>
 
 class Curve {
 
 public:
     virtual ~Curve() = 0;
     virtual unsigned long long getID() = 0;
+    virtual Eigen::Vector2d evaluateAt(double t) = 0;
     
     unsigned long long getNextID() { return this->nextID.fetch_add(1); }
     

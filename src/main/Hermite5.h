@@ -25,9 +25,9 @@ public:
     void setTangentVector1(Eigen::Vector2d t);
     void setTangentVector2(Eigen::Vector2d t);
     void setTangentVectors(Eigen::Vector2d t1, Eigen::Vector2d t2);
-    void setVelocityVector1(Eigen::Vector2d s);
-    void setVelocityVector2(Eigen::Vector2d s);
-    void setVelocityVectors(Eigen::Vector2d s1, Eigen::Vector2d s2);
+    void setAccelerationVector1(Eigen::Vector2d s);
+    void setAccelerationVector2(Eigen::Vector2d s);
+    void setAccelerationVectors(Eigen::Vector2d s1, Eigen::Vector2d s2);
 
     unsigned long long getID();
 
