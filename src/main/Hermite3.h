@@ -19,6 +19,9 @@ public:
              Eigen::Vector2d p2, Eigen::Vector2d t2);
     ~Hermite3();
 
+    unsigned long long getID();
+    Eigen::Vector2d evaluateAt(double t);
+
     void setControlPoint1(Eigen::Vector2d p);
     void setControlPoint2(Eigen::Vector2d p);
     void setControlPoints(Eigen::Vector2d p1, Eigen::Vector2d p2);
@@ -32,10 +35,7 @@ public:
     Eigen::Vector2d getControlPoint2();
     Eigen::Vector2d getTangentVector1();
     Eigen::Vector2d getTangentVector2();
-    Eigen::Matrix2Xd getCurveDescription();
-
-    unsigned long long getID();
-    Eigen::Vector2d evaluateAt(double t);
+    Eigen::Matrix2Xd getCurveMatrix();
 
 private:
     Eigen::Vector2d p1;
