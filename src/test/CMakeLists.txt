@@ -1,9 +1,10 @@
 include(../main/main.cmake)
 
 set(TEST_TARGET_SRC
-    Test_Layer.cpp
-    Test_Canvas.cpp
-    Test_Hermite3.cpp
+    LayerTest.cpp
+    CanvasTest.cpp
+    Hermite3Test.cpp
+    Hermite5Test.cpp
     )
 
 include_directories(${CMAKE_SOURCE_DIR}/src/main)
@@ -14,5 +15,5 @@ set(MAIN_DIR ../main/)
 list(TRANSFORM MAIN_H PREPEND ${MAIN_DIR})
 list(TRANSFORM MAIN_SRC PREPEND ${MAIN_DIR})
 
-add_executable(test Test_main.cpp ${TEST_TARGET_SRC} ${MAIN_H} ${MAIN_SRC})
+add_executable(test mainTest.cpp ${TEST_TARGET_SRC} ${MAIN_H} ${MAIN_SRC})
 target_link_libraries(test Catch2)
