@@ -14,10 +14,16 @@ const Eigen::Matrix4d Hermite3::C = (Eigen::Matrix4d() <<
                                       1.0, -1.0,  0.0,  0.0,
                                      -2.0,  3.0,  0.0,  0.0).finished();
 
-Hermite3::Hermite3(Eigen::Vector2d p1, Eigen::Vector2d t1,
-                   Eigen::Vector2d p2, Eigen::Vector2d t2) :
-    p1{p1}, t1{t1}, p2{p2}, t2{t2}, id{Curve::getNextID()},
-    B{(Eigen::Matrix2Xd(2, 4) << p1, t1, t2, p2).finished() * this->C} {}
+Hermite3::Hermite3(Eigen::Vector2d startPoint,
+                   Eigen::Vector2d startTangentVector,
+                   Eigen::Vector2d endPoint,
+                   Eigen::Vector2d endTangentVector) :
+    startPoint{startPoint}, startTangentVector{startTangentVector},
+    endPoint{endPoint}, endTangentVector{endTangentVector},
+    id{Curve::getNextID()},
+    B{(Eigen::Matrix2Xd(2, 4) << startPoint, startTangentVector,
+                                 endTangentVector, endPoint
+      ).finished() * this->C} {}
 
 Hermite3::~Hermite3() {}
 
@@ -36,75 +42,93 @@ Eigen::Vector2d Hermite3::evaluateAt(double t) {
     return this->B*v;
 }
 
-void Hermite3::setControlPoint1(Eigen::Vector2d p) {
+void Hermite3::setStartControlPoint(Eigen::Vector2d p) {
 
-    this->p1 = p;
-    this->B = (Eigen::Matrix2Xd(2, 4) << this->p1, this->t1, this->t2,
-                                         this->p2).finished() * this->C;
+    this->startPoint = p;
+    this->B = (Eigen::Matrix2Xd(2, 4) << this->startPoint,
+                                         this->startTangentVector,
+                                         this->endTangentVector,
+                                         this->endPoint).finished() * this->C;
 }
 
-void Hermite3::setControlPoint2(Eigen::Vector2d p) {
+void Hermite3::setEndControlPoint(Eigen::Vector2d p) {
 
-    this->p2 = p;
-    this->B = (Eigen::Matrix2Xd(2, 4) << this->p1, this->t1, this->t2,
-                                         this->p2).finished() * this->C;
+    this->endPoint = p;
+    this->B = (Eigen::Matrix2Xd(2, 4) << this->startPoint,
+                                         this->startTangentVector,
+                                         this->endTangentVector,
+                                         this->endPoint).finished() * this->C;
 }
 
-void Hermite3::setControlPoints(Eigen::Vector2d p1, Eigen::Vector2d p2) {
+void Hermite3::setControlPoints(Eigen::Vector2d startPoint,
+                                Eigen::Vector2d endPoint) {
 
-    this->p1 = p1;
-    this->p2 = p2;
-    this->B = (Eigen::Matrix2Xd(2, 4) << this->p1, this->t1, this->t2,
-                                         this->p2).finished() * this->C;
+    this->startPoint = startPoint;
+    this->endPoint = endPoint;
+    this->B = (Eigen::Matrix2Xd(2, 4) << this->startPoint,
+                                         this->startTangentVector,
+                                         this->endTangentVector,
+                                         this->endPoint).finished() * this->C;
 }
 
-void Hermite3::setTangentVector1(Eigen::Vector2d t) {
+void Hermite3::setStartTangentVector(Eigen::Vector2d t) {
 
-    this->t1 = t;
-    this->B = (Eigen::Matrix2Xd(2, 4) << this->p1, this->t1, this->t2,
-                                         this->p2).finished() * this->C;
+    this->startTangentVector = t;
+    this->B = (Eigen::Matrix2Xd(2, 4) << this->startPoint,
+                                         this->startTangentVector,
+                                         this->endTangentVector,
+                                         this->endPoint).finished() * this->C;
 }
 
-void Hermite3::setTangentVector2(Eigen::Vector2d t) {
+void Hermite3::setEndTangentVector(Eigen::Vector2d t) {
 
-    this->t2 = t;
-    this->B = (Eigen::Matrix2Xd(2, 4) << this->p1, this->t1, this->t2,
-                                         this->p2).finished() * this->C;
+    this->endTangentVector = t;
+    this->B = (Eigen::Matrix2Xd(2, 4) << this->startPoint,
+                                         this->startTangentVector,
+                                         this->endTangentVector,
+                                         this->endPoint).finished() * this->C;
 }
 
-void Hermite3::setTangentVectors(Eigen::Vector2d t1, Eigen::Vector2d t2) {
+void Hermite3::setTangentVectors(Eigen::Vector2d startTangentVector,
+                                 Eigen::Vector2d endTangentVector) {
 
-    this->t1 = t1;
-    this->t2 = t2;
-    this->B = (Eigen::Matrix2Xd(2, 4) << this->p1, this->t1, this->t2,
-                                         this->p2).finished() * this->C;
+    this->startTangentVector = startTangentVector;
+    this->endTangentVector = endTangentVector;
+    this->B = (Eigen::Matrix2Xd(2, 4) << this->startPoint,
+                                         this->startTangentVector,
+                                         this->endTangentVector,
+                                         this->endPoint).finished() * this->C;
 }
 
-void Hermite3::setCurveDescription(Eigen::Vector2d p1, Eigen::Vector2d t1,
-                                   Eigen::Vector2d p2, Eigen::Vector2d t2) {
-    this->p1 = p1;
-    this->p2 = p2;
-    this->t1 = t1;
-    this->t2 = t2;
+void Hermite3::setCurveDescription(Eigen::Vector2d startPoint,
+                                   Eigen::Vector2d startTangentVector,
+                                   Eigen::Vector2d endPoint,
+                                   Eigen::Vector2d endTangentVector) {
+    this->startPoint = startPoint;
+    this->endPoint = endPoint;
+    this->startTangentVector = startTangentVector;
+    this->endTangentVector = endTangentVector;
 
-    this->B = (Eigen::Matrix2Xd(2, 4) << this->p1, this->t1, this->t2,
-                                         this->p2).finished() * this->C;
+    this->B = (Eigen::Matrix2Xd(2, 4) << this->startPoint,
+                                         this->startTangentVector,
+                                         this->endTangentVector,
+                                         this->endPoint).finished() * this->C;
 }
 
-Eigen::Vector2d Hermite3::getControlPoint1() {
-    return this->p1;
+Eigen::Vector2d Hermite3::getStartControlPoint() {
+    return this->startPoint;
 }
 
-Eigen::Vector2d Hermite3::getControlPoint2() {
-    return this->p2;
+Eigen::Vector2d Hermite3::getEndControlPoint() {
+    return this->endPoint;
 }
 
-Eigen::Vector2d Hermite3::getTangentVector1() {
-    return this->t1;
+Eigen::Vector2d Hermite3::getStartTangentVector() {
+    return this->startTangentVector;
 }
 
-Eigen::Vector2d Hermite3::getTangentVector2() {
-    return this->t2;
+Eigen::Vector2d Hermite3::getEndTangentVector() {
+    return this->endTangentVector;
 }
 
 Eigen::Matrix2Xd Hermite3::getCurveMatrix() {

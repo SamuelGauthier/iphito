@@ -15,33 +15,36 @@
 class Hermite3 : public Curve {
 
 public:
-    Hermite3(Eigen::Vector2d p1, Eigen::Vector2d t1,
-             Eigen::Vector2d p2, Eigen::Vector2d t2);
+    Hermite3(Eigen::Vector2d startPoint, Eigen::Vector2d startTangentVector,
+             Eigen::Vector2d endPoint, Eigen::Vector2d endTangentVector);
     ~Hermite3();
 
     unsigned long long getID();
     Eigen::Vector2d evaluateAt(double t);
 
-    void setControlPoint1(Eigen::Vector2d p);
-    void setControlPoint2(Eigen::Vector2d p);
-    void setControlPoints(Eigen::Vector2d p1, Eigen::Vector2d p2);
-    void setTangentVector1(Eigen::Vector2d t);
-    void setTangentVector2(Eigen::Vector2d t);
-    void setTangentVectors(Eigen::Vector2d t1, Eigen::Vector2d t2);
-    void setCurveDescription(Eigen::Vector2d p1, Eigen::Vector2d t1,
-                             Eigen::Vector2d p2, Eigen::Vector2d t2);
+    void setStartControlPoint(Eigen::Vector2d p);
+    void setEndControlPoint(Eigen::Vector2d p);
+    void setControlPoints(Eigen::Vector2d startPoint, Eigen::Vector2d endPoint);
+    void setStartTangentVector(Eigen::Vector2d t);
+    void setEndTangentVector(Eigen::Vector2d t);
+    void setTangentVectors(Eigen::Vector2d startTangentVector,
+                           Eigen::Vector2d endTangentVector);
+    void setCurveDescription(Eigen::Vector2d startPoint,
+                             Eigen::Vector2d startTangentVector,
+                             Eigen::Vector2d endPoint,
+                             Eigen::Vector2d endTangentVector);
 
-    Eigen::Vector2d getControlPoint1();
-    Eigen::Vector2d getControlPoint2();
-    Eigen::Vector2d getTangentVector1();
-    Eigen::Vector2d getTangentVector2();
+    Eigen::Vector2d getStartControlPoint();
+    Eigen::Vector2d getEndControlPoint();
+    Eigen::Vector2d getStartTangentVector();
+    Eigen::Vector2d getEndTangentVector();
     Eigen::Matrix2Xd getCurveMatrix();
 
 private:
-    Eigen::Vector2d p1;
-    Eigen::Vector2d p2;
-    Eigen::Vector2d t1;
-    Eigen::Vector2d t2;
+    Eigen::Vector2d startPoint;
+    Eigen::Vector2d endPoint;
+    Eigen::Vector2d startTangentVector;
+    Eigen::Vector2d endTangentVector;
 
     unsigned long long id;
     Eigen::Matrix2Xd B;

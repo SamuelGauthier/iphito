@@ -33,15 +33,15 @@ TEST_CASE("cubic Hermite curves have an unique ID", "[Hermite3]") {
     REQUIRE(h3.getID() != h4.getID());
 }
 
-TEST_CASE("control points of cubic Hermite curves can be accessed",
-          "[Hermite3]") {
+TEST_CASE("control points and tangent vectors of cubic Hermite curves can be"
+          " accessed", "[Hermite3]") {
 
     Hermite3 h1(p1, t1, p2, t2);
 
-    REQUIRE(h1.getControlPoint1() == p1);
-    REQUIRE(h1.getControlPoint2() == p2);
-    REQUIRE(h1.getTangentVector1() == t1);
-    REQUIRE(h1.getTangentVector2() == t2);
+    REQUIRE(h1.getStartControlPoint() == p1);
+    REQUIRE(h1.getEndControlPoint() == p2);
+    REQUIRE(h1.getStartTangentVector() == t1);
+    REQUIRE(h1.getEndTangentVector() == t2);
 
     Eigen::Matrix2Xd B = (Eigen::Matrix2Xd(2,4) << p1, t1, t2, p2).finished()*C;
 
@@ -60,39 +60,39 @@ TEST_CASE("control points and tangent vectors of cubic Hermite curves can be"
     Hermite3 h1(p1, t1, p2, t2);
 
     SECTION("changing the first control point changes the matrix") {
-        h1.setControlPoint1(p1p);
-        REQUIRE(h1.getControlPoint1() == p1p);
+        h1.setStartControlPoint(p1p);
+        REQUIRE(h1.getStartControlPoint() == p1p);
 
         B = (Eigen::Matrix2Xd(2,4) << p1p, t1, t2, p2).finished()*C;
         REQUIRE(h1.getCurveMatrix() == B);
     }
 
     SECTION("changing the second control point changes the matrix") {
-        h1.setControlPoint2(p2p);
-        REQUIRE(h1.getControlPoint2() == p2p);
+        h1.setEndControlPoint(p2p);
+        REQUIRE(h1.getEndControlPoint() == p2p);
 
         B = (Eigen::Matrix2Xd(2,4) << p1, t1, t2, p2p).finished()*C;
         REQUIRE(h1.getCurveMatrix() == B);
     }
 
     SECTION("changing the first tangent vector changes the matrix") {
-        h1.setTangentVector1(t1p);
-        REQUIRE(h1.getTangentVector1() == t1p);
+        h1.setStartTangentVector(t1p);
+        REQUIRE(h1.getStartTangentVector() == t1p);
 
         B = (Eigen::Matrix2Xd(2,4) << p1, t1p, t2, p2).finished()*C;
         REQUIRE(h1.getCurveMatrix() == B);
     }
 
     SECTION("changing the second tangent vector changes the matrix") {
-        h1.setTangentVector2(t2p);
-        REQUIRE(h1.getTangentVector2() == t2p);
+        h1.setEndTangentVector(t2p);
+        REQUIRE(h1.getEndTangentVector() == t2p);
 
         B = (Eigen::Matrix2Xd(2,4) << p1, t1, t2p, p2).finished()*C;
         REQUIRE(h1.getCurveMatrix() == B);
     }
 }
 
-TEST_CASE("Hermite curves can be evaluated", "[Hermite3]") {
+TEST_CASE("Cubic Hermite curves can be evaluated", "[Hermite3]") {
     Hermite3 h1(p1, t1, p2, t2);
 
     REQUIRE(h1.evaluateAt(0.0) == p1);
