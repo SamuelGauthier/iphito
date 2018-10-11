@@ -16,10 +16,22 @@ const Eigen::MatrixXd Hermite5::C = (Eigen::MatrixXd(6,6) <<
                                        6, -15,   10,   0, 0, 0
                                     ).finished();
 
-Hermite5::Hermite5(Eigen::Vector2d p1, Eigen::Vector2d v1, Eigen::Vector2d a1,
-                   Eigen::Vector2d p2, Eigen::Vector2d v2, Eigen::Vector2d a2) :
-    p1{p1}, v1{v1}, a1{a1}, p2{p2}, v2{v2}, a2{a2}, id{Curve::getNextID()},
-    B{(Eigen::Matrix2Xd(2, 6) << p1, v1, a1, a2, v2, p2).finished() * this->C}
+Hermite5::Hermite5(Eigen::Vector2d startControlPoint,
+                   Eigen::Vector2d startVelocityVector,
+                   Eigen::Vector2d startAccelerationVector,
+                   Eigen::Vector2d endControlPoint,
+                   Eigen::Vector2d endVelocityVector,
+                   Eigen::Vector2d endAccelerationVector) :
+    startControlPoint{startControlPoint},
+    startVelocityVector{startVelocityVector},
+    startAccelerationVector{startAccelerationVector},
+    endControlPoint{endControlPoint},
+    endVelocityVector{endVelocityVector},
+    endAccelerationVector{endAccelerationVector},
+    id{Curve::getNextID()},
+    B{(Eigen::Matrix2Xd(2, 6) << startControlPoint, startVelocityVector,
+            startAccelerationVector, endAccelerationVector, endVelocityVector,
+            endControlPoint).finished() * this->C}
 {}
 
 Hermite5::~Hermite5() {}
@@ -39,118 +51,173 @@ Eigen::Vector2d Hermite5::evaluateAt(double t) {
     return this->B*v;
 }
 
-void Hermite5::setControlPoint1(Eigen::Vector2d p) {
+void Hermite5::setStartControlPoint(Eigen::Vector2d p) {
 
-    this->p1 = p;
-    this->B = (Eigen::Matrix2Xd(2, 6) << this->p1, this->v1, this->a1,
-                                         this->a2, this->v2, this->p2
+    this->startControlPoint = p;
+    this->B = (Eigen::Matrix2Xd(2, 6) << this->startControlPoint,
+                                         this->startVelocityVector,
+                                         this->startAccelerationVector,
+                                         this->endAccelerationVector,
+                                         this->endVelocityVector,
+                                         this->endControlPoint
               ).finished() * this->C;
 
 }
 
-void Hermite5::setControlPoint2(Eigen::Vector2d p) {
+void Hermite5::setEndControlPoint(Eigen::Vector2d p) {
 
-    this->p2 = p;
-    this->B = (Eigen::Matrix2Xd(2, 6) << this->p1, this->v1, this->a1,
-                                         this->a2, this->v2, this->p2
+    this->endControlPoint = p;
+    this->B = (Eigen::Matrix2Xd(2, 6) << this->startControlPoint,
+                                         this->startVelocityVector,
+                                         this->startAccelerationVector,
+                                         this->endAccelerationVector,
+                                         this->endVelocityVector,
+                                         this->endControlPoint
               ).finished() * this->C;
 }
 
-void Hermite5::setControlPoints(Eigen::Vector2d p1, Eigen::Vector2d p2) {
+void Hermite5::setControlControlPoints(Eigen::Vector2d startControlPoint,
+                                Eigen::Vector2d endControlPoint) {
 
-    this->p1 = p1;
-    this->p2 = p2;
-    this->B = (Eigen::Matrix2Xd(2, 6) << this->p1, this->v1, this->a1,
-                                         this->a2, this->v2, this->p2
+    this->startControlPoint = startControlPoint;
+    this->endControlPoint = endControlPoint;
+    this->B = (Eigen::Matrix2Xd(2, 6) << this->startControlPoint,
+                                         this->startVelocityVector,
+                                         this->startAccelerationVector,
+                                         this->endAccelerationVector,
+                                         this->endVelocityVector,
+                                         this->endControlPoint
               ).finished() * this->C;
 
 }
 
-void Hermite5::setVelocityVector1(Eigen::Vector2d v) {
+void Hermite5::setStartVelocityVector(Eigen::Vector2d v) {
 
-    this->v1 = v;
-    this->B = (Eigen::Matrix2Xd(2, 6) << this->p1, this->v1, this->a1,
-                                         this->a2, this->v2, this->p2
+    this->startVelocityVector = v;
+    this->B = (Eigen::Matrix2Xd(2, 6) << this->startControlPoint,
+                                         this->startVelocityVector,
+                                         this->startAccelerationVector,
+                                         this->endAccelerationVector,
+                                         this->endVelocityVector,
+                                         this->endControlPoint
               ).finished() * this->C;
 }
 
-void Hermite5::setVelocityVector2(Eigen::Vector2d v) {
+void Hermite5::setEndVelocityVector(Eigen::Vector2d v) {
 
-    this->v2 = v;
-    this->B = (Eigen::Matrix2Xd(2, 6) << this->p1, this->v1, this->a1,
-                                         this->a2, this->v2, this->p2
+    this->endVelocityVector = v;
+    this->B = (Eigen::Matrix2Xd(2, 6) << this->startControlPoint,
+                                         this->startVelocityVector,
+                                         this->startAccelerationVector,
+                                         this->endAccelerationVector,
+                                         this->endVelocityVector,
+                                         this->endControlPoint
               ).finished() * this->C;
 }
 
-void Hermite5::setVelocityVectors(Eigen::Vector2d v1, Eigen::Vector2d v2) {
+void Hermite5::setVelocityVectors(Eigen::Vector2d startVelocityVector,
+                                  Eigen::Vector2d endVelocityVector) {
 
-    this->v1 = v1;
-    this->v2 = v2;
-    this->B = (Eigen::Matrix2Xd(2, 6) << this->p1, this->v1, this->a1,
-                                         this->a2, this->v2, this->p2
+    this->startVelocityVector = startVelocityVector;
+    this->endVelocityVector = endVelocityVector;
+    this->B = (Eigen::Matrix2Xd(2, 6) << this->startControlPoint,
+                                         this->startVelocityVector,
+                                         this->startAccelerationVector,
+                                         this->endAccelerationVector,
+                                         this->endVelocityVector,
+                                         this->endControlPoint
               ).finished() * this->C;
 }
 
-void Hermite5::setAccelerationVector1(Eigen::Vector2d a) {
+void Hermite5::setStartAccelerationVector(Eigen::Vector2d a) {
 
-    this->a1 = a;
-    this->B = (Eigen::Matrix2Xd(2, 6) << this->p1, this->v1, this->a1,
-                                         this->a2, this->v2, this->p2
+    this->startAccelerationVector = a;
+    this->B = (Eigen::Matrix2Xd(2, 6) << this->startControlPoint,
+                                         this->startVelocityVector,
+                                         this->startAccelerationVector,
+                                         this->endAccelerationVector,
+                                         this->endVelocityVector,
+                                         this->endControlPoint
               ).finished() * this->C;
 }
 
-void Hermite5::setAccelerationVector2(Eigen::Vector2d a) {
+void Hermite5::setEndAccelerationVector(Eigen::Vector2d a) {
 
-    this->a2 = a;
-    this->B = (Eigen::Matrix2Xd(2, 6) << this->p1, this->v1, this->a1,
-                                         this->a2, this->v2, this->p2
+    this->endAccelerationVector = a;
+    this->B = (Eigen::Matrix2Xd(2, 6) << this->startControlPoint,
+                                         this->startVelocityVector,
+                                         this->startAccelerationVector,
+                                         this->endAccelerationVector,
+                                         this->endVelocityVector,
+                                         this->endControlPoint
               ).finished() * this->C;
 }
 
-void Hermite5::setAccelerationVectors(Eigen::Vector2d a1, Eigen::Vector2d a2) {
+void Hermite5::setAccelerationVectors(Eigen::Vector2d startAccelerationVector,
+                                      Eigen::Vector2d endAccelerationVector) {
 
-    this->a1 = a1;
-    this->a2 = a2;
-    this->B = (Eigen::Matrix2Xd(2, 6) << this->p1, this->v1, this->a1,
-                                        this->a2, this->v2, this->p2
+    this->startAccelerationVector = startAccelerationVector;
+    this->endAccelerationVector = endAccelerationVector;
+    this->B = (Eigen::Matrix2Xd(2, 6) << this->startControlPoint,
+                                         this->startVelocityVector,
+                                         this->startAccelerationVector,
+                                         this->endAccelerationVector,
+                                         this->endVelocityVector,
+                                         this->endControlPoint
               ).finished() * this->C;
 }
 
-void Hermite5::setCurveDescription(Eigen::Vector2d p1, Eigen::Vector2d v1, 
-                                   Eigen::Vector2d a1, Eigen::Vector2d p2,
-                                   Eigen::Vector2d v2, Eigen::Vector2d a2) {
+void Hermite5::setCurveDescription(Eigen::Vector2d startControlPoint,
+                                   Eigen::Vector2d startVelocityVector, 
+                                   Eigen::Vector2d startAccelerationVector,
+                                   Eigen::Vector2d endControlPoint,
+                                   Eigen::Vector2d endVelocityVector,
+                                   Eigen::Vector2d endAccelerationVector) {
 
+    this->startControlPoint = startControlPoint;
+    this->endControlPoint = endControlPoint;
+    this->startVelocityVector = startVelocityVector;
+    this->endVelocityVector = endVelocityVector;
+    this->startAccelerationVector = startAccelerationVector;
+    this->endAccelerationVector = endAccelerationVector;
+    this->B = (Eigen::Matrix2Xd(2, 6) << this->startControlPoint,
+                                         this->startVelocityVector,
+                                         this->startAccelerationVector,
+                                         this->endAccelerationVector,
+                                         this->endVelocityVector,
+                                         this->endControlPoint
+              ).finished() * this->C;
 }
 
 
-Eigen::Vector2d Hermite5::getControlPoint1() {
+Eigen::Vector2d Hermite5::getStartControlPoint() {
 
-    return this->p1;
+    return this->startControlPoint;
 }
 
-Eigen::Vector2d Hermite5::getControlPoint2() {
+Eigen::Vector2d Hermite5::getEndControlPoint() {
 
-    return this->p2;
+    return this->endControlPoint;
 }
 
-Eigen::Vector2d Hermite5::getVelocityVector1() {
+Eigen::Vector2d Hermite5::getStartVelocityVector() {
 
-    return this->v1;
+    return this->startVelocityVector;
 }
 
-Eigen::Vector2d Hermite5::getVelocityVector2() {
+Eigen::Vector2d Hermite5::getEndVelocityVector() {
 
-    return this->v2;
+    return this->endVelocityVector;
 }
 
-Eigen::Vector2d Hermite5::getAccelerationVector1() {
+Eigen::Vector2d Hermite5::getStartAccelerationVector() {
 
-    return this->a1;
+    return this->startAccelerationVector;
 }
 
-Eigen::Vector2d Hermite5::getAccelerationVector2() {
+Eigen::Vector2d Hermite5::getEndAccelerationVector() {
 
-    return this->a2;
+    return this->endAccelerationVector;
 }
 
 Eigen::Matrix2Xd Hermite5::getCurveMatrix() {
