@@ -6,8 +6,8 @@
  * @version 1.0
  * @date 2018-09-14
  */
-#ifndef CANVASH
-#define CANVASH value
+#ifndef CANVAS_H
+#define CANVAS_H
 
 //#include "Layer.h"
 
@@ -27,4 +27,4 @@ private:
    //unique_ptr<Layer> root;
 };
 
-#endif /* ifndef CANVASH */
+#endif /* ifndef CANVAS_H */

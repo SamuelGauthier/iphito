@@ -1,5 +1,12 @@
-#ifndef CURVEH
-#define CURVEH value
+/**
+ * @file Curve.h
+ * @brief Describes a parametric curve
+ * @author Samuel Gauthier
+ * @version 1.0
+ * @date 2018-09-14
+ */
+#ifndef CURVE_H
+#define CURVE_H
 
 #include <atomic>
 #include <eigen3/Eigen/Core>
@@ -21,4 +28,4 @@ private:
 inline Curve::~Curve() {}
 
 inline std::atomic<unsigned long long> Curve::nextID = 0;
-#endif /* ifndef CURVEH */
+#endif /* ifndef CURVE_H */

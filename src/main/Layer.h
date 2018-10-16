@@ -5,8 +5,8 @@
  * @version 1.0
  * @date 2018-09-14
  */
-#ifndef LAYERH
-#define LAYERH value
+#ifndef LAYER_H
+#define LAYER_H
 
 #include <atomic>
 #include <unordered_map>
@@ -43,4 +43,4 @@ private:
     std::unordered_map<unsigned long long, std::unique_ptr<Curve>> curves;
 };
 
-#endif /* ifndef LAYERH */
+#endif /* ifndef LAYER_H */

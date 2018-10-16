@@ -6,7 +6,7 @@
  * @date 2018-10-01
  */
 #ifndef HERMITE3H
-#define HERMITE3H value
+#define HERMITE3H
 
 #include <eigen3/Eigen/Core>
 
