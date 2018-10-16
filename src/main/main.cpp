@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <eigen3/Eigen/Core>
+#include <limits>
 
 #include "Layer.h"
 
@@ -30,27 +31,9 @@ int main(int argc, char *argv[])
     else std::cout << "null" << std::endl;
 
 
-    std::cout << "================matrix tests===================" << std::endl;
-    Eigen::Matrix4Xd m(4, 2);
-    m << 1, 2, 3, 4, 5, 6, 7, 8;
-    std::cout << m << std::endl;
-
-    Eigen::Vector2d t(4, 4);
-
-    std::cout << t << std::endl;
-    //std::cout << m*t << std::endl;
-
-    Eigen::Vector4d res = m*t;
-
-    std::cout << res << std::endl;
-
-
-    Eigen::Vector2d a(1, 2);
-    Eigen::Vector2d b(3, 4);
-    Eigen::Matrix2d c;
-    c << a, b;
-
-    std::cout << c << std::endl;
+    std::cout << "ull\t"
+              << std::numeric_limits<unsigned long long>::lowest() << '\t'
+              << std::numeric_limits<unsigned long long>::max() << std::endl ;
 
     return 0;
 }
