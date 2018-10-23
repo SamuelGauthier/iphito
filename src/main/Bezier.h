@@ -18,12 +18,13 @@
 class Bezier : public Curve {
 
 public:
-    Bezier(std::vector<Eigen::Vector2d> points =
-           std::vector<Eigen::Vector2d>());
+    Bezier(std::vector<Eigen::Vector2d> points);
     ~Bezier();
     
     unsigned long long getID();
     Eigen::Vector2d evaluateAt(double t);
+
+    void setPoints(std::vector<Eigen::Vector2d>& points);
 
 private:
     unsigned long long id;
