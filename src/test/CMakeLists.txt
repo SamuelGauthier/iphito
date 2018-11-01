@@ -16,4 +16,4 @@ list(TRANSFORM MAIN_H PREPEND ${MAIN_DIR})
 list(TRANSFORM MAIN_SRC PREPEND ${MAIN_DIR})
 
 add_executable(test mainTest.cpp ${TEST_TARGET_SRC} ${MAIN_H} ${MAIN_SRC})
-target_link_libraries(test Catch2)
+target_link_libraries(test Catch2  ${OPENGL_gl_LIBRARY} glfw)
