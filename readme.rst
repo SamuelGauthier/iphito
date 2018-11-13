@@ -8,3 +8,12 @@ Iphito
 
 .. sectnum::
 
+Build
+-----
+
+.. code:: bash
+
+   $ md build bin
+   $ cd build
+   $ cmake -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+   $ ../bin; ninja -C ../build
