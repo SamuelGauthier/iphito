@@ -7,33 +7,26 @@
 #include "Layer.h"
 #include "Canvas.h"
 #include "Window.h"
+#include "Hermite3.h"
 
 int main(int argc, char *argv[])
 {
-    
-    Layer l1;
-    Layer l2;
-    Layer l3;
 
-    std::cout << l1.getID() << std::endl;
-    std::cout << l2.getID() << std::endl;
-    std::cout << l3.getID() << std::endl;
+    int WIDTH = 640;
+    int HEIGHT = 480;
 
-    std::unique_ptr<Layer> l4(new Layer());
-    std::unique_ptr<Layer> l5(new Layer());
-    std::unique_ptr<Layer> l6(new Layer());
+    std::unique_ptr<Layer> rootLayer(new Layer());
+    Eigen::Vector2d p1(0, 0);
+    Eigen::Vector2d t1(1, 0);
+    Eigen::Vector2d p2(1, 0);
+    Eigen::Vector2d t2(1, 0);
+    std::unique_ptr<Curve> c1(new Hermite3(p1, t1, p2, t2));
+    rootLayer->addCurve(c1);
 
-    std::cout << l4->getID() << std::endl;
-    std::cout << l5->getID() << std::endl;
-    std::cout << l6->getID() << std::endl;
-
-    l4->addLayer(l5);
-
-    if(l5) std::cout << l5.get() << std::endl;
-    else std::cout << "null" << std::endl;
-
-    Canvas c(12, 13);
-    Window w(640, 480, "iphito", c);
+    /* std::unique_ptr<Canvas> c(new Canvas(WIDTH, HEIGHT)); */
+    Canvas c(WIDTH, HEIGHT);
+    c.setRootLayer(std::move(rootLayer));
+    Window w(WIDTH, HEIGHT, "iphito", c);
 
     w.render();
 
