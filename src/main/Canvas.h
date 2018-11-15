@@ -9,7 +9,7 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
-//#include "Layer.h"
+#include "Layer.h"
 
 class Canvas {
 
@@ -19,12 +19,14 @@ public:
 
     unsigned int getWidth();
     unsigned int getHeight();
+
+    void setRootLayer(std::shared_ptr<Layer> rootLayer);
     
 
 private:
    unsigned int width; 
    unsigned int height; 
-   //unique_ptr<Layer> root;
+   std::shared_ptr<Layer> rootLayer; // shared or unique?
 };
 
 #endif /* ifndef CANVAS_H */

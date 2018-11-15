@@ -8,9 +8,8 @@
 
 #include "Canvas.h"
 
-Canvas::Canvas(unsigned int width, unsigned int height) {
-    this->width = width;
-    this->height = height;
+Canvas::Canvas(unsigned int width, unsigned int height) : width{width},
+    height{height}, rootLayer{new Layer()} {
 }
 Canvas::~Canvas() {}
 
@@ -20,4 +19,8 @@ unsigned int Canvas::getWidth() {
 
 unsigned int Canvas::getHeight() {
     return this->height;
+}
+
+void Canvas::setRootLayer(std::shared_ptr<Layer> rootLayer) {
+    this->rootLayer = rootLayer;
 }
