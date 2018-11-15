@@ -27,9 +27,9 @@ public:
 
     unsigned long long getID() { return this->id; };
     bool addCurve(std::unique_ptr<Curve>& curve);
-    bool addCurves(std::vector<std::unique_ptr<Curve>> curves);
+    void addCurves(std::vector<std::unique_ptr<Curve>> curves);
     bool addLayer(std::unique_ptr<Layer>& layer);
-    bool addLayers(std::vector<std::unique_ptr<Layer>> layers);
+    void addLayers(std::vector<std::unique_ptr<Layer>> layers);
     bool containsCurve(unsigned long long id);
     bool containsLayer(unsigned long long id);
     bool removeCurve(unsigned long long id);

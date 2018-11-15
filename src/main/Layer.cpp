@@ -37,7 +37,7 @@ bool Layer::addCurve(std::unique_ptr<Curve>& curve) {
 }
 
 
-bool Layer::addCurves(std::vector<std::unique_ptr<Curve>> curves) {
+void Layer::addCurves(std::vector<std::unique_ptr<Curve>> curves) {
 
     for (auto& i : curves) {
         std::unique_ptr<Curve> j = std::move(i);
@@ -56,7 +56,7 @@ bool Layer::addLayer(std::unique_ptr<Layer>& layer) {
     return true;
 }
 
-bool Layer::addLayers(std::vector<std::unique_ptr<Layer>> layers) {
+void Layer::addLayers(std::vector<std::unique_ptr<Layer>> layers) {
 
     for (auto& i : layers) {
         std::unique_ptr<Layer> j = std::move(i);
@@ -86,11 +86,29 @@ bool Layer::containsLayer(unsigned long long id) {
 
 bool Layer::removeCurve(unsigned long long id) {
 
+    if(this->curves.erase(id) != 1) {
+
+        for (auto& i : this->children) {
+            if(i.second->removeCurve(id)) return true;
+        }
+
+        return false;
+    }
+    else {
+        return true;
+    }
 }
 
 bool Layer::removeLayer(unsigned long long id) {
 
-    for (auto& i : this->children) {
-        
+    if(this->children.erase(id) != 1) {
+
+        for (auto& i : this->children) {
+            if(i.second->removeLayer(id)) return true;
+        }
+
+        return false;
     }
+
+    return true;
 }
