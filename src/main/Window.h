@@ -10,7 +10,7 @@
 
 #include <string>
 #include <memory>
-#include <GL/glew.h>
+/* #include <GL/glew.h> */
 #include <GLFW/glfw3.h>
 
 #include "Canvas.h"
@@ -38,6 +38,7 @@ private:
     std::string title;
     Canvas canvas;
     //Curve Renderer
+    // Camera
     smart_GLFWwindow window;
 };
 #endif /* ifndef WINDOW_H */

@@ -28,10 +28,6 @@ endif ()
 
 # set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-add_subdirectory(src/main ../bin/main)
-add_subdirectory(src/test ../bin/test)
-
 # Catch2
 set(CATCH_INCLUDE_DIR src/external)
 add_library(Catch2 INTERFACE)
@@ -44,6 +40,14 @@ include_directories(${OPENGL_INCLUDE_DIR})
 # GLFW
 find_package(GLFW3 REQUIRED)
 
+# GLEW
+find_package(GLEW REQUIRED)
+include_directories(${GLEW_INCLUDE_DIRS})
+
 # Eigen3
 find_package(Eigen3 REQUIRED)
 include_directories(EIGEN3_INCLUDE_DIR)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(src/main ../bin/main)
+add_subdirectory(src/test ../bin/test)
