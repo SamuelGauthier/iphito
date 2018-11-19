@@ -7,6 +7,7 @@ set(TARGET_H
     Bezier.h
     Utils.h
     Window.h
+    Logger.h
     )
 
 set(TARGET_SRC
@@ -16,4 +17,5 @@ set(TARGET_SRC
     Hermite5.cpp
     Bezier.cpp
     Window.cpp
+    Logger.cpp
     )

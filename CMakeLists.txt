@@ -48,6 +48,9 @@ include_directories(${GLEW_INCLUDE_DIRS})
 find_package(Eigen3 REQUIRED)
 include_directories(EIGEN3_INCLUDE_DIR)
 
+# spdlog
+find_package(spdlog REQUIRED)
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(src/main ../bin/main)
 add_subdirectory(src/test ../bin/test)

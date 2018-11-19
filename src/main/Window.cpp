@@ -8,14 +8,21 @@
 #include <iostream>
 #include <stdexcept>
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #include "Window.h"
+
+#include "Logger.h"
 
 Window::Window(int x, int y, std::string title, Canvas canvas) :
     x{x}, y{y}, title{title}, canvas{canvas} {
     
-    if(!glfwInit())
-        throw std::runtime_error("Could not initialize GLFW.");
+    if(!glfwInit()) throw std::runtime_error("Could not initialize GLFW.");
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);    
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     this->window.reset(glfwCreateWindow(this->x, this->y, this->title.c_str(),
                                         NULL, NULL));
@@ -25,19 +32,25 @@ Window::Window(int x, int y, std::string title, Canvas canvas) :
         throw std::runtime_error("Could not create GLFW window.");
     }
 
+    glfwMakeContextCurrent(this->window.get());
+
     GLenum status = glewInit();
     if(status != GLEW_OK) {
         glfwTerminate();
 
         std::stringstream errorMessage;
-        errorMessage << "Could not intialize GLEW.Error: ";
+        errorMessage << "Could not intialize GLEW. Error: ";
         errorMessage << glewGetErrorString(status);
 
         throw std::runtime_error(errorMessage.str());
     }
 
-    std::cout << "INFO: OpenGL Version: " << glGetString(GL_VERSION)
-              << std::endl;
+    std::stringstream openGLVersion;
+    openGLVersion << "OpenGL Version: ";
+    openGLVersion << glGetString(GL_VERSION);
+    Logger::Instance()->debug(openGLVersion.str());
+
+
 }
 
 Window::~Window() {
