@@ -112,3 +112,15 @@ bool Layer::removeLayer(unsigned long long id) {
 
     return true;
 }
+
+void Layer::render() {
+
+    // back to front rendering to ensure correct order.
+    for(auto i = this->children.rbegin(); i != this->children.rend(); i++) {
+        i->second->render();
+    }
+
+    for(auto i = this->curves.rbegin(); i != this->curves.rend(); i++) {
+        i->second->render();
+    }
+}

@@ -9,7 +9,7 @@
 #define LAYER_H
 
 #include <atomic>
-#include <unordered_map>
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -34,13 +34,14 @@ public:
     bool containsLayer(unsigned long long id);
     bool removeCurve(unsigned long long id);
     bool removeLayer(unsigned long long id);
+    void render();
         
 
 private:
     static std::atomic<unsigned long long> nextID;
     unsigned long long id;
-    std::unordered_map<unsigned long long, std::unique_ptr<Layer>> children;
-    std::unordered_map<unsigned long long, std::unique_ptr<Curve>> curves;
+    std::map<unsigned long long, std::unique_ptr<Layer>> children;
+    std::map<unsigned long long, std::unique_ptr<Curve>> curves;
 };
 
 #endif /* ifndef LAYER_H */

@@ -51,6 +51,9 @@ Eigen::Vector2d Hermite5::evaluateAt(double t) {
     return this->B*v;
 }
 
+void Hermite5::render() {
+}
+
 void Hermite5::setStartControlPoint(Eigen::Vector2d p) {
 
     this->startControlPoint = p;

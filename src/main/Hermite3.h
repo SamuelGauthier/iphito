@@ -21,6 +21,7 @@ public:
 
     unsigned long long getID();
     Eigen::Vector2d evaluateAt(double t);
+    void render();
 
     void setStartControlPoint(Eigen::Vector2d p);
     void setEndControlPoint(Eigen::Vector2d p);

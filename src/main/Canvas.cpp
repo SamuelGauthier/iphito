@@ -24,3 +24,7 @@ unsigned int Canvas::getHeight() {
 void Canvas::setRootLayer(std::shared_ptr<Layer> rootLayer) {
     this->rootLayer = rootLayer;
 }
+
+void Canvas::render() {
+    this->rootLayer->render();
+}

@@ -5,7 +5,10 @@
  * @version 1.0
  * @date 2018-10-01
  */
+#include <vector>
 #include <eigen3/Eigen/Core>
+#include <GL/glew.h>
+
 #include "Hermite3.h"
 
 const Eigen::Matrix4d Hermite3::C = (Eigen::Matrix4d() << 
@@ -40,6 +43,15 @@ Eigen::Vector2d Hermite3::evaluateAt(double t) {
     Eigen::Vector4d v(t*t*t, t*t, t, 1.0);
 
     return this->B*v;
+}
+
+void Hermite3::render() {
+
+    /* static std::vector<GLuint> vertices; */
+    /* static std::vector<GLuint> indices; */
+
+    /* vertices = {} */
+
 }
 
 void Hermite3::setStartControlPoint(Eigen::Vector2d p) {

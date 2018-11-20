@@ -49,6 +49,10 @@ Eigen::Vector2d Bezier::evaluateAt(double t) {
     return sum;
 }
 
+void Bezier::render() {
+
+}
+
 void Bezier::setPoints(std::vector<Eigen::Vector2d>& points) {
 
     if(points.size() != this->degree) {

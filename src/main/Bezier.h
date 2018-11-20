@@ -23,6 +23,7 @@ public:
     
     unsigned long long getID();
     Eigen::Vector2d evaluateAt(double t);
+    void render();
 
     void setPoints(std::vector<Eigen::Vector2d>& points);
 

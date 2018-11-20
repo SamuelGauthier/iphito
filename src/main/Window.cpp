@@ -68,6 +68,8 @@ void Window::render() {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
+        this->canvas.render();
+
         /* Swap front and back buffers */
         glfwSwapBuffers(this->window.get());
 

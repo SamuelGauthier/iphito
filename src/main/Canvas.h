@@ -21,6 +21,7 @@ public:
     unsigned int getHeight();
 
     void setRootLayer(std::shared_ptr<Layer> rootLayer);
+    void render();
     
 
 private:
