@@ -3,8 +3,6 @@
 #include <stdexcept>
 #include <eigen3/Eigen/Core>
 #include <limits>
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
 #include <map>
 
 #include "Layer.h"
@@ -12,12 +10,14 @@
 #include "Window.h"
 #include "Hermite3.h"
 #include "Logger.h"
+#include "Shader.h"
 
 int main(int argc, char *argv[])
 {
 
     int WIDTH = 640;
     int HEIGHT = 480;
+
 
     std::unique_ptr<Layer> rootLayer(new Layer());
     Eigen::Vector2d p1(0, 0);
@@ -32,11 +32,13 @@ int main(int argc, char *argv[])
 
     try{
         Window w(WIDTH, HEIGHT, "iphito", c);
+        Shader t = Shader("../src/shaders/basic.vert", "../src/shaders/basic.frag");
         w.render();
     }
     catch(std::exception& e) {
 
-        std::cout << e.what() << std::endl;
+        /* std::cout << e.what() << std::endl; */
+        Logger::Instance()->critical(e.what());
     }
 
     Logger::Instance()->info("test");

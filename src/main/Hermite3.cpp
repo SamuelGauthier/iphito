@@ -6,6 +6,7 @@
  * @date 2018-10-01
  */
 #include <vector>
+#include <sstream>
 #include <eigen3/Eigen/Core>
 #include <GL/glew.h>
 
@@ -26,7 +27,7 @@ Hermite3::Hermite3(Eigen::Vector2d startPoint,
     id{Curve::getNextID()},
     B{(Eigen::Matrix2Xd(2, 4) << startPoint, startTangentVector,
                                  endTangentVector, endPoint
-      ).finished() * this->C} {}
+      ).finished() * this->C}, logger{Logger::Instance()} {}
 
 Hermite3::~Hermite3() {}
 
@@ -47,11 +48,63 @@ Eigen::Vector2d Hermite3::evaluateAt(double t) {
 
 void Hermite3::render() {
 
-    /* static std::vector<GLuint> vertices; */
-    /* static std::vector<GLuint> indices; */
+    static std::vector<GLfloat> vertices;
+    static std::vector<GLuint> indices;
 
-    /* vertices = {} */
+    if(vertices.size() == 0) {
 
+        vertices = {0.0f, 0.0f, 0.0f, 1.0f,
+                    0.25f, 0.5, 0.0f, 1.0f,
+                    0.5f, 0.0f, 0.0f, 1.0f};
+    }
+
+    if(indices.size() == 0) {
+
+        indices = {0, 1, 2};
+    }
+
+    // Check if needed to recompute the vertices and indices
+    /* CurveRenderer::sampleCurve(vertices, indices, this); */
+
+    static GLuint vertexArrayObjectID = -1;
+    static GLuint vertexBufferID = -1;
+    static GLuint indexBufferID;
+
+    /* std::stringstream m; */
+    /* m << "vertexArrayObjectID = " << vertexArrayObjectID; */
+    /* this->logger->debug(m.str()); */
+
+    if(vertexArrayObjectID == -1) {
+        glGenVertexArrays(1, &vertexArrayObjectID);
+        glBindVertexArray(vertexArrayObjectID);
+    }
+
+    if(vertexBufferID == -1) {
+        glGenBuffers(1, &vertexBufferID);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+    }
+
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat),
+                 &vertices[0], GL_STATIC_DRAW);
+    //glBufferSubData updates a subset of a buffer object's data store
+    static bool test = true;
+
+    if(test) {
+        this->logger->debug(std::to_string(vertices.size() * sizeof(GLfloat)));
+        this->logger->debug(std::to_string(sizeof(vertices)));
+        test = false;
+    }
+
+    if(indexBufferID == -1) {
+        glGenBuffers(1, &indexBufferID);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+    }
+
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint),
+                 &indices[0], GL_STATIC_DRAW);
+
+    glGenVertexArrays(1, &vertexArrayObjectID);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
 }
 
 void Hermite3::setStartControlPoint(Eigen::Vector2d p) {

@@ -8,6 +8,7 @@ set(TARGET_H
     Utils.h
     Window.h
     Logger.h
+    Shader.h
     )
 
 set(TARGET_SRC
@@ -16,6 +17,8 @@ set(TARGET_SRC
     Hermite3.cpp
     Hermite5.cpp
     Bezier.cpp
+    Utils.cpp
     Window.cpp
     Logger.cpp
+    Shader.cpp
     )
