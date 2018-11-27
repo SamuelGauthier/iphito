@@ -45,3 +45,11 @@ void Logger::debug(std::string message) {
 void Logger::info(std::string message) {
     logger->info(message);
 }
+
+void Logger::critical(std::string message) {
+    logger->critical(message);
+}
+
+void Logger::warn(std::string message) {
+    logger->warn(message);
+}

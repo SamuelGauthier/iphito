@@ -22,8 +22,9 @@ public:
     static std::shared_ptr<Logger>& Instance();
 
     void debug(std::string message);
-
     void info(std::string message);
+    void critical(std::string message);
+    void warn(std::string message);
 
 private:
     Logger();
