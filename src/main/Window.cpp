@@ -13,6 +13,8 @@
 #include "Window.h"
 
 #include "Logger.h"
+#include "Utils.h"
+
 
 Window::Window(int x, int y, std::string title, Canvas canvas) :
     x{x}, y{y}, title{title}, canvas{canvas} {
@@ -50,7 +52,8 @@ Window::Window(int x, int y, std::string title, Canvas canvas) :
     openGLVersion << glGetString(GL_VERSION);
     Logger::Instance()->debug(openGLVersion.str());
 
-
+    Utils::setGlfwInitialized();
+    Utils::setGlewInitialized();
 }
 
 Window::~Window() {
