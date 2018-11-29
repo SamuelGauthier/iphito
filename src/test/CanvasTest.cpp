@@ -6,7 +6,7 @@
  * @date 2018-10-01
  */
 #include "catch.h"
-#include "Canvas.h"
+#include "renderer/Canvas.h"
 
 TEST_CASE("canvas size", "[Canvas]") {
     Canvas c = Canvas(3, 4);

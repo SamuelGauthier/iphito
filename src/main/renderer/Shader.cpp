@@ -13,8 +13,8 @@
 
 #include "Shader.h"
 
-#include "Utils.h"
-#include "Logger.h"
+#include "utils/Utils.h"
+#include "utils/Logger.h"
 
 Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath) {
 

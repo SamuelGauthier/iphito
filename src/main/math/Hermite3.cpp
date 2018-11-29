@@ -12,6 +12,9 @@
 
 #include "Hermite3.h"
 
+#include "renderer/Shader.h"
+#include "utils/Logger.h"
+
 const Eigen::Matrix4d Hermite3::C = (Eigen::Matrix4d() << 
                                       2.0, -3.0,  0.0,  1.0,
                                       1.0, -2.0,  1.0,  0.0,
@@ -27,7 +30,7 @@ Hermite3::Hermite3(Eigen::Vector2d startPoint,
     id{Curve::getNextID()},
     B{(Eigen::Matrix2Xd(2, 4) << startPoint, startTangentVector,
                                  endTangentVector, endPoint
-      ).finished() * this->C}, logger{Logger::Instance()} {}
+      ).finished() * this->C} {} //, logger{Logger::Instance()} {}
 
 Hermite3::~Hermite3() {}
 
@@ -48,27 +51,32 @@ Eigen::Vector2d Hermite3::evaluateAt(double t) {
 
 void Hermite3::render() {
 
-    static std::vector<GLfloat> vertices;
-    static std::vector<GLuint> indices;
+    static std::vector<GLfloat> vertices = {0.0f, 0.0f, 0.0f, 1.0f,
+                                            0.25f, 0.5, 0.0f, 1.0f,
+                                            0.5f, 0.0f, 0.0f, 1.0f};
+    static std::vector<GLuint> indices = {0, 1, 2};
 
-    if(vertices.size() == 0) {
+    /* if(vertices.size() == 0) { */
 
-        vertices = {0.0f, 0.0f, 0.0f, 1.0f,
-                    0.25f, 0.5, 0.0f, 1.0f,
-                    0.5f, 0.0f, 0.0f, 1.0f};
-    }
+    /*     vertices = {0.0f, 0.0f, 0.0f, 1.0f, */
+    /*                 0.25f, 0.5, 0.0f, 1.0f, */
+    /*                 0.5f, 0.0f, 0.0f, 1.0f}; */
+    /* } */
 
-    if(indices.size() == 0) {
+    /* if(indices.size() == 0) { */
 
-        indices = {0, 1, 2};
-    }
+    /*     indices = {0, 1, 2}; */
+    /* } */
+
+    static Shader t = Shader("../src/shaders/basic.vert", "../src/shaders/basic.frag");
+    glUseProgram(t.getProgramID());
 
     // Check if needed to recompute the vertices and indices
     /* CurveRenderer::sampleCurve(vertices, indices, this); */
 
     static GLuint vertexArrayObjectID = -1;
     static GLuint vertexBufferID = -1;
-    static GLuint indexBufferID;
+    static GLuint indexBufferID = -1;
 
     /* std::stringstream m; */
     /* m << "vertexArrayObjectID = " << vertexArrayObjectID; */
@@ -81,29 +89,33 @@ void Hermite3::render() {
 
     if(vertexBufferID == -1) {
         glGenBuffers(1, &vertexBufferID);
+        /* glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID); */
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat),
+                &vertices[0], GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+        /* glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat), NULL); */
+        glEnableVertexAttribArray(0);
     }
 
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat),
-                 &vertices[0], GL_STATIC_DRAW);
     //glBufferSubData updates a subset of a buffer object's data store
-    static bool test = true;
+    /* static bool test = true; */
 
-    if(test) {
-        this->logger->debug(std::to_string(vertices.size() * sizeof(GLfloat)));
-        this->logger->debug(std::to_string(sizeof(vertices)));
-        test = false;
-    }
+    /* if(test) { */
+    /*     this->logger->debug(std::to_string(vertices.size() * sizeof(GLfloat))); */
+    /*     this->logger->debug(std::to_string(sizeof(vertices))); */
+    /*     test = false; */
+    /* } */
 
     if(indexBufferID == -1) {
         glGenBuffers(1, &indexBufferID);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint),
+                &indices[0], GL_STATIC_DRAW);
     }
 
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint),
-                 &indices[0], GL_STATIC_DRAW);
-
-    glGenVertexArrays(1, &vertexArrayObjectID);
+    glBindVertexArray(vertexArrayObjectID);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
 }
 

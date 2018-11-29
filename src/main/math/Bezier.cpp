@@ -8,7 +8,7 @@
 #include <stdexcept>
 
 #include "Bezier.h"
-#include "Utils.h"
+#include "utils/Utils.h"
 
 Bezier::Bezier(std::vector<Eigen::Vector2d> points) : id{Curve::getNextID()},
                                                       degree{0} {

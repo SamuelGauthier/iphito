@@ -12,7 +12,6 @@
 #include <eigen3/Eigen/Core>
 
 #include "Curve.h"
-#include "Logger.h"
 
 class Hermite3 : public Curve {
 
@@ -52,8 +51,6 @@ private:
     unsigned long long id;
     Eigen::Matrix2Xd B;
     static const Eigen::Matrix4d C;
-
-    std::shared_ptr<Logger> logger;
 
     void recomputeB();
 };

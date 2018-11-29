@@ -12,8 +12,8 @@
 
 #include "Window.h"
 
-#include "Logger.h"
-#include "Utils.h"
+#include "utils/Logger.h"
+#include "utils/Utils.h"
 
 
 Window::Window(int x, int y, std::string title, Canvas canvas) :

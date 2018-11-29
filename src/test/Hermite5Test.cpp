@@ -8,7 +8,7 @@
 #include <eigen3/Eigen/Core>
 
 #include "catch.h"
-#include "Hermite5.h"
+#include "math/Hermite5.h"
 
 const Eigen::Vector2d p1(0, 0);
 const Eigen::Vector2d p2(0, 1);

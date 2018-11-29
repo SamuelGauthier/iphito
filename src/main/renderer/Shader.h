@@ -10,7 +10,7 @@
 #define SHADER_H value
 
 #include <string>
-/* #include <GL/glew.h> */
+#include <GL/glew.h>
 
 class Shader {
 

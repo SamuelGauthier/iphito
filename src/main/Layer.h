@@ -13,7 +13,7 @@
 #include <memory>
 #include <vector>
 
-#include "Curve.h"
+#include "math/Curve.h"
 
 class Layer {
 

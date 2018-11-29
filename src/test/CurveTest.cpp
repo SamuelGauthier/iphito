@@ -8,8 +8,8 @@
 #include <eigen3/Eigen/Core>
 
 #include "catch.h"
-#include "Hermite3.h"
-#include "Hermite5.h"
+#include "math/Hermite3.h"
+#include "math/Hermite5.h"
 
 TEST_CASE("curves have an unique ID", "[Curve]") {
 
