@@ -8,7 +8,7 @@
 #include <memory>
 #include <vector>
 #include "catch.h"
-#include "Layer.h"
+#include "renderer/Layer.h"
 
 TEST_CASE("layers have an unique ID", "[Layer]") {
 

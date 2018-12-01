@@ -31,12 +31,14 @@ set(RENDERER_SRC
     Canvas.cpp
     Window.cpp
     Shader.cpp
+    Layer.cpp
     )
 
 set(RENDERER_H
     Canvas.h
     Window.h
     Shader.h
+    Layer.h
     )
 
 list(TRANSFORM UTILS_SRC PREPEND ${UTILS_DIR})
@@ -47,14 +49,12 @@ list(TRANSFORM RENDERER_SRC PREPEND ${RENDERER_DIR})
 list(TRANSFORM RENDERER_H PREPEND ${RENDERER_DIR})
 
 set(TARGET_H
-    Layer.h
     ${UTILS_H}
     ${MATH_H}
     ${RENDERER_H}
     )
 
 set(TARGET_SRC
-    Layer.cpp
     ${UTILS_SRC}
     ${MATH_SRC}
     ${RENDERER_SRC}
