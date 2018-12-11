@@ -8,9 +8,20 @@
 
 #include "Canvas.h"
 
+#include "utils/Utils.h"
+
 Canvas::Canvas(unsigned int width, unsigned int height) : width{width},
     height{height}, rootLayer{new Layer()} {
+
+        if(!Utils::isGlfwInitialized())
+            throw std::runtime_error("Please initialize GLFW."); 
+
+        if(!Utils::isGlewInitialized())
+            throw std::runtime_error("Please initialize Glew.");
+        
+        glGenVertexArrays(1, &this->vertexArrayObjectID);
 }
+
 Canvas::~Canvas() {}
 
 unsigned int Canvas::getWidth() {
@@ -26,5 +37,6 @@ void Canvas::setRootLayer(std::shared_ptr<Layer> rootLayer) {
 }
 
 void Canvas::render() {
+    glBindVertexArray(this->vertexArrayObjectID);
     this->rootLayer->render();
 }

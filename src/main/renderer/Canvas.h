@@ -9,6 +9,8 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
+#include <GL/glew.h>
+
 #include "Layer.h"
 
 class Canvas {
@@ -28,6 +30,7 @@ private:
    unsigned int width; 
    unsigned int height; 
    std::shared_ptr<Layer> rootLayer; // shared or unique?
+   GLuint vertexArrayObjectID;
 };
 
 #endif /* ifndef CANVAS_H */

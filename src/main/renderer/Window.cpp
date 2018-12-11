@@ -16,8 +16,8 @@
 #include "utils/Utils.h"
 
 
-Window::Window(int x, int y, std::string title, Canvas canvas) :
-    x{x}, y{y}, title{title}, canvas{canvas} {
+Window::Window(int x, int y, std::string title) :
+    x{x}, y{y}, title{title}, canvas{nullptr} {
     
     if(!glfwInit()) throw std::runtime_error("Could not initialize GLFW.");
 
@@ -65,13 +65,16 @@ void Window::render() {
     /* Make the window's context current */
     glfwMakeContextCurrent(this->window.get());
 
+    if(!this->canvas)
+        throw new std::runtime_error("No canvas set.");
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(this->window.get()))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        this->canvas.render();
+        this->canvas->render();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(this->window.get());
@@ -79,4 +82,8 @@ void Window::render() {
         /* Poll for and process events */
         glfwPollEvents();
     }
+}
+
+void Window::setCanvas(std::unique_ptr<Canvas>& canvas) {
+    this->canvas = std::move(canvas);
 }

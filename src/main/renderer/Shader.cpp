@@ -21,6 +21,10 @@ Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath) {
     if(!Utils::isGlfwInitialized())
         throw std::runtime_error("Please initialize GLFW.");
 
+    if(!Utils::isGlewInitialized())
+        throw std::runtime_error("Please initialize Glew.");
+    
+
     this->vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     this->fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -113,5 +117,3 @@ void Shader::compileShader(GLuint& shaderID, std::string& shaderCode,
 
 }
 
-void Shader::linkShaders() {
-}

@@ -26,17 +26,18 @@ typedef std::unique_ptr<GLFWwindow, DestroyGLFWWindow> smart_GLFWwindow;
 class Window {
 
 public:
-    Window(int x, int y, std::string title, Canvas canvas);
+    Window(int x, int y, std::string title);
     ~Window();
 
     void render();
+    void setCanvas(std::unique_ptr<Canvas>& canvas);
 
 private:
 
     int x;
     int y;
     std::string title;
-    Canvas canvas;
+    std::unique_ptr<Canvas> canvas;
     //Curve Renderer
     // Camera
     smart_GLFWwindow window;

@@ -5,10 +5,11 @@
 #include <limits>
 #include <map>
 
-#include "Layer.h"
-
 #include "math/Hermite3.h"
 #include "renderer/Canvas.h"
+#include "renderer/Curve2D.h"
+#include "renderer/Hermite32D.h"
+#include "renderer/Layer.h"
 #include "renderer/Shader.h"
 #include "renderer/Window.h"
 #include "utils/Logger.h"
@@ -25,14 +26,22 @@ int main(int argc, char *argv[])
     Eigen::Vector2d t1(1, 0);
     Eigen::Vector2d p2(1, 0);
     Eigen::Vector2d t2(1, 0);
-    std::unique_ptr<Curve> c1(new Hermite3(p1, t1, p2, t2));
-    rootLayer->addCurve(c1);
+    std::unique_ptr<Hermite3> c1(new Hermite3(p1, t1, p2, t2));
 
-    Canvas c(WIDTH, HEIGHT);
-    c.setRootLayer(std::move(rootLayer));
+    Eigen::Vector3d curveColor(1.0, 0.0, 0.0);
+    Eigen::Vector3d tangentColor(0.0, 0.0, 1.0);
+    Eigen::Vector3d controlPointsColor(0.0, 1.0, 0.0);
+    double curveWidth = 1.0;
+
 
     try{
-        Window w(WIDTH, HEIGHT, "iphito", c);
+        Window w(WIDTH, HEIGHT, "iphito");
+        std::unique_ptr<Canvas> c(new Canvas(WIDTH, HEIGHT));
+        std::unique_ptr<Curve2D> c2D(new Hermite32D(std::move(c1), curveColor,
+                    curveWidth, tangentColor, controlPointsColor));
+        rootLayer->addCurve(c2D);
+        c->setRootLayer(std::move(rootLayer));
+        w.setCanvas(c);
         /* Shader t = Shader("../src/shaders/basic.vert", */
         /*                   "../src/shaders/basic.frag"); */
         w.render();

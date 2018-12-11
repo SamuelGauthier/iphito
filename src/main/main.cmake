@@ -32,6 +32,10 @@ set(RENDERER_SRC
     Window.cpp
     Shader.cpp
     Layer.cpp
+    Curve2D.cpp
+    Hermite32D.cpp
+    Hermite52D.cpp
+    Bezier2D.cpp
     )
 
 set(RENDERER_H
@@ -39,6 +43,10 @@ set(RENDERER_H
     Window.h
     Shader.h
     Layer.h
+    Curve2D.h
+    Hermite32D.h
+    Hermite52D.h
+    Bezier2D.h
     )
 
 list(TRANSFORM UTILS_SRC PREPEND ${UTILS_DIR})

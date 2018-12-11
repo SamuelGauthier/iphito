@@ -34,6 +34,10 @@ const std::vector<unsigned long long> Utils::factorials = {
     1121645100408832000
 };
 
+bool Utils::glfwInitialized = false;
+
+bool Utils::glewInitialized = false;
+
 const unsigned long long Utils::factorial(int n) {
     if(n < 0) {
         throw std::domain_error("Negative factorials do not exist.");
@@ -45,10 +49,6 @@ const unsigned long long Utils::factorial(int n) {
 
     return Utils::factorials[n];
 }
-
-bool Utils::glfwInitialized = false;
-
-bool Utils::glewInitialized = false;
 
 const bool Utils::isGlfwInitialized() { return Utils::glfwInitialized; }
 

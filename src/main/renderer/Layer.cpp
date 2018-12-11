@@ -11,7 +11,7 @@
 std::atomic<unsigned long long> Layer::nextID = 0;
 
 Layer::Layer(std::vector<std::unique_ptr<Layer>> children, 
-             std::vector<std::unique_ptr<Curve>> curves) {
+             std::vector<std::unique_ptr<Curve2D>> curves) {
 
     this->id = this->nextID.fetch_add(1);
 
@@ -26,7 +26,7 @@ Layer::Layer(std::vector<std::unique_ptr<Layer>> children,
 
 Layer::~Layer() {}
 
-bool Layer::addCurve(std::unique_ptr<Curve>& curve) {
+bool Layer::addCurve(std::unique_ptr<Curve2D>& curve) {
 
     unsigned long long curveID = curve->getID();
 
@@ -37,10 +37,10 @@ bool Layer::addCurve(std::unique_ptr<Curve>& curve) {
 }
 
 
-void Layer::addCurves(std::vector<std::unique_ptr<Curve>> curves) {
+void Layer::addCurves(std::vector<std::unique_ptr<Curve2D>> curves) {
 
     for (auto& i : curves) {
-        std::unique_ptr<Curve> j = std::move(i);
+        std::unique_ptr<Curve2D> j = std::move(i);
         addCurve(j);
     }
 }

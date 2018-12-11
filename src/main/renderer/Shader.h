@@ -33,7 +33,6 @@ private:
 
     void compileShader(GLuint& shaderID, std::string& shaderCode,
                        std::string logInfo = "");
-    void linkShaders();
 };
 
 #endif /* ifndef SHADER_H */

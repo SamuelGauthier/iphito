@@ -9,7 +9,6 @@
 #define UTILS_H
 #include <stdexcept>
 #include <string>
-
 #include <vector>
 
 class Utils {
