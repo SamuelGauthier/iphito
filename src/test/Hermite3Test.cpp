@@ -21,18 +21,6 @@ const Eigen::Matrix4d C = (Eigen::Matrix4d() <<
                             1.0, -1.0,  0.0,  0.0,
                            -2.0,  3.0,  0.0,  0.0).finished();
 
-
-TEST_CASE("cubic Hermite curves have an unique ID", "[Hermite3]") {
-
-    Hermite3 h1(p1, t1, p2, t2);
-    Hermite3 h2(p1, t1, p2, t2);
-    Hermite3 h3(p1, t1, p2, t2);
-    Hermite3 h4(p1, t1, p2, t2);
-
-    REQUIRE(h1.getID() != h2.getID());
-    REQUIRE(h3.getID() != h4.getID());
-}
-
 TEST_CASE("control points and tangent vectors of cubic Hermite curves can be"
           " accessed", "[Hermite3]") {
 

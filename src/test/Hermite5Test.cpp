@@ -26,21 +26,6 @@ const Eigen::MatrixXd C = (Eigen::MatrixXd(6,6) <<
                               6, -15,   10,   0, 0, 0
                            ).finished();
 
-TEST_CASE("quintic Hermite curves have an unique ID", "[Hermite5]") {
-
-    Hermite5 h1(p1, v1, a1, p2, v2, a2);
-    Hermite5 h2(p1, v1, a1, p2, v2, a2);
-    Hermite5 h3(p1, v1, a1, p2, v2, a2);
-    Hermite5 h4(p1, v1, a1, p2, v2, a2);
-
-    REQUIRE(h1.getID() != h2.getID());
-    REQUIRE(h1.getID() != h3.getID());
-    REQUIRE(h1.getID() != h4.getID());
-    REQUIRE(h2.getID() != h4.getID());
-    REQUIRE(h3.getID() != h2.getID());
-    REQUIRE(h3.getID() != h4.getID());
-}
-
 TEST_CASE("control points, velocity and acceleration vectors of quintic"
           " Hermite curves can be accessed", "[Hermite5]") {
 

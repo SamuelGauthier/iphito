@@ -20,9 +20,7 @@ public:
              Eigen::Vector2d endPoint, Eigen::Vector2d endTangentVector);
     ~Hermite3();
 
-    unsigned long long getID();
     Eigen::Vector2d evaluateAt(double t);
-    void render();
 
     void setStartControlPoint(Eigen::Vector2d p);
     void setEndControlPoint(Eigen::Vector2d p);
@@ -48,7 +46,6 @@ private:
     Eigen::Vector2d startTangentVector;
     Eigen::Vector2d endTangentVector;
 
-    unsigned long long id;
     Eigen::Matrix2Xd B;
     static const Eigen::Matrix4d C;
 

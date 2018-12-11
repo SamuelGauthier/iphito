@@ -10,8 +10,7 @@
 #include "Bezier.h"
 #include "utils/Utils.h"
 
-Bezier::Bezier(std::vector<Eigen::Vector2d> points) : id{Curve::getNextID()},
-                                                      degree{0} {
+Bezier::Bezier(std::vector<Eigen::Vector2d> points) : degree{0} {
 
     if(points.size() <= 1) {
         throw std::length_error("A Bézier curve has to have at least two"
@@ -31,7 +30,6 @@ Bezier::Bezier(std::vector<Eigen::Vector2d> points) : id{Curve::getNextID()},
 
 Bezier::~Bezier() {}
 
-unsigned long long Bezier::getID() { return this->id; }
 
 Eigen::Vector2d Bezier::evaluateAt(double t) {
 
@@ -47,10 +45,6 @@ Eigen::Vector2d Bezier::evaluateAt(double t) {
     }
 
     return sum;
-}
-
-void Bezier::render() {
-
 }
 
 void Bezier::setPoints(std::vector<Eigen::Vector2d>& points) {

@@ -28,17 +28,13 @@ Hermite5::Hermite5(Eigen::Vector2d startControlPoint,
     endControlPoint{endControlPoint},
     endVelocityVector{endVelocityVector},
     endAccelerationVector{endAccelerationVector},
-    id{Curve::getNextID()},
+    /* id{Curve::getNextID()}, */
     B{(Eigen::Matrix2Xd(2, 6) << startControlPoint, startVelocityVector,
             startAccelerationVector, endAccelerationVector, endVelocityVector,
             endControlPoint).finished() * this->C}
 {}
 
 Hermite5::~Hermite5() {}
-
-unsigned long long Hermite5::getID() {
-    return this->id;
-}
 
 Eigen::Vector2d Hermite5::evaluateAt(double t) {
 
@@ -49,9 +45,6 @@ Eigen::Vector2d Hermite5::evaluateAt(double t) {
     v << t*t*t*t*t, t*t*t*t, t*t*t, t*t, t, 1.0;
 
     return this->B*v;
-}
-
-void Hermite5::render() {
 }
 
 void Hermite5::setStartControlPoint(Eigen::Vector2d p) {

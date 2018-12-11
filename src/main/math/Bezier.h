@@ -21,14 +21,11 @@ public:
     Bezier(std::vector<Eigen::Vector2d> points);
     ~Bezier();
     
-    unsigned long long getID();
     Eigen::Vector2d evaluateAt(double t);
-    void render();
 
     void setPoints(std::vector<Eigen::Vector2d>& points);
 
 private:
-    unsigned long long id;
     std::map<int, std::pair<Eigen::Vector2d, double>> pointsAndBernstein;
     int degree;
 };

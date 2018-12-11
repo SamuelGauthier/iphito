@@ -23,9 +23,7 @@ public:
              Eigen::Vector2d endAccelerationVector);
     ~Hermite5();
 
-    unsigned long long getID();
     Eigen::Vector2d evaluateAt(double t);
-    void render();
 
     void setStartControlPoint(Eigen::Vector2d p);
     void setEndControlPoint(Eigen::Vector2d p);
@@ -62,7 +60,6 @@ private:
     Eigen::Vector2d startAccelerationVector;
     Eigen::Vector2d endAccelerationVector;
 
-    unsigned long long id;
     Eigen::Matrix2Xd B;
     static const Eigen::MatrixXd C;
 };
