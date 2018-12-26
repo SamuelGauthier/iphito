@@ -53,7 +53,9 @@ private:
     static std::atomic<unsigned long long> nextID;
     unsigned long long id;
 
-    void sampleCurve(std::vector<Eigen::Vector3d> samplePoints);
+    std::vector<Eigen::Vector2d> sampleCurve();
+    void computeVerticesFromSamplePoints(std::vector<Eigen::Vector2d>& samplePoints);
+    void computeIndicesFromVertices();
 };
 
 inline Curve2D::~Curve2D() {}

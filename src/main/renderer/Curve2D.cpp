@@ -5,9 +5,11 @@
  * @version 0.1.0
  * @date 2018-12-10
  */
-
+#include <iostream>
+#include <sstream>
 #include "Curve2D.h"
 
+#include "utils/Logger.h"
 #include "utils/Utils.h"
 
 inline std::atomic<unsigned long long> Curve2D::nextID = 0;
@@ -27,6 +29,11 @@ Curve2D::Curve2D(std::unique_ptr<Curve> curve, Eigen::Vector3d curveColor,
                                   "../src/shaders/basic.frag"));
     glUseProgram(this->shader->getProgramID());
 
+    int curveColorLocation = glGetUniformLocation(this->shader->getProgramID(),
+            "curveColor");
+    glUniform3f(curveColorLocation, this->curveColor[0], this->curveColor[1],
+            this->curveColor[2]);
+
     glGenVertexArrays(1, &this->vertexArrayObjectID);
     glBindVertexArray(this->vertexArrayObjectID);
 
@@ -36,18 +43,15 @@ Curve2D::Curve2D(std::unique_ptr<Curve> curve, Eigen::Vector3d curveColor,
 
 void Curve2D::recomputeVerticesAndIndices() {
 
-    std::vector<Eigen::Vector3d> samplePoints;
-
-    this->vertices = {0.0f, 0.0f, 0.0f, 1.0f,
-                      0.25f, 0.5, 0.0f, 1.0f,
-                      0.5f, 0.0f, 0.0f, 1.0f};
-    this->indices = {0, 1, 2};
+    std::vector<Eigen::Vector2d> samplePoints = sampleCurve();
+    computeVerticesFromSamplePoints(samplePoints);
+    computeIndicesFromVertices();
 
     glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(GLfloat),
                  &this->vertices[0], GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indexBufferID);
@@ -60,6 +64,60 @@ unsigned long long Curve2D::getID() {
     return this->id;
 }
 
-void sampleCurve(std::vector<Eigen::Vector3d> samplePoints) {
+std::vector<Eigen::Vector2d> Curve2D::sampleCurve() {
 
+    int sampleSize = 10;
+    std::vector<Eigen::Vector2d> samplePoints =
+        std::vector<Eigen::Vector2d>(sampleSize + 1);
+
+    for (int i = 0; i <= sampleSize; i++) {
+        samplePoints[i] = this->curve->evaluateAt(double(i) / sampleSize);
+    }
+
+    return samplePoints;
 }
+
+void Curve2D::computeVerticesFromSamplePoints(std::vector<Eigen::Vector2d>&
+        samplePoints) {
+
+    for (int i = 0; i < samplePoints.size() - 1; i++) {
+        Eigen::Vector2d a = samplePoints[i];
+        Eigen::Vector2d b = samplePoints[i+1];
+
+        Eigen::Vector2d d = (b-a);
+        std::swap(d[0], d[1]);
+        d[0] = -d[0];
+        d.normalize();
+
+        Eigen::Vector2d a1 = a + (this->curveWidth * d);
+        Eigen::Vector2d a2 = a - (this->curveWidth * d);
+        Eigen::Vector2d b1 = b + (this->curveWidth * d);
+        Eigen::Vector2d b2 = b - (this->curveWidth * d);
+
+        this->vertices.push_back(a1[0]);
+        this->vertices.push_back(a1[1]);
+        this->vertices.push_back(a2[0]);
+        this->vertices.push_back(a2[1]);
+        this->vertices.push_back(b1[0]);
+        this->vertices.push_back(b1[1]);
+        this->vertices.push_back(b2[0]);
+        this->vertices.push_back(b2[1]);
+
+    }
+}
+
+void Curve2D::computeIndicesFromVertices() {
+
+    int size = this->vertices.size()/2;
+
+    for (int i = 0; i < size; i += 4) {
+        this->indices.push_back(i+1);
+        this->indices.push_back(i+2);
+        this->indices.push_back(i);
+
+        this->indices.push_back(i+1);
+        this->indices.push_back(i+3);
+        this->indices.push_back(i+2);
+    }
+}
+

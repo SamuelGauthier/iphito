@@ -23,15 +23,15 @@ int main(int argc, char *argv[])
 
     std::unique_ptr<Layer> rootLayer(new Layer());
     Eigen::Vector2d p1(0, 0);
-    Eigen::Vector2d t1(1, 0);
-    Eigen::Vector2d p2(1, 0);
-    Eigen::Vector2d t2(1, 0);
+    Eigen::Vector2d t1(0, 1);
+    Eigen::Vector2d p2(0.5, 0);
+    Eigen::Vector2d t2(0, -1);
     std::unique_ptr<Hermite3> c1(new Hermite3(p1, t1, p2, t2));
 
     Eigen::Vector3d curveColor(1.0, 0.0, 0.0);
     Eigen::Vector3d tangentColor(0.0, 0.0, 1.0);
     Eigen::Vector3d controlPointsColor(0.0, 1.0, 0.0);
-    double curveWidth = 1.0;
+    double curveWidth = 0.005;
 
 
     try{

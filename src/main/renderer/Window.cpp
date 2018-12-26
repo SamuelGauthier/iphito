@@ -25,6 +25,7 @@ Window::Window(int x, int y, std::string title) :
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);    
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
     this->window.reset(glfwCreateWindow(this->x, this->y, this->title.c_str(),
                                         NULL, NULL));
