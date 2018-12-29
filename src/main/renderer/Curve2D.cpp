@@ -13,11 +13,14 @@
 #include "utils/Utils.h"
 
 inline std::atomic<unsigned long long> Curve2D::nextID = 0;
+inline std::mt19937_64 Curve2D::engine = std::mt19937_64();
+inline std::uniform_real_distribution<double> Curve2D::distribution(0.0, 1.0);
 
 Curve2D::Curve2D(std::unique_ptr<Curve> curve, Eigen::Vector3d curveColor,
                  double curveWidth) :
     curve{std::move(curve)}, curveColor{curveColor}, curveWidth{curveWidth},
-    isDirty{false}, id{this->nextID.fetch_add(1)} {
+    isDirty{false}, id{this->nextID.fetch_add(1)},
+    samplePoints{std::vector<Eigen::Vector2d>()} {
 
     if(!Utils::isGlfwInitialized())
         throw std::runtime_error("Please initialize GLFW.");
@@ -43,9 +46,9 @@ Curve2D::Curve2D(std::unique_ptr<Curve> curve, Eigen::Vector3d curveColor,
 
 void Curve2D::recomputeVerticesAndIndices() {
 
-    std::vector<Eigen::Vector2d> samplePoints = sampleCurve();
-    computeVerticesFromSamplePoints(samplePoints);
-    computeIndicesFromVertices();
+    sampleCurve(0.0, 1.0);
+    verticesFromSamplePoints(this->samplePoints);
+    indicesFromVertices();
 
     glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(GLfloat),
@@ -64,22 +67,39 @@ unsigned long long Curve2D::getID() {
     return this->id;
 }
 
-std::vector<Eigen::Vector2d> Curve2D::sampleCurve() {
+void Curve2D::sampleCurve(double a, double b) {
 
-    int sampleSize = 10;
-    std::vector<Eigen::Vector2d> samplePoints =
-        std::vector<Eigen::Vector2d>(sampleSize + 1);
+    double t = 0.45 + 0.1 * Curve2D::distribution(Curve2D::engine);
+    double m = a + t * (b - a);
+    /* double m = a + 0.5 * (b - a); */
 
-    for (int i = 0; i <= sampleSize; i++) {
-        samplePoints[i] = this->curve->evaluateAt(double(i) / sampleSize);
+    Eigen::Vector2d pa = this->curve->evaluateAt(a);
+    Eigen::Vector2d pb = this->curve->evaluateAt(b);
+    Eigen::Vector2d pm = this->curve->evaluateAt(m);
+
+    if(isFlat(pa, pb, pm)) {
+        this->samplePoints.push_back(pa);
+        this->samplePoints.push_back(pb);
     }
+    else{
+        sampleCurve(a, m);
+        sampleCurve(m, b);
+    }
+}
+bool Curve2D::isFlat(Eigen::Vector2d a, Eigen::Vector2d b, Eigen::Vector2d m) {
 
-    return samplePoints;
+    Eigen::Vector2d ma = a - m;
+    Eigen::Vector2d mb = b - m;
+
+    return std::abs(ma.dot(mb) / (ma.norm() * mb.norm())) > 0.999;
 }
 
-void Curve2D::computeVerticesFromSamplePoints(std::vector<Eigen::Vector2d>&
+void Curve2D::verticesFromSamplePoints(std::vector<Eigen::Vector2d>&
         samplePoints) {
 
+    Logger::Instance()->debug("Sample size = " +
+                              std::to_string(samplePoints.size()));
+    if(samplePoints.size() == 0 ) return;
     for (int i = 0; i < samplePoints.size() - 1; i++) {
         Eigen::Vector2d a = samplePoints[i];
         Eigen::Vector2d b = samplePoints[i+1];
@@ -106,7 +126,7 @@ void Curve2D::computeVerticesFromSamplePoints(std::vector<Eigen::Vector2d>&
     }
 }
 
-void Curve2D::computeIndicesFromVertices() {
+void Curve2D::indicesFromVertices() {
 
     int size = this->vertices.size()/2;
 

@@ -10,6 +10,7 @@
 
 #include <atomic>
 #include <memory>
+#include <random>
 #include <vector>
 #include <eigen3/Eigen/Core>
 #include <GL/glew.h>
@@ -52,10 +53,14 @@ protected:
 private:
     static std::atomic<unsigned long long> nextID;
     unsigned long long id;
+    static std::mt19937_64 engine;
+    static std::uniform_real_distribution<double> distribution;
+    std::vector<Eigen::Vector2d> samplePoints;
 
-    std::vector<Eigen::Vector2d> sampleCurve();
-    void computeVerticesFromSamplePoints(std::vector<Eigen::Vector2d>& samplePoints);
-    void computeIndicesFromVertices();
+    void sampleCurve(double a, double b);
+    bool isFlat(Eigen::Vector2d a, Eigen::Vector2d b, Eigen::Vector2d m);
+    void verticesFromSamplePoints(std::vector<Eigen::Vector2d>& samplePoints);
+    void indicesFromVertices();
 };
 
 inline Curve2D::~Curve2D() {}
