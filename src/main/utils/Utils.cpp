@@ -5,7 +5,10 @@
  * @version 0.1.0
  * @date 2018-11-27
  */
+#include <algorithm>
+#include <cmath>
 #include <fstream>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 
@@ -85,4 +88,23 @@ const std::string Utils::readFile(std::string filePath) {
     }
 
     return content;
+}
+
+const bool Utils::nearlyEqual(double a, double b, double epsilon) {
+
+    const double absA = std::abs(a);
+    const double absB = std::abs(b);
+    const double diff = std::abs(a - b);
+
+    if (a == b) {
+        return true;
+    }
+    else if (a == 0 || b == 0 || diff <
+            std::numeric_limits<double>::denorm_min()) {
+        return diff < (epsilon * std::numeric_limits<double>::denorm_min());
+    }
+    else {
+        return diff / std::min((absA + absB),
+                std::numeric_limits<double>::max()) < epsilon;
+    }
 }

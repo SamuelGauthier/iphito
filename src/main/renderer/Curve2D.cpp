@@ -78,8 +78,22 @@ void Curve2D::sampleCurve(double a, double b) {
     Eigen::Vector2d pm = this->curve->evaluateAt(m);
 
     if(isFlat(pa, pb, pm)) {
-        this->samplePoints.push_back(pa);
-        this->samplePoints.push_back(pb);
+        if(!samplePoints.empty()) {
+            Eigen::Vector2d back = this->samplePoints.back();
+            if(!(Utils::nearlyEqual(back[0], pa[0]) && 
+                 Utils::nearlyEqual(back[1], pa[1]))) {
+
+                this->samplePoints.push_back(pa);
+                this->samplePoints.push_back(pb);
+            }
+            else {
+                this->samplePoints.push_back(pb);
+            }
+        }
+        else {
+            this->samplePoints.push_back(pa);
+            this->samplePoints.push_back(pb);
+        }
     }
     else{
         sampleCurve(a, m);
@@ -91,7 +105,7 @@ bool Curve2D::isFlat(Eigen::Vector2d a, Eigen::Vector2d b, Eigen::Vector2d m) {
     Eigen::Vector2d ma = a - m;
     Eigen::Vector2d mb = b - m;
 
-    return std::abs(ma.dot(mb) / (ma.norm() * mb.norm())) > 0.999;
+    return std::abs(ma.dot(mb) / (ma.norm() * mb.norm())) > 0.999; // 0.999
 }
 
 void Curve2D::verticesFromSamplePoints(std::vector<Eigen::Vector2d>&
@@ -100,44 +114,105 @@ void Curve2D::verticesFromSamplePoints(std::vector<Eigen::Vector2d>&
     Logger::Instance()->debug("Sample size = " +
                               std::to_string(samplePoints.size()));
     if(samplePoints.size() == 0 ) return;
-    for (int i = 0; i < samplePoints.size() - 1; i++) {
+
+    Eigen::Vector2d a = samplePoints[0];
+    Eigen::Vector2d b = samplePoints[1];
+
+    Eigen::Vector2d d = b-a;
+    std::swap(d[0], d[1]);
+    d[0] = -d[0];
+    d.normalize();
+    Eigen::Vector2d a1 = a + (this->curveWidth * d);
+    Eigen::Vector2d a2 = a - (this->curveWidth * d);
+    this->vertices.push_back(a1[0]);
+    this->vertices.push_back(a1[1]);
+    this->vertices.push_back(a2[0]);
+    this->vertices.push_back(a2[1]);
+
+    Logger::Instance()->debug("dist " + std::to_string((a2-a1).norm()));
+
+    for (int i = 0; i < samplePoints.size() - 2; i++) {
         Eigen::Vector2d a = samplePoints[i];
         Eigen::Vector2d b = samplePoints[i+1];
+        Eigen::Vector2d c = samplePoints[i+2];
 
-        Eigen::Vector2d d = (b-a);
-        std::swap(d[0], d[1]);
-        d[0] = -d[0];
-        d.normalize();
+        Eigen::Vector2d v1 = (b-a);
+        Eigen::Vector2d v2 = (c-b);
+        v1.normalize();
+        v2.normalize();
 
-        Eigen::Vector2d a1 = a + (this->curveWidth * d);
-        Eigen::Vector2d a2 = a - (this->curveWidth * d);
-        Eigen::Vector2d b1 = b + (this->curveWidth * d);
-        Eigen::Vector2d b2 = b - (this->curveWidth * d);
+        Eigen::Vector2d d1 = v1;
+        std::swap(d1[0], d1[1]);
+        d1[0] = -d1[0];
+        d1.normalize();
 
-        this->vertices.push_back(a1[0]);
-        this->vertices.push_back(a1[1]);
-        this->vertices.push_back(a2[0]);
-        this->vertices.push_back(a2[1]);
-        this->vertices.push_back(b1[0]);
-        this->vertices.push_back(b1[1]);
-        this->vertices.push_back(b2[0]);
-        this->vertices.push_back(b2[1]);
+        Eigen::Vector2d d2 = v2;
+        std::swap(d2[0], d2[1]);
+        d2[0] = -d2[0];
+        d2.normalize();
 
+        Eigen::Vector2d b1 = b + (this->curveWidth * d1);
+        Eigen::Vector2d b2 = b - (this->curveWidth * d1);
+        Eigen::Vector2d c1 = b + (this->curveWidth * d2);
+        Eigen::Vector2d c2 = b - (this->curveWidth * d2);
+
+        double det1 = v1[0]*v2[1] - v1[1]*v2[0];
+        double det2 = v1[0]*b1[1] - v1[1]*b1[0];
+        double det3 = c1[0]*v1[1] - c1[1]*v1[0];
+
+        Eigen::Vector2d i1;
+        if(det1 > 0.00001 || det1 < -0.00001)
+            i1 = c1 + (det2 + det3) / det1 * v1;
+        else i1 = b1;
+
+        det1 = v1[0]*v2[1] - v1[1]*v2[0];
+        det2 = v1[0]*b2[1] - v1[1]*b2[0];
+        det3 = c2[0]*v1[1] - c2[1]*v1[0];
+
+        Eigen::Vector2d i2;
+        if(det1 > 0.00001 || det1 < -0.00001)
+            i2 = c2 + (det2 + det3) / det1 * v1;
+        else i2 = b2;
+
+        this->vertices.push_back(i1[0]);
+        this->vertices.push_back(i1[1]);
+        this->vertices.push_back(i2[0]);
+        this->vertices.push_back(i2[1]);
+        Logger::Instance()->debug("dist " + std::to_string((i2-i1).norm()));
     }
+
+    a = samplePoints[samplePoints.size() - 2];
+    b = samplePoints[samplePoints.size() - 1];
+
+    d = b-a;
+    std::swap(d[0], d[1]);
+    d[0] = -d[0];
+    d.normalize();
+    Eigen::Vector2d b1 = b + (this->curveWidth * d);
+    Eigen::Vector2d b2 = b - (this->curveWidth * d);
+    this->vertices.push_back(b1[0]);
+    this->vertices.push_back(b1[1]);
+    this->vertices.push_back(b2[0]);
+    this->vertices.push_back(b2[1]);
+    Logger::Instance()->debug("dist " + std::to_string((b2-b1).norm()));
 }
 
 void Curve2D::indicesFromVertices() {
 
-    int size = this->vertices.size()/2;
+    int size = this->vertices.size()/4;
+    Logger::Instance()->debug("Vertices size = " + std::to_string(size*2));
 
-    for (int i = 0; i < size; i += 4) {
+    for (int i = 0, j = 0; j < size - 1; i += 2, j++) {
+        this->indices.push_back(i);
         this->indices.push_back(i+1);
         this->indices.push_back(i+2);
-        this->indices.push_back(i);
 
         this->indices.push_back(i+1);
         this->indices.push_back(i+3);
         this->indices.push_back(i+2);
     }
+
+    Logger::Instance()->debug("Indices size = " +
+            std::to_string(this->indices.size()));
 }
 
