@@ -16,9 +16,9 @@ inline std::atomic<unsigned long long> Curve2D::nextID = 0;
 inline std::mt19937_64 Curve2D::engine = std::mt19937_64();
 inline std::uniform_real_distribution<double> Curve2D::distribution(0.0, 1.0);
 
-Curve2D::Curve2D(std::unique_ptr<Curve> curve, Eigen::Vector3d curveColor,
+Curve2D::Curve2D(std::shared_ptr<Curve> curve, Eigen::Vector3d curveColor,
                  double curveWidth) :
-    curve{std::move(curve)}, curveColor{curveColor}, curveWidth{curveWidth},
+    curve{curve}, curveColor{curveColor}, curveWidth{curveWidth/2.0},
     isDirty{false}, id{this->nextID.fetch_add(1)},
     samplePoints{std::vector<Eigen::Vector2d>()} {
 
@@ -33,7 +33,7 @@ Curve2D::Curve2D(std::unique_ptr<Curve> curve, Eigen::Vector3d curveColor,
     glUseProgram(this->shader->getProgramID());
 
     int curveColorLocation = glGetUniformLocation(this->shader->getProgramID(),
-            "curveColor");
+            "color");
     glUniform3f(curveColorLocation, this->curveColor[0], this->curveColor[1],
             this->curveColor[2]);
 
@@ -46,6 +46,7 @@ Curve2D::Curve2D(std::unique_ptr<Curve> curve, Eigen::Vector3d curveColor,
 
 void Curve2D::recomputeVerticesAndIndices() {
 
+    this->samplePoints = std::vector<Eigen::Vector2d>();
     sampleCurve(0.0, 1.0);
     verticesFromSamplePoints(this->samplePoints);
     indicesFromVertices();
@@ -100,6 +101,7 @@ void Curve2D::sampleCurve(double a, double b) {
         sampleCurve(m, b);
     }
 }
+
 bool Curve2D::isFlat(Eigen::Vector2d a, Eigen::Vector2d b, Eigen::Vector2d m) {
 
     Eigen::Vector2d ma = a - m;
@@ -120,7 +122,7 @@ void Curve2D::verticesFromSamplePoints(std::vector<Eigen::Vector2d>&
 
     Eigen::Vector2d d = b-a;
     std::swap(d[0], d[1]);
-    d[0] = -d[0];
+    d[0] *= -1;
     d.normalize();
     Eigen::Vector2d a1 = a + (this->curveWidth * d);
     Eigen::Vector2d a2 = a - (this->curveWidth * d);
@@ -128,8 +130,6 @@ void Curve2D::verticesFromSamplePoints(std::vector<Eigen::Vector2d>&
     this->vertices.push_back(a1[1]);
     this->vertices.push_back(a2[0]);
     this->vertices.push_back(a2[1]);
-
-    Logger::Instance()->debug("dist " + std::to_string((a2-a1).norm()));
 
     for (int i = 0; i < samplePoints.size() - 2; i++) {
         Eigen::Vector2d a = samplePoints[i];
@@ -143,12 +143,12 @@ void Curve2D::verticesFromSamplePoints(std::vector<Eigen::Vector2d>&
 
         Eigen::Vector2d d1 = v1;
         std::swap(d1[0], d1[1]);
-        d1[0] = -d1[0];
+        d1[0] *= -1;
         d1.normalize();
 
         Eigen::Vector2d d2 = v2;
         std::swap(d2[0], d2[1]);
-        d2[0] = -d2[0];
+        d2[0] *= -1;
         d2.normalize();
 
         Eigen::Vector2d b1 = b + (this->curveWidth * d1);
@@ -178,7 +178,6 @@ void Curve2D::verticesFromSamplePoints(std::vector<Eigen::Vector2d>&
         this->vertices.push_back(i1[1]);
         this->vertices.push_back(i2[0]);
         this->vertices.push_back(i2[1]);
-        Logger::Instance()->debug("dist " + std::to_string((i2-i1).norm()));
     }
 
     a = samplePoints[samplePoints.size() - 2];
@@ -186,7 +185,7 @@ void Curve2D::verticesFromSamplePoints(std::vector<Eigen::Vector2d>&
 
     d = b-a;
     std::swap(d[0], d[1]);
-    d[0] = -d[0];
+    d[0] *= -1;
     d.normalize();
     Eigen::Vector2d b1 = b + (this->curveWidth * d);
     Eigen::Vector2d b2 = b - (this->curveWidth * d);
@@ -194,7 +193,6 @@ void Curve2D::verticesFromSamplePoints(std::vector<Eigen::Vector2d>&
     this->vertices.push_back(b1[1]);
     this->vertices.push_back(b2[0]);
     this->vertices.push_back(b2[1]);
-    Logger::Instance()->debug("dist " + std::to_string((b2-b1).norm()));
 }
 
 void Curve2D::indicesFromVertices() {

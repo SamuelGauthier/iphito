@@ -1,9 +1,9 @@
 #version 410
 
-uniform vec3 curveColor;
+uniform vec3 color;
 
 out vec4 outColor;
 
 void main(void) {
-    outColor = vec4(curveColor, 1);
+    outColor = vec4(color, 1);
 }

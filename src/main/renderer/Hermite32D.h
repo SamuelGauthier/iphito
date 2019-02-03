@@ -13,12 +13,13 @@
 
 #include "Curve2D.h"
 #include "math/Hermite3.h"
+#include "Arrow2D.h"
 
 class Hermite32D : public Curve2D {
 
 public:
     Hermite32D() = delete;
-    Hermite32D(std::unique_ptr<Hermite3> curve, Eigen::Vector3d curveColor,
+    Hermite32D(std::shared_ptr<Hermite3> curve, Eigen::Vector3d curveColor,
                double curveWidth, Eigen::Vector3d tangentColor,
                Eigen::Vector3d controlPointsColor);
     ~Hermite32D();
@@ -27,8 +28,12 @@ public:
     bool hasToBeRedrawn();
 
 private:
+    std::shared_ptr<Hermite3> curve;
     Eigen::Vector3d tangentColor;
     Eigen::Vector3d controlPointsColor;
+    std::unique_ptr<Arrow2D> startTangent;
+    std::unique_ptr<Arrow2D> endTangent;
+    
 };
 
 #endif /* ifndef HERMITE32D_H */

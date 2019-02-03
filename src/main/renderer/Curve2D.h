@@ -23,7 +23,7 @@ class Curve2D {
 public:
     Curve2D() = delete;
 
-    Curve2D(std::unique_ptr<Curve> curve, Eigen::Vector3d curveColor =
+    Curve2D(std::shared_ptr<Curve> curve, Eigen::Vector3d curveColor =
             Eigen::Vector3d(0.0, 0.0, 0.0), double curveWidth = 1.0);
     void recomputeVerticesAndIndices();
     unsigned long long getID();
@@ -36,7 +36,7 @@ public:
 
 protected:
 
-    std::unique_ptr<Curve> curve;
+    std::shared_ptr<Curve> curve;
 
     std::unique_ptr<Shader> shader;
     std::vector<GLfloat> vertices;

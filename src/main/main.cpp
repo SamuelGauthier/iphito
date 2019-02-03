@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     Eigen::Vector3d curveColor(1.0, 0.0, 0.0);
     Eigen::Vector3d tangentColor(0.0, 0.0, 1.0);
     Eigen::Vector3d controlPointsColor(0.0, 1.0, 0.0);
-    double curveWidth = 0.005;
+    double curveWidth = 0.01;
 
 
     try{
@@ -42,8 +42,6 @@ int main(int argc, char *argv[])
         rootLayer->addCurve(c2D);
         c->setRootLayer(std::move(rootLayer));
         w.setCanvas(c);
-        /* Shader t = Shader("../src/shaders/basic.vert", */
-        /*                   "../src/shaders/basic.frag"); */
         w.render();
     }
     catch(std::exception& e) {

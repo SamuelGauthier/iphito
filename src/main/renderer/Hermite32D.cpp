@@ -9,22 +9,37 @@
 
 #include "Hermite32D.h"
 
-Hermite32D::Hermite32D(std::unique_ptr<Hermite3> curve,
+Hermite32D::Hermite32D(std::shared_ptr<Hermite3> curve,
                        Eigen::Vector3d curveColor, double curveWidth,
                        Eigen::Vector3d tangentColor,
                        Eigen::Vector3d controlPointsColor) :
-    Curve2D(std::unique_ptr<Curve>(std::move(curve)), curveColor, curveWidth),
+    curve{curve}, Curve2D(curve, curveColor, curveWidth),
     tangentColor{tangentColor}, controlPointsColor{controlPointsColor} {
 
-        Curve2D::recomputeVerticesAndIndices();
+    Curve2D::recomputeVerticesAndIndices();
+
+    this->startTangent.reset(
+            new Arrow2D(this->curve->getStartControlPoint(),
+                        this->curve->getStartTangentVector(),
+                        this->curve->getStartTangentVector().norm(),
+                        curveWidth, tangentColor));
+    this->endTangent.reset(
+            new Arrow2D(this->curve->getEndControlPoint(),
+                        this->curve->getEndTangentVector(),
+                        this->curve->getEndTangentVector().norm(),
+                        curveWidth, tangentColor));
 }
 
 Hermite32D::~Hermite32D() {
 
+    // TODO: Correctly destory buffers
 }
 
 void Hermite32D::render() {
 
+    this->startTangent->render();
+    this->endTangent->render();
+    glUseProgram(Curve2D::shader->getProgramID());
     glBindVertexArray(Curve2D::vertexArrayObjectID);
     glDrawElements(GL_TRIANGLES, Curve2D::indices.size(), GL_UNSIGNED_INT, NULL);
 }

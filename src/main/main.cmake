@@ -36,6 +36,7 @@ set(RENDERER_SRC
     Hermite32D.cpp
     Hermite52D.cpp
     Bezier2D.cpp
+    Arrow2D.cpp
     )
 
 set(RENDERER_H
@@ -47,6 +48,7 @@ set(RENDERER_H
     Hermite32D.h
     Hermite52D.h
     Bezier2D.h
+    Arrow2D.h
     )
 
 list(TRANSFORM UTILS_SRC PREPEND ${UTILS_DIR})
