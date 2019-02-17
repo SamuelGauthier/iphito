@@ -11,9 +11,10 @@
 #include <memory>
 #include <eigen3/Eigen/Core>
 
-#include "Curve2D.h"
 #include "math/Hermite3.h"
+#include "Curve2D.h"
 #include "Arrow2D.h"
+#include "Point2D.h"
 
 class Hermite32D : public Curve2D {
 
@@ -33,6 +34,8 @@ private:
     Eigen::Vector3d controlPointsColor;
     std::unique_ptr<Arrow2D> startTangent;
     std::unique_ptr<Arrow2D> endTangent;
+    std::unique_ptr<Point2D> startControlPoint;
+    std::unique_ptr<Point2D> endControlPoint;
     
 };
 

@@ -18,14 +18,14 @@ int main(int argc, char *argv[])
 {
 
     int WIDTH = 640;
-    int HEIGHT = 480;
+    int HEIGHT = 640;
 
 
     std::unique_ptr<Layer> rootLayer(new Layer());
     Eigen::Vector2d p1(0, 0);
-    Eigen::Vector2d t1(0, 1);
-    Eigen::Vector2d p2(0.5, 0);
-    Eigen::Vector2d t2(0, -1);
+    Eigen::Vector2d t1(1, 2);
+    Eigen::Vector2d p2(0.25, 0);
+    Eigen::Vector2d t2(1, -2);
     std::unique_ptr<Hermite3> c1(new Hermite3(p1, t1, p2, t2));
 
     Eigen::Vector3d curveColor(1.0, 0.0, 0.0);
