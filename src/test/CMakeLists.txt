@@ -5,6 +5,7 @@ set(TEST_TARGET_SRC
     CanvasTest.cpp
     Hermite3Test.cpp
     Hermite5Test.cpp
+    BezierTest.cpp
     )
 
 include_directories(${CMAKE_SOURCE_DIR}/src/main)
