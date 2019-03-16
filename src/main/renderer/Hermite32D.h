@@ -1,5 +1,5 @@
 /**
- * @file 2DHermite3.h
+ * @file Hermite32D.h
  * @brief Describes a 2D cubic Hermite curve to be rendered
  * @author Samuel Gauthier
  * @version 0.1.0

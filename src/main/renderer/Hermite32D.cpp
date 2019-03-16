@@ -1,5 +1,5 @@
 /**
- * @file 2DHermite3.cpp
+ * @file Hermite32D.cpp
  * @brief Implements the 2D cubic Hermite curve
  * @author Samuel Gauthier
  * @version 0.1.0
