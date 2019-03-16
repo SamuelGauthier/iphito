@@ -5,8 +5,8 @@
  * @version 1.0
  * @date 2018-10-02
  */
-#ifndef HERMITE5H
-#define HERMITE5H value
+#ifndef HERMITE5_H
+#define HERMITE5_H
 
 #include <eigen3/Eigen/Core>
 
@@ -64,4 +64,4 @@ private:
     static const Eigen::MatrixXd C;
 };
 
-#endif /* ifndef HERMITE5H */
+#endif /* ifndef HERMITE5_H */

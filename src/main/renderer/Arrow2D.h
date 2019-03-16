@@ -5,8 +5,8 @@
  * @version 0.1.0
  * @date 2018-12-26
  */
-#ifndef ARROW_H
-#define ARROW_H
+#ifndef ARROW2D_H
+#define ARROW2D_H
 
 #include <memory>
 #include <vector>
@@ -42,4 +42,4 @@ private:
     void recomputeVerticesAndIndices();
 };
 
-#endif /* ifndef ARROW_H */
+#endif /* ifndef ARROW2D_H */

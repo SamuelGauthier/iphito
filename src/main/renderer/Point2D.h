@@ -5,6 +5,9 @@
  * @version 0.1.0
  * @date 2018-12-29
  */
+#ifndef POINT2D_H
+#define POINT2D_H
+
 #include <memory>
 #include <random>
 #include <vector>
@@ -46,3 +49,5 @@ private:
     bool isFlat(Eigen::Vector2d a, Eigen::Vector2d b, Eigen::Vector2d m);
     Eigen::Vector2d evaluateCircleAt(double t);
 };
+
+#endif /* ifndef POINT2D_H */

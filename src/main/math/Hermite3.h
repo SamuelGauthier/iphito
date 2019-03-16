@@ -5,8 +5,8 @@
  * @version 1.0
  * @date 2018-10-01
  */
-#ifndef HERMITE3H
-#define HERMITE3H
+#ifndef HERMITE3_H
+#define HERMITE3_H
 
 #include <memory>
 #include <eigen3/Eigen/Core>
@@ -52,4 +52,4 @@ private:
     void recomputeB();
 };
 
-#endif /* ifndef HERMITE3H */
+#endif /* ifndef HERMITE3_H */
