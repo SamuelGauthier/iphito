@@ -38,6 +38,7 @@ set(RENDERER_SRC
     Bezier2D.cpp
     Arrow2D.cpp
     Point2D.cpp
+    Line2D.cpp
     )
 
 set(RENDERER_H
@@ -51,6 +52,7 @@ set(RENDERER_H
     Bezier2D.h
     Arrow2D.h
     Point2D.h
+    Line2D.h
     )
 
 list(TRANSFORM UTILS_SRC PREPEND ${UTILS_DIR})
