@@ -24,6 +24,8 @@ public:
     Eigen::Vector2d evaluateAt(double t);
 
     void setPoints(std::vector<Eigen::Vector2d>& points);
+    std::vector<Eigen::Vector2d> getPoints();
+    std::map<int, std::pair<Eigen::Vector2d, double>> getPointsAndBernstein();
 
 private:
     std::map<int, std::pair<Eigen::Vector2d, double>> pointsAndBernstein;

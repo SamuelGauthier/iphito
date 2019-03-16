@@ -5,7 +5,9 @@
 #include <limits>
 #include <map>
 
+#include "math/Bezier.h"
 #include "math/Hermite3.h"
+#include "renderer/Bezier2D.h"
 #include "renderer/Canvas.h"
 #include "renderer/Curve2D.h"
 #include "renderer/Hermite32D.h"
@@ -33,13 +35,24 @@ int main(int argc, char *argv[])
     Eigen::Vector3d controlPointsColor(0.0, 1.0, 0.0);
     double curveWidth = 0.01;
 
+    std::vector<Eigen::Vector2d> points = { Eigen::Vector2d(-0.5, 0),
+                                            Eigen::Vector2d(-0.7, 0.6),
+                                            Eigen::Vector2d(0.0, 0.9),
+                                            Eigen::Vector2d(0.7, 0.6),
+                                            Eigen::Vector2d(0.5, 0)
+                                          };
+    std::unique_ptr<Bezier> b1(new Bezier(points));
 
     try{
         Window w(WIDTH, HEIGHT, "iphito");
         std::unique_ptr<Canvas> c(new Canvas(WIDTH, HEIGHT));
         std::unique_ptr<Curve2D> c2D(new Hermite32D(std::move(c1), curveColor,
                     curveWidth, tangentColor, controlPointsColor));
+        std::unique_ptr<Curve2D> b2D(new Bezier2D(std::move(b1), curveColor,
+                                     curveWidth, controlPointsColor,
+                                     controlPointsColor));
         rootLayer->addCurve(c2D);
+        rootLayer->addCurve(b2D);
         c->setRootLayer(std::move(rootLayer));
         w.setCanvas(c);
         w.render();

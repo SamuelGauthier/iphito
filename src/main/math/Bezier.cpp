@@ -17,7 +17,7 @@ Bezier::Bezier(std::vector<Eigen::Vector2d> points) : degree{0} {
                                 "points.");
     }
 
-    this->degree = points.size();
+    this->degree = points.size() - 1;
 
     for (int i = 0; i < points.size(); i++) {
         double bernsteinCoefficient = Utils::factorial(this->degree) /
@@ -33,7 +33,7 @@ Bezier::~Bezier() {}
 
 Eigen::Vector2d Bezier::evaluateAt(double t) {
 
-    Eigen::Vector2d sum;
+    Eigen::Vector2d sum(0.0, 0.0);
 
     for (auto& i : this->pointsAndBernstein) {
         int power = i.first;
@@ -49,7 +49,7 @@ Eigen::Vector2d Bezier::evaluateAt(double t) {
 
 void Bezier::setPoints(std::vector<Eigen::Vector2d>& points) {
 
-    if(points.size() != this->degree) {
+    if(points.size() != this->degree + 1) {
         throw std::length_error("The points count has to be the same as the"
                                 "current count of the curve.");
     }
@@ -57,4 +57,21 @@ void Bezier::setPoints(std::vector<Eigen::Vector2d>& points) {
     for (int i = 0; i < points.size(); i++)
         this->pointsAndBernstein[i].first = points[i];
 
+}
+
+std::vector<Eigen::Vector2d> Bezier::getPoints() {
+
+    std::vector<Eigen::Vector2d> controlPoints;
+    
+    for (auto& i : this->pointsAndBernstein)
+        controlPoints.push_back(i.second.first);
+
+    return controlPoints;
+}
+
+
+std::map<int, std::pair<Eigen::Vector2d, double>>
+Bezier::getPointsAndBernstein() {
+
+    return this->pointsAndBernstein;
 }
