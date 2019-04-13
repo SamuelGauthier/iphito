@@ -8,10 +8,11 @@
 #include <iostream>
 #include "Bezier2D.h"
 
-Bezier2D::Bezier2D(std::shared_ptr<Bezier> curve, Eigen::Vector3d curveColor,
-                   double curveWidth, Eigen::Vector3d controlPointsColor,
+Bezier2D::Bezier2D(std::shared_ptr<Bezier> curve, double curveWidth,
+                   Eigen::Vector3d curveColor,
+                   Eigen::Vector3d controlPointsColor,
                    Eigen::Vector3d controlPolygonColor) :
-    curve{curve}, Curve2D(curve, curveColor, curveWidth),
+    curve{curve}, Curve2D(curve, curveWidth, curveColor),
     controlPointsColor{controlPointsColor},
     controlPolygonColor{controlPolygonColor} {
 

@@ -23,8 +23,8 @@ class Curve2D {
 public:
     Curve2D() = delete;
 
-    Curve2D(std::shared_ptr<Curve> curve, Eigen::Vector3d curveColor =
-            Eigen::Vector3d(0.0, 0.0, 0.0), double curveWidth = 1.0);
+    Curve2D(std::shared_ptr<Curve> curve, double curveWidth = 1.0,
+            Eigen::Vector3d curveColor = Eigen::Vector3d(0.0, 0.0, 0.0));
     void recomputeVerticesAndIndices();
     unsigned long long getID();
     
@@ -45,8 +45,8 @@ protected:
     GLuint vertexBufferID;
     GLuint indexBufferID;
 
-    Eigen::Vector3d curveColor;
     double curveWidth;
+    Eigen::Vector3d curveColor;
 
     bool isDirty;
 

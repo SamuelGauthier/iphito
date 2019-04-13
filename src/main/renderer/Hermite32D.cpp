@@ -9,28 +9,26 @@
 
 #include "Hermite32D.h"
 
-Hermite32D::Hermite32D(std::shared_ptr<Hermite3> curve,
-                       Eigen::Vector3d curveColor, double curveWidth,
+Hermite32D::Hermite32D(std::shared_ptr<Hermite3> curve, double curveWidth,
+                       Eigen::Vector3d curveColor,
                        Eigen::Vector3d tangentColor,
                        Eigen::Vector3d controlPointsColor) :
-    curve{curve}, Curve2D(curve, curveColor, curveWidth),
+    curve{curve}, Curve2D(curve, curveWidth, curveColor),
     tangentColor{tangentColor}, controlPointsColor{controlPointsColor} {
 
     Curve2D::recomputeVerticesAndIndices();
 
     Eigen::Vector2d startControlPoint = this->curve->getStartControlPoint();
     Eigen::Vector2d endControlPoint = this->curve->getEndControlPoint();
+    Eigen::Vector2d startTangentVector = this->curve->getStartTangentVector();
+    Eigen::Vector2d endTangentVector = this->curve->getEndTangentVector();
 
     this->startTangent.reset(
-            new Arrow2D(startControlPoint,
-                        this->curve->getStartTangentVector(),
-                        this->curve->getStartTangentVector().norm(),
-                        curveWidth, tangentColor));
+            new Arrow2D(startControlPoint, startTangentVector,
+                        startTangentVector.norm(), curveWidth, tangentColor));
     this->endTangent.reset(
-            new Arrow2D(endControlPoint,
-                        this->curve->getEndTangentVector(),
-                        this->curve->getEndTangentVector().norm(),
-                        curveWidth, tangentColor));
+            new Arrow2D(endControlPoint, endTangentVector,
+                        endTangentVector.norm(), curveWidth, tangentColor));
 
     // TODO: Remove ugly hardwritten radius
     this->startControlPoint.reset(new Point2D(startControlPoint,
@@ -51,7 +49,8 @@ void Hermite32D::render() {
 
     glUseProgram(Curve2D::shader->getProgramID());
     glBindVertexArray(Curve2D::vertexArrayObjectID);
-    glDrawElements(GL_TRIANGLES, Curve2D::indices.size(), GL_UNSIGNED_INT, NULL);
+    glDrawElements(GL_TRIANGLES, Curve2D::indices.size(), GL_UNSIGNED_INT,
+                   NULL);
 
     this->startControlPoint->render();
     this->endControlPoint->render();

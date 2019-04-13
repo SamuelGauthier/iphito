@@ -20,8 +20,8 @@ class Hermite32D : public Curve2D {
 
 public:
     Hermite32D() = delete;
-    Hermite32D(std::shared_ptr<Hermite3> curve, Eigen::Vector3d curveColor,
-               double curveWidth, Eigen::Vector3d tangentColor,
+    Hermite32D(std::shared_ptr<Hermite3> curve, double curveWidth,
+               Eigen::Vector3d curveColor, Eigen::Vector3d tangentColor,
                Eigen::Vector3d controlPointsColor);
     ~Hermite32D();
     

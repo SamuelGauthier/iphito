@@ -21,8 +21,8 @@ class Bezier2D : public Curve2D {
 
 public:
     Bezier2D() = delete;
-    Bezier2D(std::shared_ptr<Bezier> curve, Eigen::Vector3d curveColor,
-             double curveWidth, Eigen::Vector3d controlPointsColor,
+    Bezier2D(std::shared_ptr<Bezier> curve, double curveWidth,
+             Eigen::Vector3d curveColor, Eigen::Vector3d controlPointsColor,
              Eigen::Vector3d controlPolygonColor);
     ~Bezier2D();
     

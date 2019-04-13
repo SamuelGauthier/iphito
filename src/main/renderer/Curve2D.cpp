@@ -16,9 +16,9 @@ inline std::atomic<unsigned long long> Curve2D::nextID = 0;
 inline std::mt19937_64 Curve2D::engine = std::mt19937_64();
 inline std::uniform_real_distribution<double> Curve2D::distribution(0.0, 1.0);
 
-Curve2D::Curve2D(std::shared_ptr<Curve> curve, Eigen::Vector3d curveColor,
-                 double curveWidth) :
-    curve{curve}, curveColor{curveColor}, curveWidth{curveWidth/2.0},
+Curve2D::Curve2D(std::shared_ptr<Curve> curve, double curveWidth,
+                 Eigen::Vector3d curveColor) :
+    curve{curve}, curveWidth{curveWidth/2.0}, curveColor{curveColor}, 
     isDirty{false}, id{this->nextID.fetch_add(1)},
     samplePoints{std::vector<Eigen::Vector2d>()} {
 
