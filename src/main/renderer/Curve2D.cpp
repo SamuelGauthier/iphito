@@ -17,9 +17,9 @@ inline std::mt19937_64 Curve2D::engine = std::mt19937_64();
 inline std::uniform_real_distribution<double> Curve2D::distribution(0.0, 1.0);
 
 Curve2D::Curve2D(std::shared_ptr<Curve> curve, double curveWidth,
-                 Eigen::Vector3d curveColor) :
+                 Eigen::Vector3d curveColor, Eigen::Matrix3d transform) :
     curve{curve}, curveWidth{curveWidth/2.0}, curveColor{curveColor}, 
-    isDirty{false}, id{this->nextID.fetch_add(1)},
+    transform{transform}, isDirty{true}, id{this->nextID.fetch_add(1)},
     samplePoints{std::vector<Eigen::Vector2d>()} {
 
     if(!Utils::isGlfwInitialized())
@@ -46,21 +46,32 @@ Curve2D::Curve2D(std::shared_ptr<Curve> curve, double curveWidth,
 
 void Curve2D::recomputeVerticesAndIndices() {
 
+    /* if(!this->hasToBeRedrawn()) return; */
+
+    Logger::Instance()->debug("[Curve2D] Recomputing vertices and indices...");
+
+    this->vertices = std::vector<GLfloat>();
+    this->indices = std::vector<GLuint>();
     this->samplePoints = std::vector<Eigen::Vector2d>();
     sampleCurve(0.0, 1.0);
+    /* updateSamplePoints(this->transform); */
     verticesFromSamplePoints(this->samplePoints);
     indicesFromVertices();
+
+    glBindVertexArray(this->vertexArrayObjectID);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(GLfloat),
                  &this->vertices[0], GL_STATIC_DRAW);
 
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indexBufferID);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLuint),
+                 &this->indices[0], GL_STATIC_DRAW);
+
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(0);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indexBufferID);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLuint),
-            &this->indices[0], GL_STATIC_DRAW);
+    this->isDirty = false;
 }
 
 unsigned long long Curve2D::getID() {
@@ -74,9 +85,26 @@ void Curve2D::sampleCurve(double a, double b) {
     double m = a + t * (b - a);
     /* double m = a + 0.5 * (b - a); */
 
-    Eigen::Vector2d pa = this->curve->evaluateAt(a);
-    Eigen::Vector2d pb = this->curve->evaluateAt(b);
-    Eigen::Vector2d pm = this->curve->evaluateAt(m);
+    /* Eigen::Vector2d pa = this->curve->evaluateAt(a); */
+    /* Eigen::Vector2d pb = this->curve->evaluateAt(b); */
+    /* Eigen::Vector2d pm = this->curve->evaluateAt(m); */
+
+    Eigen::Vector3d pa3D;
+    Eigen::Vector3d pb3D;
+    Eigen::Vector3d pm3D;
+    pa3D << this->curve->evaluateAt(a), 1.0;
+    pb3D << this->curve->evaluateAt(b), 1.0;
+    pm3D << this->curve->evaluateAt(m), 1.0;
+    pa3D = this->transform * pa3D;
+    pb3D = this->transform * pb3D;
+    pm3D = this->transform * pm3D;
+
+    Eigen::Vector2d pa;
+    Eigen::Vector2d pb;
+    Eigen::Vector2d pm;
+    pa << pa3D[0], pa3D[1];
+    pb << pb3D[0], pb3D[1];
+    pm << pm3D[0], pm3D[1];
 
     if(isFlat(pa, pb, pm)) {
         if(!samplePoints.empty()) {
@@ -214,3 +242,33 @@ void Curve2D::indicesFromVertices() {
             std::to_string(this->indices.size()));
 }
 
+
+void Curve2D::updateSamplePoints(Eigen::Matrix3d& transform) {
+
+    for (int i = 0; i < this->samplePoints.size(); i++) {
+        Eigen::Vector2d originalPoint = this->samplePoints[i];
+
+        Eigen::Vector3d transformedPoint;
+        transformedPoint << originalPoint[0], originalPoint[1], 1.0;
+        transformedPoint = transform * transformedPoint;
+
+        originalPoint[0] = transformedPoint[0];
+        originalPoint[1] = transformedPoint[1];
+    }
+}
+
+/* void Curve2D::updateTransform(Eigen::Matrix3d& transform) { */
+
+/*     Logger::Instance()->debug("Updating transform"); */
+
+/*     /1* if (this->transform.isApprox(transform)) { *1/ */
+/*     if (transform.isApprox(Eigen::Matrix3d::Identity())) { */
+/*         if (this->isDirty) */
+/*             this->isDirty = false; */
+/*         return; */
+/*     } */
+
+/*     this->transform(0, 2) += transform(0, 2); */
+/*     this->transform(1, 2) += transform(1, 2); */
+/*     this->isDirty = true; */
+/* } */

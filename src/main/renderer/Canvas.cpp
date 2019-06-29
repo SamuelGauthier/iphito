@@ -11,8 +11,9 @@
 #include "utils/Utils.h"
 
 Canvas::Canvas(unsigned int width, unsigned int height) : width{width},
-    height{height}, rootLayer{new Layer()} {
-
+    height{height}, rootLayer{new Layer()},
+    transform{Eigen::Matrix3d::Identity()} {
+        
         if(!Utils::isGlfwInitialized())
             throw std::runtime_error("Please initialize GLFW."); 
 
@@ -39,4 +40,13 @@ void Canvas::setRootLayer(std::shared_ptr<Layer> rootLayer) {
 void Canvas::render() {
     glBindVertexArray(this->vertexArrayObjectID);
     this->rootLayer->render();
+}
+
+void Canvas::updateTransform(Eigen::Matrix3d transform) {
+    
+    if (this->transform.isApprox(transform))
+        return;
+
+    this->rootLayer->updateCurveTransform(transform);
+    this->transform = transform;
 }

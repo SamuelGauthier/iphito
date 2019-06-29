@@ -124,3 +124,10 @@ void Layer::render() {
         i->second->render();
     }
 }
+
+void Layer::updateCurveTransform(Eigen::Matrix3d transform) {
+
+    for(auto i = this->curves.rbegin(); i != this->curves.rend(); i++) {
+        i->second->updateTransform(transform);
+    }
+}

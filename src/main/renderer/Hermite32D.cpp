@@ -5,9 +5,13 @@
  * @version 0.1.0
  * @date 2018-12-01
  */
+#include <iostream>
 #include <GL/glew.h>
 
 #include "Hermite32D.h"
+#include "utils/Logger.h"
+
+const Eigen::Vector3d Hermite32D::RED((Eigen::Vector3d() << 1.0, 0, 0).finished());
 
 Hermite32D::Hermite32D(std::shared_ptr<Hermite3> curve, double curveWidth,
                        Eigen::Vector3d curveColor,
@@ -28,7 +32,7 @@ Hermite32D::Hermite32D(std::shared_ptr<Hermite3> curve, double curveWidth,
                         startTangentVector.norm(), curveWidth, tangentColor));
     this->endTangent.reset(
             new Arrow2D(endControlPoint, endTangentVector,
-                        endTangentVector.norm(), curveWidth, tangentColor));
+                        endTangentVector.norm(), curveWidth, RED));
 
     // TODO: Remove ugly hardwritten radius
     this->startControlPoint.reset(new Point2D(startControlPoint,
@@ -44,16 +48,42 @@ Hermite32D::~Hermite32D() {
 
 void Hermite32D::render() {
 
+    if (this->hasToBeRedrawn()) {
+        Curve2D::recomputeVerticesAndIndices();
+    }
+
     this->startTangent->render();
     this->endTangent->render();
 
-    glUseProgram(Curve2D::shader->getProgramID());
-    glBindVertexArray(Curve2D::vertexArrayObjectID);
+    glUseProgram(this->shader->getProgramID());
+    glBindVertexArray(this->vertexArrayObjectID);
     glDrawElements(GL_TRIANGLES, Curve2D::indices.size(), GL_UNSIGNED_INT,
                    NULL);
+    glBindVertexArray(0);
 
     this->startControlPoint->render();
     this->endControlPoint->render();
 }
 
-bool Hermite32D::hasToBeRedrawn() { return Curve2D::isDirty; }
+bool Hermite32D::hasToBeRedrawn() { return this->isDirty; }
+
+void Hermite32D::updateTransform(Eigen::Matrix3d& transform) {
+
+    Logger::Instance()->debug("Updating transform");
+
+    if (transform.isApprox(Eigen::Matrix3d::Identity())) {
+        if (this->hasToBeRedrawn())
+            this->isDirty = false;
+        return;
+    }
+
+    this->transform(0, 2) += transform(0, 2);
+    this->transform(1, 2) += transform(1, 2);
+    this->isDirty = true;
+
+    this->startTangent->updateTransform(transform);
+    this->endTangent->updateTransform(transform);
+    this->startControlPoint->updateTransform(transform);
+    this->endControlPoint->updateTransform(transform);
+
+}

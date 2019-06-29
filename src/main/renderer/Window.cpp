@@ -55,6 +55,10 @@ Window::Window(int x, int y, std::string title) :
 
     Utils::setGlfwInitialized();
     Utils::setGlewInitialized();
+
+    this->setMouseCallbacks();
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 Window::~Window() {
@@ -75,16 +79,77 @@ void Window::render() {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
+        if(Window::leftMouseButtonPressed)
+            this->canvas->updateTransform(Window::mouseTransform);
+
         this->canvas->render();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(this->window.get());
 
         /* Poll for and process events */
-        glfwPollEvents();
+        /* glfwPollEvents(); */
+        glfwWaitEvents();
     }
 }
 
 void Window::setCanvas(std::unique_ptr<Canvas>& canvas) {
     this->canvas = std::move(canvas);
+}
+
+void Window::setMouseCallbacks() {
+    glfwSetMouseButtonCallback(this->window.get(), mouseButtonCallback);
+    glfwSetCursorPosCallback(this->window.get(), this->cursorPositionCallback);
+}
+
+void Window::mouseButtonCallback(GLFWwindow* window, int button, int action,
+                                 int modifiers) {
+    if (button == GLFW_MOUSE_BUTTON_LEFT) {
+    /* if (button == GLFW_MOUSE_BUTTON_MIDDLE) { */
+
+        if (action == GLFW_PRESS) {
+            Logger::Instance()->debug("[Window] Start pressing left mouse button");
+            Window::leftMouseButtonPressed = true;
+            Window::updateMousePosition(window);
+        }
+
+        else if (action == GLFW_RELEASE) {
+            Logger::Instance()->debug("[Window] Left mouse button released");
+            Window::leftMouseButtonPressed = false;
+        }
+
+    }
+}
+
+void Window::cursorPositionCallback(GLFWwindow* window, double xPosition,
+                                    double yPosition) {
+    if(Window::leftMouseButtonPressed) {
+        Logger::Instance()->debug("[Window] Panning...");
+
+        Eigen::Vector2d previousMousePosition = Window::mousePosition;
+        Window::updateMousePosition(window);
+        Eigen::Vector2d translationVector = Window::mousePosition -
+                                            previousMousePosition;
+        translationVector *= -1;
+        // update transform
+        Window::mouseTransform(0, 2) = translationVector[0];
+        Window::mouseTransform(1, 2) = translationVector[1];
+    }
+}
+
+void Window::updateMousePosition(GLFWwindow* window) {
+
+        double xPosition = 0.0;
+        double yPosition = 0.0;
+        glfwGetCursorPos(window, &xPosition, &yPosition);
+
+        int windowHeight = 0;
+        int windowWidth = 0;
+        glfwGetWindowSize(window, &windowWidth, &windowHeight);
+
+        xPosition = (xPosition / windowWidth) - 0.5;
+        yPosition = (yPosition / windowWidth) - 0.5;
+        xPosition *= -1;
+
+        Window::mousePosition << xPosition, yPosition;
 }

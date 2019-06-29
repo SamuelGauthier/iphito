@@ -24,14 +24,17 @@ public:
     Curve2D() = delete;
 
     Curve2D(std::shared_ptr<Curve> curve, double curveWidth = 1.0,
-            Eigen::Vector3d curveColor = Eigen::Vector3d(0.0, 0.0, 0.0));
+            Eigen::Vector3d curveColor = Eigen::Vector3d(0.0, 0.0, 0.0),
+            Eigen::Matrix3d transform = Eigen::Matrix3d::Identity());
     void recomputeVerticesAndIndices();
     unsigned long long getID();
+    /* void updateTransform(Eigen::Matrix3d& transform); */
     
 
     virtual ~Curve2D() = 0;
     virtual void render() = 0;
     virtual bool hasToBeRedrawn() = 0;
+    virtual void updateTransform(Eigen::Matrix3d& transform) = 0;
     
 
 protected:
@@ -48,6 +51,8 @@ protected:
     double curveWidth;
     Eigen::Vector3d curveColor;
 
+    Eigen::Matrix3d transform;
+
     bool isDirty;
 
 private:
@@ -61,8 +66,9 @@ private:
     bool isFlat(Eigen::Vector2d a, Eigen::Vector2d b, Eigen::Vector2d m);
     void verticesFromSamplePoints(std::vector<Eigen::Vector2d>& samplePoints);
     void indicesFromVertices();
+    void updateSamplePoints(Eigen::Matrix3d& transform);
 };
 
 inline Curve2D::~Curve2D() {}
 
-#endif /* ifndef CURVE2D_H */
+#endif /* ifndef CURVE3D_H */

@@ -9,6 +9,7 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
+#include <eigen3/Eigen/Core>
 #include <GL/glew.h>
 
 #include "Layer.h"
@@ -24,13 +25,16 @@ public:
 
     void setRootLayer(std::shared_ptr<Layer> rootLayer);
     void render();
+    /* void updateMousePosition(double x, double y); */
+    void updateTransform(Eigen::Matrix3d transform);
     
 
 private:
-   unsigned int width; 
-   unsigned int height; 
-   std::shared_ptr<Layer> rootLayer; // shared or unique?
-   GLuint vertexArrayObjectID;
+    unsigned int width; 
+    unsigned int height; 
+    std::shared_ptr<Layer> rootLayer; // shared or unique?
+    GLuint vertexArrayObjectID;
+    Eigen::Matrix3d transform;
 };
 
 #endif /* ifndef CANVAS_H */

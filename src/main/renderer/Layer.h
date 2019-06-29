@@ -13,6 +13,8 @@
 #include <memory>
 #include <vector>
 
+#include <eigen3/Eigen/Core>
+
 #include "Curve2D.h"
 
 class Layer {
@@ -35,6 +37,7 @@ public:
     bool removeCurve(unsigned long long id);
     bool removeLayer(unsigned long long id);
     void render();
+    void updateCurveTransform(Eigen::Matrix3d transform);
         
 
 private:

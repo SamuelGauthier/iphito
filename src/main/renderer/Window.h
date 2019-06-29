@@ -11,6 +11,7 @@
 #include <string>
 #include <memory>
 /* #include <GL/glew.h> */
+#include <eigen3/Eigen/Core>
 #include <GLFW/glfw3.h>
 
 #include "Canvas.h"
@@ -33,6 +34,12 @@ public:
     void setCanvas(std::unique_ptr<Canvas>& canvas);
 
 private:
+    void setMouseCallbacks();
+    static void mouseButtonCallback(GLFWwindow* window, int button, int action,
+                                    int modifiers);
+    static void cursorPositionCallback(GLFWwindow* window, double xPosition,
+                                       double yPosition);
+    static void updateMousePosition(GLFWwindow* window);
 
     int x;
     int y;
@@ -41,5 +48,9 @@ private:
     //Curve Renderer
     // Camera
     smart_GLFWwindow window;
+
+    inline static bool leftMouseButtonPressed = false;
+    inline static Eigen::Matrix3d mouseTransform = Eigen::Matrix3d::Identity();
+    inline static Eigen::Vector2d mousePosition = Eigen::Vector2d::Zero();
 };
 #endif /* ifndef WINDOW_H */
