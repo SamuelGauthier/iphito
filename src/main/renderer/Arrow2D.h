@@ -23,6 +23,8 @@ public:
     ~Arrow2D();
     
     void render();
+    void updateTransform(Eigen::Matrix3d& transform);
+    bool hasToBeRedrawn();
 
 private:
     Eigen::Vector2d position;
@@ -30,6 +32,8 @@ private:
     double length;
     double width;
     Eigen::Vector3d color;
+    Eigen::Matrix3d transform;
+    bool isDirty;
 
     std::vector<GLfloat> vertices;
     std::vector<GLuint> indices;
