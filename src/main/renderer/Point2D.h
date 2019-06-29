@@ -24,8 +24,9 @@ public:
             double width = 0.0);
     ~Point2D();
 
-    void recomputeVerticesAndIndices();
     void render();
+    void updateTransform(Eigen::Matrix3d& transform);
+    bool hasToBeRedrawn();
     
 
 private:
@@ -33,6 +34,8 @@ private:
     Eigen::Vector3d color;
     double radius;
     double width;
+    Eigen::Matrix3d transform;
+    bool isDirty;
     
     std::unique_ptr<Shader> shader;
     std::vector<GLfloat> vertices;
@@ -48,6 +51,7 @@ private:
     void sampleCurve(double a, double b);
     bool isFlat(Eigen::Vector2d a, Eigen::Vector2d b, Eigen::Vector2d m);
     Eigen::Vector2d evaluateCircleAt(double t);
+    void recomputeVerticesAndIndices();
 };
 
 #endif /* ifndef POINT2D_H */
