@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 
 #include "Hermite52D.h"
+#include "utils/Logger.h"
 
 Hermite52D::Hermite52D(std::shared_ptr<Hermite5> curve,
                        double curveWidth, Eigen::Vector3d curveColor,
@@ -46,6 +47,7 @@ Hermite52D::Hermite52D(std::shared_ptr<Hermite5> curve,
                         endAccelerationVector.norm(), curveWidth,
                         secondDerivativeColor));
 
+    // TODO: Remove ugly hardwritten radius
     this->startControlPoint.reset(new Point2D(startControlPoint,
                 this->controlPointsColor, 0.015));
     this->endControlPoint.reset(new Point2D(endControlPoint,
@@ -58,16 +60,46 @@ Hermite52D::~Hermite52D() {
 
 void Hermite52D::render() {
 
+    if (this->hasToBeRedrawn()) {
+        this->recomputeVerticesAndIndices();
+    }
+
     this->startTangent->render();
     this->endTangent->render();
     this->startSecondDerivative->render();
     this->endSecondDerivative->render();
-    glUseProgram(Curve2D::shader->getProgramID());
-    glBindVertexArray(Curve2D::vertexArrayObjectID);
+
+    glUseProgram(this->shader->getProgramID());
+    glBindVertexArray(this->vertexArrayObjectID);
     glDrawElements(GL_TRIANGLES, Curve2D::indices.size(), GL_UNSIGNED_INT,
                    NULL);
+    glBindVertexArray(0);
+
     this->startControlPoint->render();
     this->endControlPoint->render();
 }
 
 bool Hermite52D::hasToBeRedrawn() { return Curve2D::isDirty; }
+
+void Hermite52D::updateTransform(Eigen::Matrix3d& transform) {
+
+    Logger::Instance()->debug("[Hermite52D] Updating transform");
+
+    if (transform.isApprox(Eigen::Matrix3d::Identity())) {
+        if (this->hasToBeRedrawn())
+            this->isDirty = false;
+        return;
+    }
+
+    this->transform(0, 2) += transform(0, 2);
+    this->transform(1, 2) += transform(1, 2);
+    this->isDirty = true;
+
+    this->startTangent->updateTransform(transform);
+    this->endTangent->updateTransform(transform);
+    this->startSecondDerivative->updateTransform(transform);
+    this->endSecondDerivative->updateTransform(transform);
+    this->startControlPoint->updateTransform(transform);
+    this->endControlPoint->updateTransform(transform);
+}
+

@@ -5,6 +5,8 @@
  * @version 0.1.0
  * @date 2019-02-23
  */
+#include <iostream>
+
 #include "Line2D.h"
 
 #include "utils/Utils.h"
@@ -12,7 +14,8 @@
 
 Line2D::Line2D(Eigen::Vector2d startPoint, Eigen::Vector2d endPoint, double width,
                Eigen::Vector3d color) :
-    startPoint{startPoint}, endPoint{endPoint}, width{width}, color{color} {
+    startPoint{startPoint}, endPoint{endPoint}, width{width}, color{color},
+    transform{Eigen::Matrix3d::Identity()}, isDirty{true} {
 
     if(!Utils::isGlfwInitialized())
         throw std::runtime_error("Please initialize GLFW.");
@@ -46,15 +49,38 @@ Line2D::~Line2D() {
 
 void Line2D::recomputeVerticesAndIndices() {
 
+    this->vertices = std::vector<GLfloat>();
+    this->indices = std::vector<GLuint>();
+
     Eigen::Vector2d d = this->endPoint - this->startPoint;
     std::swap(d[0], d[1]);
     d[0] *= -1;
     d.normalize();
 
-    Eigen::Vector2d v1 = this->startPoint + (this->width * d);
-    Eigen::Vector2d v2 = this->startPoint - (this->width * d);
-    Eigen::Vector2d v3 = this->endPoint + (this->width * d);
-    Eigen::Vector2d v4 = this->endPoint - (this->width * d);
+    Eigen::Vector3d v13D;
+    Eigen::Vector3d v23D;
+    Eigen::Vector3d v33D;
+    Eigen::Vector3d v43D;
+
+    v13D << this->startPoint + (this->width * d), 1.0;
+    v23D << this->startPoint - (this->width * d), 1.0;
+    v33D << this->endPoint + (this->width * d), 1.0;
+    v43D << this->endPoint - (this->width * d), 1.0;
+
+    v13D = this->transform * v13D;
+    v23D = this->transform * v23D;
+    v33D = this->transform * v33D;
+    v43D = this->transform * v43D;
+
+    Eigen::Vector2d v1;
+    Eigen::Vector2d v2;
+    Eigen::Vector2d v3;
+    Eigen::Vector2d v4;
+
+    v1 << v13D[0], v13D[1];
+    v2 << v23D[0], v23D[1];
+    v3 << v33D[0], v33D[1];
+    v4 << v43D[0], v43D[1];
 
     this->vertices.push_back(v1[0]);
     this->vertices.push_back(v1[1]);
@@ -73,21 +99,45 @@ void Line2D::recomputeVerticesAndIndices() {
     this->indices.push_back(3);
     this->indices.push_back(2);
 
+    glBindVertexArray(this->vertexArrayObjectID);
+
     glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(GLfloat),
                  &this->vertices[0], GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-    glEnableVertexAttribArray(0);
-
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indexBufferID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLuint),
                  &this->indices[0], GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(0);
+
+    this->isDirty = false;
 }
 
 void Line2D::render() {
 
+    if (this->hasToBeRedrawn()) {
+        this->recomputeVerticesAndIndices();
+    }
+
     glUseProgram(this->shader->getProgramID());
     glBindVertexArray(this->vertexArrayObjectID);
     glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, NULL);
+    glBindVertexArray(0);
 }
+
+void Line2D::updateTransform(Eigen::Matrix3d& transform) {
+
+    if (transform.isApprox(Eigen::Matrix3d::Identity())) {
+        if (this->isDirty)
+            this->isDirty = false;
+        return;
+    }
+
+    this->transform(0, 2) += transform(0, 2);
+    this->transform(1, 2) += transform(1, 2);
+    this->isDirty = true;
+}
+
+bool Line2D::hasToBeRedrawn() { return this->isDirty; }

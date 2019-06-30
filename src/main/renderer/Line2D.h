@@ -24,12 +24,16 @@ public:
     ~Line2D();
     
     void render();
+    void updateTransform(Eigen::Matrix3d& transform);
+    bool hasToBeRedrawn();
 
 private:
     Eigen::Vector2d startPoint;
     Eigen::Vector2d endPoint;
     double width;
     Eigen::Vector3d color;
+    Eigen::Matrix3d transform;
+    bool isDirty;
 
     std::vector<GLfloat> vertices;
     std::vector<GLuint> indices;

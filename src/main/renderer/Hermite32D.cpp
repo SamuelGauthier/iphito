@@ -69,7 +69,7 @@ bool Hermite32D::hasToBeRedrawn() { return this->isDirty; }
 
 void Hermite32D::updateTransform(Eigen::Matrix3d& transform) {
 
-    Logger::Instance()->debug("Updating transform");
+    Logger::Instance()->debug("[Hermite32D] Updating transform");
 
     if (transform.isApprox(Eigen::Matrix3d::Identity())) {
         if (this->hasToBeRedrawn())

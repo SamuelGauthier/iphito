@@ -28,6 +28,7 @@ public:
     
     void render();
     bool hasToBeRedrawn();
+    void updateTransform(Eigen::Matrix3d& transform);
 
 private:
     std::shared_ptr<Bezier> curve;

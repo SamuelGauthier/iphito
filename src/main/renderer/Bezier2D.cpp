@@ -6,7 +6,9 @@
  * @date 2019-02-23
  */
 #include <iostream>
+
 #include "Bezier2D.h"
+#include "utils/Logger.h"
 
 Bezier2D::Bezier2D(std::shared_ptr<Bezier> curve, double curveWidth,
                    Eigen::Vector3d curveColor,
@@ -39,13 +41,18 @@ Bezier2D::~Bezier2D() {
 
 void Bezier2D::render() {
 
+    if (this->hasToBeRedrawn()) {
+        this->recomputeVerticesAndIndices();
+    }
+
     for (auto& i : this->controlPolygon)
         i->render();
 
-    glUseProgram(Curve2D::shader->getProgramID());
-    glBindVertexArray(Curve2D::vertexArrayObjectID);
+    glUseProgram(this->shader->getProgramID());
+    glBindVertexArray(this->vertexArrayObjectID);
     glDrawElements(GL_TRIANGLES, Curve2D::indices.size(), GL_UNSIGNED_INT,
                    NULL);
+    glBindVertexArray(0);
 
     for (auto& i : this->controlPoints)
         i->render();
@@ -53,3 +60,24 @@ void Bezier2D::render() {
 }
 
 bool Bezier2D::hasToBeRedrawn() { return Curve2D::isDirty; }
+
+void Bezier2D::updateTransform(Eigen::Matrix3d& transform) {
+
+    Logger::Instance()->debug("[Bezier2D] Updating transform");
+
+    if (transform.isApprox(Eigen::Matrix3d::Identity())) {
+        if (this->hasToBeRedrawn())
+            this->isDirty = false;
+        return;
+    }
+
+    this->transform(0, 2) += transform(0, 2);
+    this->transform(1, 2) += transform(1, 2);
+    this->isDirty = true;
+
+    for (auto& i : this->controlPolygon)
+        i->updateTransform(transform);
+
+    for (auto& i : this->controlPoints)
+        i->updateTransform(transform);
+}
