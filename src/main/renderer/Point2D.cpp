@@ -50,7 +50,7 @@ Point2D::~Point2D() {
 
 void Point2D::recomputeVerticesAndIndices() {
 
-    Logger::Instance()->debug("[Point2D] Recomputing vertices and indices...");
+    /* Logger::Instance()->debug("[Point2D] Recomputing vertices and indices..."); */
 
     this->samplePoints = std::vector<Eigen::Vector2d>();
     sampleCurve(0.0, M_PI);
@@ -100,12 +100,12 @@ void Point2D::recomputeVerticesAndIndices() {
 
     }
     
-    Logger::Instance()->debug("[Point2D] circle sample size = " +
-            std::to_string(this->samplePoints.size()));
-    Logger::Instance()->debug("[Point2D] circle indices size = " +
-            std::to_string(this->indices.size()));
-    Logger::Instance()->debug("[Point2D] circle vertices size = " +
-            std::to_string(this->vertices.size()));
+    /* Logger::Instance()->debug("[Point2D] circle sample size = " + */
+    /*         std::to_string(this->samplePoints.size())); */
+    /* Logger::Instance()->debug("[Point2D] circle indices size = " + */
+    /*         std::to_string(this->indices.size())); */
+    /* Logger::Instance()->debug("[Point2D] circle vertices size = " + */
+    /*         std::to_string(this->vertices.size())); */
 
     glBindVertexArray(this->vertexArrayObjectID);
 
