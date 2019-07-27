@@ -30,7 +30,7 @@ public:
     
 
 private:
-    Eigen::Vector2d center;
+    Eigen::Vector3d center;
     Eigen::Vector3d color;
     double radius;
     double width;

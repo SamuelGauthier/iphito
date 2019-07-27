@@ -135,6 +135,11 @@ bool Curve2D::isFlat(Eigen::Vector2d a, Eigen::Vector2d b, Eigen::Vector2d m) {
     Eigen::Vector2d ma = a - m;
     Eigen::Vector2d mb = b - m;
 
+    if (ma.isApprox(Eigen::Vector2d::Zero()) ||
+        mb.isApprox(Eigen::Vector2d::Zero())) {
+        return true;
+    }
+
     return std::abs(ma.dot(mb) / (ma.norm() * mb.norm())) > 0.999; // 0.999
 }
 

@@ -73,6 +73,14 @@ void Bezier2D::updateTransform(Eigen::Matrix3d& transform) {
 
     this->transform(0, 2) += transform(0, 2);
     this->transform(1, 2) += transform(1, 2);
+    this->transform(0, 0) += transform(0, 0);
+    this->transform(1, 1) += transform(1, 1);
+
+    if (this->transform(0, 0) < 0.0) {
+        this->transform(0, 0) = 0.0;
+        this->transform(1, 1) = 0.0;
+    }
+
     this->isDirty = true;
 
     for (auto& i : this->controlPolygon)

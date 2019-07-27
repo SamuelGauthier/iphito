@@ -40,6 +40,8 @@ private:
     static void cursorPositionCallback(GLFWwindow* window, double xPosition,
                                        double yPosition);
     static void updateMousePosition(GLFWwindow* window);
+    static void scrollButtonCallback(GLFWwindow* window, double xOffset,
+                                     double yOffset);
 
     int x;
     int y;
@@ -50,6 +52,7 @@ private:
     smart_GLFWwindow window;
 
     inline static bool leftMouseButtonPressed = false;
+    inline static bool mouseScrolling = false;
     inline static Eigen::Matrix3d mouseTransform = Eigen::Matrix3d::Identity();
     inline static Eigen::Vector2d mousePosition = Eigen::Vector2d::Zero();
 };

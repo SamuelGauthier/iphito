@@ -15,7 +15,7 @@ inline std::uniform_real_distribution<double> Point2D::distribution(0.0, 1.0);
 
 Point2D::Point2D(Eigen::Vector2d center, Eigen::Vector3d color, double radius,
                  double width) :
-    center{center}, color{color}, radius{radius}, width{width},
+    center{(Eigen::Vector3d() << center, 1.0).finished()}, color{color}, radius{radius}, width{width},
     transform{Eigen::Matrix3d::Identity()}, isDirty{true} {
 
     if(!Utils::isGlfwInitialized())
@@ -56,19 +56,23 @@ void Point2D::recomputeVerticesAndIndices() {
     sampleCurve(0.0, M_PI);
 
 
+    Eigen::Vector3d updatedCenter = this->transform * this->center;
+    Eigen::Vector2d center2D;
+    center2D << updatedCenter[0], updatedCenter[1];
     Eigen::Vector2d translationVector;
     translationVector << this->transform(0, 2), this->transform(1, 2);
 
     for (int i = this->samplePoints.size() - 2; i > 0; i--) {
         
         Eigen::Vector2d p = this->samplePoints[i];
-        p -= (this->center + translationVector);
+        p -= center2D;
         p[1] *= -1;
-        p += (this->center + translationVector);
+        p += center2D;
         this->samplePoints.push_back(p);
     }
 
-    this->samplePoints.push_back(this->center + translationVector);
+    this->samplePoints.push_back((Eigen::Vector2d() << updatedCenter[0],
+                                  updatedCenter[1]).finished());
 
     this->vertices = std::vector<GLfloat>();
     this->indices = std::vector<GLuint>();
@@ -137,22 +141,9 @@ void Point2D::sampleCurve(double a, double b) {
     /* double m = a + t * (b - a); */
     double m = a + 0.5 * (b - a);
 
-    Eigen::Vector3d pa3D;
-    Eigen::Vector3d pb3D;
-    Eigen::Vector3d pm3D;
-    pa3D << this->evaluateCircleAt(a), 1.0;
-    pb3D << this->evaluateCircleAt(b), 1.0;
-    pm3D << this->evaluateCircleAt(m), 1.0;
-    pa3D = this->transform * pa3D;
-    pb3D = this->transform * pb3D;
-    pm3D = this->transform * pm3D;
-
-    Eigen::Vector2d pa;
-    Eigen::Vector2d pb;
-    Eigen::Vector2d pm;
-    pa << pa3D[0], pa3D[1];
-    pb << pb3D[0], pb3D[1];
-    pm << pm3D[0], pm3D[1];
+    Eigen::Vector2d pa = this->evaluateCircleAt(a);
+    Eigen::Vector2d pb = this->evaluateCircleAt(b);
+    Eigen::Vector2d pm = this->evaluateCircleAt(m);
     
 
     if(isFlat(pa, pb, pm)) {
@@ -184,7 +175,9 @@ Eigen::Vector2d Point2D::evaluateCircleAt(double t) {
 
     Eigen::Vector2d p(cos(t), sin(t));
     p *= this->radius;
-    p += this->center;
+
+    Eigen::Vector3d updatedCenter = this->transform * this->center;
+    p += (Eigen::Vector2d() << updatedCenter[0], updatedCenter[1]).finished();
 
     return p;
 }
@@ -211,8 +204,16 @@ void Point2D::updateTransform(Eigen::Matrix3d& transform) {
 
     this->transform(0, 2) += transform(0, 2);
     this->transform(1, 2) += transform(1, 2);
-    this->isDirty = true;
 
+    this->transform(0, 0) += transform(0, 0);
+    this->transform(1, 1) += transform(1, 1);
+
+    if (this->transform(0, 0) < 0.0) {
+        this->transform(0, 0) = 0.0;
+        this->transform(1, 1) = 0.0;
+    }
+
+    this->isDirty = true;
 }
 
 bool Point2D::hasToBeRedrawn() { return this->isDirty; }

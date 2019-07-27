@@ -79,8 +79,11 @@ void Window::render() {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        if(Window::leftMouseButtonPressed)
+        if(Window::leftMouseButtonPressed || Window::mouseScrolling)
+        {
             this->canvas->updateTransform(Window::mouseTransform);
+            Window::mouseScrolling = false;
+        }
 
         this->canvas->render();
 
@@ -98,8 +101,9 @@ void Window::setCanvas(std::unique_ptr<Canvas>& canvas) {
 }
 
 void Window::setMouseCallbacks() {
-    glfwSetMouseButtonCallback(this->window.get(), mouseButtonCallback);
+    glfwSetMouseButtonCallback(this->window.get(), this->mouseButtonCallback);
     glfwSetCursorPosCallback(this->window.get(), this->cursorPositionCallback);
+    glfwSetScrollCallback(this->window.get(), this->scrollButtonCallback);
 }
 
 void Window::mouseButtonCallback(GLFWwindow* window, int button, int action,
@@ -134,22 +138,42 @@ void Window::cursorPositionCallback(GLFWwindow* window, double xPosition,
         // update transform
         Window::mouseTransform(0, 2) = translationVector[0];
         Window::mouseTransform(1, 2) = translationVector[1];
+
+        // avoid updating scaling
+        Window::mouseTransform(0, 0) = 0;
+        Window::mouseTransform(1, 1) = 0;
     }
 }
 
 void Window::updateMousePosition(GLFWwindow* window) {
 
-        double xPosition = 0.0;
-        double yPosition = 0.0;
-        glfwGetCursorPos(window, &xPosition, &yPosition);
+    double xPosition = 0.0;
+    double yPosition = 0.0;
+    glfwGetCursorPos(window, &xPosition, &yPosition);
 
-        int windowHeight = 0;
-        int windowWidth = 0;
-        glfwGetWindowSize(window, &windowWidth, &windowHeight);
+    int windowHeight = 0;
+    int windowWidth = 0;
+    glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
-        xPosition = (xPosition / windowWidth) - 0.5;
-        yPosition = (yPosition / windowWidth) - 0.5;
-        xPosition *= -1;
+    xPosition = (xPosition / windowWidth) - 0.5;
+    yPosition = (yPosition / windowWidth) - 0.5;
+    xPosition *= -1;
 
-        Window::mousePosition << xPosition, yPosition;
+    Window::mousePosition << xPosition, yPosition;
+}
+
+void Window::scrollButtonCallback(GLFWwindow* window, double xOffset,
+                                  double yOffset) {
+    std::string scrollAmount = std::to_string(yOffset);
+    Logger::Instance()->debug("[Window] Scrolling..." + scrollAmount);
+
+    // update scale
+    Window::mouseTransform(0, 0) = yOffset;
+    Window::mouseTransform(1, 1) = yOffset;
+
+    // avoid updating panning
+    Window::mouseTransform(0, 2) = 0;
+    Window::mouseTransform(1, 2) = 0;
+
+    Window::mouseScrolling = true;
 }

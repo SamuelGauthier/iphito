@@ -37,8 +37,6 @@ private:
     std::unique_ptr<Arrow2D> endTangent;
     std::unique_ptr<Point2D> startControlPoint;
     std::unique_ptr<Point2D> endControlPoint;
-
-    static const Eigen::Vector3d RED;
     
 };
 

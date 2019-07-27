@@ -11,8 +11,6 @@
 #include "Hermite32D.h"
 #include "utils/Logger.h"
 
-const Eigen::Vector3d Hermite32D::RED((Eigen::Vector3d() << 1.0, 0, 0).finished());
-
 Hermite32D::Hermite32D(std::shared_ptr<Hermite3> curve, double curveWidth,
                        Eigen::Vector3d curveColor,
                        Eigen::Vector3d tangentColor,
@@ -32,7 +30,7 @@ Hermite32D::Hermite32D(std::shared_ptr<Hermite3> curve, double curveWidth,
                         startTangentVector.norm(), curveWidth, tangentColor));
     this->endTangent.reset(
             new Arrow2D(endControlPoint, endTangentVector,
-                        endTangentVector.norm(), curveWidth, RED));
+                        endTangentVector.norm(), curveWidth, tangentColor));
 
     // TODO: Remove ugly hardwritten radius
     this->startControlPoint.reset(new Point2D(startControlPoint,
@@ -79,6 +77,15 @@ void Hermite32D::updateTransform(Eigen::Matrix3d& transform) {
 
     this->transform(0, 2) += transform(0, 2);
     this->transform(1, 2) += transform(1, 2);
+
+    this->transform(0, 0) += transform(0, 0);
+    this->transform(1, 1) += transform(1, 1);
+
+    if (this->transform(0, 0) < 0.0) {
+        this->transform(0, 0) = 0.0;
+        this->transform(1, 1) = 0.0;
+    }
+
     this->isDirty = true;
 
     this->startTangent->updateTransform(transform);

@@ -71,7 +71,8 @@ void Arrow2D::recomputeVerticesAndIndices() {
     Eigen::Vector2d v1 = position + (this->width * d);
     Eigen::Vector2d v2 = position - (this->width * d);
 
-    Eigen::Vector2d frontAnchor = position + (this->direction * this->length);
+    double updatedLength = this->length * this->transform(0, 0);
+    Eigen::Vector2d frontAnchor = position + (this->direction * updatedLength);
 
     Eigen::Vector2d v3 = frontAnchor + (this->width * d);
     Eigen::Vector2d v4 = frontAnchor - (this->width * d);
@@ -155,6 +156,15 @@ void Arrow2D::updateTransform(Eigen::Matrix3d& transform) {
 
     this->transform(0, 2) += transform(0, 2);
     this->transform(1, 2) += transform(1, 2);
+
+    this->transform(0, 0) += transform(0, 0);
+    this->transform(1, 1) += transform(1, 1);
+
+    if (this->transform(0, 0) < 0.0) {
+        this->transform(0, 0) = 0.0;
+        this->transform(1, 1) = 0.0;
+    }
+
     this->isDirty = true;
 }
 

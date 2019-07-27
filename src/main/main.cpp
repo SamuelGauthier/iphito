@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
                     controlPointsColor));
         rootLayer->addCurve(c2D);
         rootLayer->addCurve(b2D);
-        /* rootLayer->addCurve(h52D); */
+        rootLayer->addCurve(h52D);
         c->setRootLayer(std::move(rootLayer));
         w.setCanvas(c);
         w.render();
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
         Logger::Instance()->critical(e.what());
     }
 
-    Logger::Instance()->info("test");
+    Logger::Instance()->info("Quitting...");
 
     return 0;
 }
