@@ -26,7 +26,7 @@ if (${FORCE_COLORED_OUTPUT})
     endif ()
 endif ()
 
-# set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+include(CMakePrintHelpers)
 
 # Catch2
 set(CATCH_INCLUDE_DIR src/external)
@@ -35,18 +35,15 @@ target_include_directories(Catch2 INTERFACE ${CATCH_INCLUDE_DIR})
 
 # OpenGL
 find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIR})
 
 # GLFW
 find_package(GLFW3 REQUIRED)
 
 # GLEW
 find_package(GLEW REQUIRED)
-include_directories(${GLEW_INCLUDE_DIRS})
 
 # Eigen3
 find_package(Eigen3 REQUIRED)
-include_directories(EIGEN3_INCLUDE_DIR)
 
 # spdlog
 find_package(spdlog REQUIRED)
