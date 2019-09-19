@@ -26,9 +26,8 @@ Todo
 
 The following list is sorted by order of priority:
 
-[] Make window resizable
-[] Display axes
 [] Command line interface
 [] File loading and saving
 [] Export to pdf format
-[] Add text of points and vectors
+[] Option to add text of points and vectors
+[] Option to make width of curves fixed with zoom
