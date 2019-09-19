@@ -45,11 +45,36 @@ void Bezier2D::render() {
         this->recomputeVerticesAndIndices();
     }
 
+    if (Curve2D::viewMatrixUpdate) {
+
+        for (auto& i : this->controlPolygon)
+            i->updateViewMatrix(Curve2D::view);
+
+        for (auto& i : this->controlPoints)
+            i->updateViewMatrix(Curve2D::view);
+
+        Curve2D::viewMatrixUpdate = false;
+    }
+
+    if (Curve2D::projectionMatrixUpdate) {
+
+        for (auto& i : this->controlPolygon)
+            i->updateProjectionMatrix(Curve2D::projection);
+
+        for (auto& i : this->controlPoints)
+            i->updateProjectionMatrix(Curve2D::projection);
+
+        Curve2D::projectionMatrixUpdate = false;
+    }
+
     for (auto& i : this->controlPolygon)
         i->render();
 
-    glUseProgram(this->shader->getProgramID());
-    glBindVertexArray(this->vertexArrayObjectID);
+    Curve2D::shader->useProgram();
+    Curve2D::shader->setMatrix4("model", Curve2D::model);
+    Curve2D::shader->setMatrix4("view", Curve2D::view);
+    Curve2D::shader->setMatrix4("projection", Curve2D::projection);
+    glBindVertexArray(Curve2D::vertexArrayObjectID);
     glDrawElements(GL_TRIANGLES, Curve2D::indices.size(), GL_UNSIGNED_INT,
                    NULL);
     glBindVertexArray(0);
@@ -60,32 +85,3 @@ void Bezier2D::render() {
 }
 
 bool Bezier2D::hasToBeRedrawn() { return Curve2D::isDirty; }
-
-void Bezier2D::updateTransform(Eigen::Matrix3d& transform) {
-
-    Logger::Instance()->debug("[Bezier2D] Updating transform");
-
-    if (transform.isApprox(Eigen::Matrix3d::Identity())) {
-        if (this->hasToBeRedrawn())
-            this->isDirty = false;
-        return;
-    }
-
-    this->transform(0, 2) += transform(0, 2);
-    this->transform(1, 2) += transform(1, 2);
-    this->transform(0, 0) += transform(0, 0);
-    this->transform(1, 1) += transform(1, 1);
-
-    if (this->transform(0, 0) < 0.0) {
-        this->transform(0, 0) = 0.0;
-        this->transform(1, 1) = 0.0;
-    }
-
-    this->isDirty = true;
-
-    for (auto& i : this->controlPolygon)
-        i->updateTransform(transform);
-
-    for (auto& i : this->controlPoints)
-        i->updateTransform(transform);
-}

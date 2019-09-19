@@ -19,8 +19,10 @@ inline std::uniform_real_distribution<double> Curve2D::distribution(0.0, 1.0);
 Curve2D::Curve2D(std::shared_ptr<Curve> curve, double curveWidth,
                  Eigen::Vector3d curveColor, Eigen::Matrix3d transform) :
     curve{curve}, curveWidth{curveWidth/2.0}, curveColor{curveColor}, 
-    transform{transform}, isDirty{true}, id{this->nextID.fetch_add(1)},
-    samplePoints{std::vector<Eigen::Vector2d>()} {
+    isDirty{true}, viewMatrixUpdate{true}, projectionMatrixUpdate{true}, 
+    id{this->nextID.fetch_add(1)}, samplePoints{std::vector<Eigen::Vector2d>()},
+    model{Eigen::Matrix4d::Identity()}, view{Eigen::Matrix4d::Identity()},
+    projection{Eigen::Matrix4d::Identity()} {
 
     if(!Utils::isGlfwInitialized())
         throw std::runtime_error("Please initialize GLFW.");
@@ -30,7 +32,7 @@ Curve2D::Curve2D(std::shared_ptr<Curve> curve, double curveWidth,
 
     this->shader.reset(new Shader("../src/shaders/basic.vert",
                                   "../src/shaders/basic.frag"));
-    glUseProgram(this->shader->getProgramID());
+    this->shader->useProgram();
 
     int curveColorLocation = glGetUniformLocation(this->shader->getProgramID(),
             "color");
@@ -46,15 +48,11 @@ Curve2D::Curve2D(std::shared_ptr<Curve> curve, double curveWidth,
 
 void Curve2D::recomputeVerticesAndIndices() {
 
-    /* if(!this->hasToBeRedrawn()) return; */
-
-    Logger::Instance()->debug("[Curve2D] Recomputing vertices and indices...");
-
     this->vertices = std::vector<GLfloat>();
     this->indices = std::vector<GLuint>();
     this->samplePoints = std::vector<Eigen::Vector2d>();
     sampleCurve(0.0, 1.0);
-    /* updateSamplePoints(this->transform); */
+
     verticesFromSamplePoints(this->samplePoints);
     indicesFromVertices();
 
@@ -83,21 +81,13 @@ void Curve2D::sampleCurve(double a, double b) {
 
     double t = 0.45 + 0.1 * Curve2D::distribution(Curve2D::engine);
     double m = a + t * (b - a);
-    /* double m = a + 0.5 * (b - a); */
 
-    /* Eigen::Vector2d pa = this->curve->evaluateAt(a); */
-    /* Eigen::Vector2d pb = this->curve->evaluateAt(b); */
-    /* Eigen::Vector2d pm = this->curve->evaluateAt(m); */
-
-    Eigen::Vector3d pa3D;
-    Eigen::Vector3d pb3D;
-    Eigen::Vector3d pm3D;
-    pa3D << this->curve->evaluateAt(a), 1.0;
-    pb3D << this->curve->evaluateAt(b), 1.0;
-    pm3D << this->curve->evaluateAt(m), 1.0;
-    pa3D = this->transform * pa3D;
-    pb3D = this->transform * pb3D;
-    pm3D = this->transform * pm3D;
+    Eigen::Vector4d pa3D;
+    Eigen::Vector4d pb3D;
+    Eigen::Vector4d pm3D;
+    pa3D << this->curve->evaluateAt(a), 1.0, 0.0;
+    pb3D << this->curve->evaluateAt(b), 1.0, 0.0;
+    pm3D << this->curve->evaluateAt(m), 1.0, 0.0;
 
     Eigen::Vector2d pa;
     Eigen::Vector2d pb;
@@ -106,7 +96,18 @@ void Curve2D::sampleCurve(double a, double b) {
     pb << pb3D[0], pb3D[1];
     pm << pm3D[0], pm3D[1];
 
-    if(isFlat(pa, pb, pm)) {
+    pa3D = this->projection * this->view * this->model * pa3D;
+    pb3D = this->projection * this->view * this->model * pb3D;
+    pm3D = this->projection * this->view * this->model * pm3D;
+    Eigen::Vector2d paScreen;
+    Eigen::Vector2d pbScreen;
+    Eigen::Vector2d pmScreen;
+    paScreen << pa3D[0], pa3D[1];
+    pbScreen << pb3D[0], pb3D[1];
+    pmScreen << pm3D[0], pm3D[1];
+
+
+    if(isFlat(paScreen, pbScreen, pmScreen)) {
         if(!samplePoints.empty()) {
             Eigen::Vector2d back = this->samplePoints.back();
             if(!(Utils::nearlyEqual(back[0], pa[0]) && 
@@ -140,14 +141,12 @@ bool Curve2D::isFlat(Eigen::Vector2d a, Eigen::Vector2d b, Eigen::Vector2d m) {
         return true;
     }
 
-    return std::abs(ma.dot(mb) / (ma.norm() * mb.norm())) > 0.999; // 0.999
+    return std::abs(ma.dot(mb) / (ma.norm() * mb.norm())) > 0.999;
 }
 
 void Curve2D::verticesFromSamplePoints(std::vector<Eigen::Vector2d>&
         samplePoints) {
 
-    Logger::Instance()->debug("Sample size = " +
-                              std::to_string(samplePoints.size()));
     if(samplePoints.size() == 0 ) return;
 
     Eigen::Vector2d a = samplePoints[0];
@@ -231,7 +230,6 @@ void Curve2D::verticesFromSamplePoints(std::vector<Eigen::Vector2d>&
 void Curve2D::indicesFromVertices() {
 
     int size = this->vertices.size()/4;
-    Logger::Instance()->debug("Vertices size = " + std::to_string(size*2));
 
     for (int i = 0, j = 0; j < size - 1; i += 2, j++) {
         this->indices.push_back(i);
@@ -242,9 +240,6 @@ void Curve2D::indicesFromVertices() {
         this->indices.push_back(i+3);
         this->indices.push_back(i+2);
     }
-
-    Logger::Instance()->debug("Indices size = " +
-            std::to_string(this->indices.size()));
 }
 
 
@@ -252,28 +247,23 @@ void Curve2D::updateSamplePoints(Eigen::Matrix3d& transform) {
 
     for (int i = 0; i < this->samplePoints.size(); i++) {
         Eigen::Vector2d originalPoint = this->samplePoints[i];
-
-        Eigen::Vector3d transformedPoint;
-        transformedPoint << originalPoint[0], originalPoint[1], 1.0;
-        transformedPoint = transform * transformedPoint;
-
-        originalPoint[0] = transformedPoint[0];
-        originalPoint[1] = transformedPoint[1];
     }
 }
 
-/* void Curve2D::updateTransform(Eigen::Matrix3d& transform) { */
+void Curve2D::updateModelMatrix(Eigen::Matrix4d model) {
+    
+    this->model = model;
+}
 
-/*     Logger::Instance()->debug("Updating transform"); */
+void Curve2D::updateViewMatrix(Eigen::Matrix4d view) {
+    
+    this->view = view;
+    this->viewMatrixUpdate = true;
+}
 
-/*     /1* if (this->transform.isApprox(transform)) { *1/ */
-/*     if (transform.isApprox(Eigen::Matrix3d::Identity())) { */
-/*         if (this->isDirty) */
-/*             this->isDirty = false; */
-/*         return; */
-/*     } */
+void Curve2D::updateProjectionMatrix(Eigen::Matrix4d projection) {
 
-/*     this->transform(0, 2) += transform(0, 2); */
-/*     this->transform(1, 2) += transform(1, 2); */
-/*     this->isDirty = true; */
-/* } */
+    this->projection = projection;
+    this->projectionMatrixUpdate = true;
+    this->isDirty = true;
+}

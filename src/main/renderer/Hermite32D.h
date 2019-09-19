@@ -27,7 +27,6 @@ public:
     
     void render();
     bool hasToBeRedrawn();
-    void updateTransform(Eigen::Matrix3d& transform);
 
 private:
     std::shared_ptr<Hermite3> curve;
@@ -37,7 +36,6 @@ private:
     std::unique_ptr<Arrow2D> endTangent;
     std::unique_ptr<Point2D> startControlPoint;
     std::unique_ptr<Point2D> endControlPoint;
-    
 };
 
 #endif /* ifndef HERMITE32D_H */

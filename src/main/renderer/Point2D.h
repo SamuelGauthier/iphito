@@ -25,16 +25,19 @@ public:
     ~Point2D();
 
     void render();
-    void updateTransform(Eigen::Matrix3d& transform);
     bool hasToBeRedrawn();
-    
+    void updateModelMatrix(Eigen::Matrix4d model);
+    void updateViewMatrix(Eigen::Matrix4d view);
+    void updateProjectionMatrix(Eigen::Matrix4d projection);
 
 private:
     Eigen::Vector3d center;
     Eigen::Vector3d color;
     double radius;
     double width;
-    Eigen::Matrix3d transform;
+    Eigen::Matrix4d model;
+    Eigen::Matrix4d view;
+    Eigen::Matrix4d projection;
     bool isDirty;
     
     std::unique_ptr<Shader> shader;

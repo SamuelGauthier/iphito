@@ -26,7 +26,8 @@ public:
     void setRootLayer(std::shared_ptr<Layer> rootLayer);
     void render();
     /* void updateMousePosition(double x, double y); */
-    void updateTransform(Eigen::Matrix3d transform);
+    void updateViewMatrix(Eigen::Matrix4d view);
+    void updateProjectionMatrix(Eigen::Matrix4d projection);
     
 
 private:

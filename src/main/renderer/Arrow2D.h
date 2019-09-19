@@ -23,8 +23,9 @@ public:
     ~Arrow2D();
     
     void render();
-    void updateTransform(Eigen::Matrix3d& transform);
-    bool hasToBeRedrawn();
+    void updateModelMatrix(Eigen::Matrix4d model);
+    void updateViewMatrix(Eigen::Matrix4d view);
+    void updateProjectionMatrix(Eigen::Matrix4d projection);
 
 private:
     Eigen::Vector2d position;
@@ -32,8 +33,9 @@ private:
     double length;
     double width;
     Eigen::Vector3d color;
-    Eigen::Matrix3d transform;
-    bool isDirty;
+    Eigen::Matrix4d model;
+    Eigen::Matrix4d view;
+    Eigen::Matrix4d projection;
 
     std::vector<GLfloat> vertices;
     std::vector<GLuint> indices;

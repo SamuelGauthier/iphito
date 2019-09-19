@@ -12,6 +12,7 @@
 
 #include "Window.h"
 
+#include "Camera.h"
 #include "utils/Logger.h"
 #include "utils/Utils.h"
 
@@ -57,8 +58,23 @@ Window::Window(int x, int y, std::string title) :
     Utils::setGlewInitialized();
 
     this->setMouseCallbacks();
+    glfwSetWindowSizeCallback(this->window.get(),
+                              this->updateWindowSizeCallback);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    Window::currentWindowWidth = this->x;
+    Window::currentWindowHeight = this->y;
+    Window::initialWindowWidth = this->x;
+    Window::initialWindowHeight = this->y;
+
+    /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    /* this->view = Camera::lookAt(Window::cameraPosition, Window::cameraTarget, */
+    /*                             Window::cameraUp); */
+    updateViewMatrix();
+    updateProjectionMatrix();
+
+    initializeAxes();
 }
 
 Window::~Window() {
@@ -79,12 +95,22 @@ void Window::render() {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        if(Window::leftMouseButtonPressed || Window::mouseScrolling)
+        if(Window::mouseScrolling || Window::windowResizing)
         {
-            this->canvas->updateTransform(Window::mouseTransform);
+            this->updateProjectionMatrix();
+            this->axes->updateProjectionMatrix(this->projection);
+            this->canvas->updateProjectionMatrix(this->projection);
             Window::mouseScrolling = false;
+            Window::windowResizing = false;
+        }
+        if (Window::leftMouseButtonPressed) {
+            this->updateViewMatrix();
+            this->axes->updateViewMatrix(this->view);
+            this->canvas->updateViewMatrix(this->view);
+            /* Window::windowResizing = false; */
         }
 
+        this->axes->render();
         this->canvas->render();
 
         /* Swap front and back buffers */
@@ -98,6 +124,10 @@ void Window::render() {
 
 void Window::setCanvas(std::unique_ptr<Canvas>& canvas) {
     this->canvas = std::move(canvas);
+    // TODO: This is ugly doing it here but we cannot do it in the constructor
+    // because the canvas pointer is not set yet
+    this->canvas->updateViewMatrix(this->view);
+    this->canvas->updateProjectionMatrix(this->projection);
 }
 
 void Window::setMouseCallbacks() {
@@ -112,36 +142,30 @@ void Window::mouseButtonCallback(GLFWwindow* window, int button, int action,
     /* if (button == GLFW_MOUSE_BUTTON_MIDDLE) { */
 
         if (action == GLFW_PRESS) {
-            Logger::Instance()->debug("[Window] Start pressing left mouse button");
             Window::leftMouseButtonPressed = true;
             Window::updateMousePosition(window);
         }
 
         else if (action == GLFW_RELEASE) {
-            Logger::Instance()->debug("[Window] Left mouse button released");
             Window::leftMouseButtonPressed = false;
         }
-
     }
 }
 
 void Window::cursorPositionCallback(GLFWwindow* window, double xPosition,
                                     double yPosition) {
     if(Window::leftMouseButtonPressed) {
-        Logger::Instance()->debug("[Window] Panning...");
+        /* Logger::Instance()->debug("[Window] Panning..."); */
 
         Eigen::Vector2d previousMousePosition = Window::mousePosition;
         Window::updateMousePosition(window);
         Eigen::Vector2d translationVector = Window::mousePosition -
                                             previousMousePosition;
-        translationVector *= -1;
-        // update transform
-        Window::mouseTransform(0, 2) = translationVector[0];
-        Window::mouseTransform(1, 2) = translationVector[1];
 
-        // avoid updating scaling
-        Window::mouseTransform(0, 0) = 0;
-        Window::mouseTransform(1, 1) = 0;
+        Eigen::Vector3d cameraTranslation(translationVector(0),
+                                          translationVector(1), 0);
+        Window::cameraPosition += cameraTranslation;
+        Window::cameraTarget += cameraTranslation;
     }
 }
 
@@ -151,12 +175,16 @@ void Window::updateMousePosition(GLFWwindow* window) {
     double yPosition = 0.0;
     glfwGetCursorPos(window, &xPosition, &yPosition);
 
-    int windowHeight = 0;
     int windowWidth = 0;
+    int windowHeight = 0;
     glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
-    xPosition = (xPosition / windowWidth) - 0.5;
-    yPosition = (yPosition / windowWidth) - 0.5;
+    double wRatio = Window::currentWindowWidth / Window::initialWindowWidth;
+    double hRatio = Window::currentWindowHeight / Window::initialWindowHeight;
+    wRatio *= Window::zoomFactor;
+    hRatio *= Window::zoomFactor;
+    xPosition = (xPosition / windowWidth) - wRatio;
+    yPosition = (yPosition / windowHeight) - hRatio;
     xPosition *= -1;
 
     Window::mousePosition << xPosition, yPosition;
@@ -164,16 +192,58 @@ void Window::updateMousePosition(GLFWwindow* window) {
 
 void Window::scrollButtonCallback(GLFWwindow* window, double xOffset,
                                   double yOffset) {
-    std::string scrollAmount = std::to_string(yOffset);
-    Logger::Instance()->debug("[Window] Scrolling..." + scrollAmount);
 
-    // update scale
-    Window::mouseTransform(0, 0) = yOffset;
-    Window::mouseTransform(1, 1) = yOffset;
+    if (Window::zoomFactor + yOffset < 0.1) {
+        return;
+    }
 
-    // avoid updating panning
-    Window::mouseTransform(0, 2) = 0;
-    Window::mouseTransform(1, 2) = 0;
-
+    Window::zoomFactor += yOffset;
     Window::mouseScrolling = true;
+}
+
+void Window::updateWindowSizeCallback(GLFWwindow* window, int width,
+                                      int height) {
+
+    int oldWidth = Window::currentWindowWidth;
+    int oldHeight = Window::currentWindowHeight;
+
+    int newWidth = width;
+    int newHeight = height;
+    glViewport(0, 0, newWidth, newHeight);
+
+    Window::currentWindowWidth = newWidth;
+    Window::currentWindowHeight = newHeight;
+
+    Window::windowResizing = true;
+}
+
+void Window::initializeAxes() {
+
+    Eigen::Vector3d white(1.0, 1.0, 1.0);
+    Eigen::Vector2d xDir(1.0, 0.0);
+    Eigen::Vector2d yDir(0.0, 1.0);
+    double axisLength = 1.0;
+    double axisWidth = 0.01;
+
+    this->axes.reset(new Axes2D(Eigen::Vector2d::Zero(), xDir, yDir, white,
+                                axisLength, axisWidth));
+    this->axes->updateViewMatrix(this->view);
+    this->axes->updateProjectionMatrix(this->projection);
+}
+
+void Window::updateViewMatrix() {
+
+    this->view = Camera::lookAt(Window::cameraPosition, Window::cameraTarget,
+                                Window::cameraUp);
+}
+
+void Window::updateProjectionMatrix() {
+
+    double wRatio = Window::currentWindowWidth / Window::initialWindowWidth;
+    double hRatio = Window::currentWindowHeight / Window::initialWindowHeight;
+    wRatio *= Window::zoomFactor;
+    hRatio *= Window::zoomFactor;
+    this->projection = Camera::orthographic(-2 * wRatio, 2 * wRatio,
+                                            -2 * hRatio, 2 * hRatio,
+                                            0.1, 100);
 }

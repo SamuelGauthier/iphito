@@ -81,7 +81,24 @@ Shader::~Shader() {
     /* glDeleteShader(this->fragmentShaderID); */
 }
 
-GLuint Shader::getProgramID() { return this->shaderProgramID; }
+void Shader::setMatrix4(const std::string& name,
+                        const Eigen::Matrix4d& matrix) {
+
+    int matrixLocation = glGetUniformLocation(this->shaderProgramID,
+                                              name.c_str());
+    Eigen::Matrix4f m = matrix.cast<float>();
+    glUniformMatrix4fv(matrixLocation, 1, GL_FALSE, m.data());
+}
+
+GLuint Shader::getProgramID() {
+
+    return this->shaderProgramID;
+}
+
+void Shader::useProgram() {
+
+    glUseProgram(this->shaderProgramID);
+}
 
 void Shader::compileShader(GLuint& shaderID, std::string& shaderCode, 
                            std::string logInfo) {

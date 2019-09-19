@@ -42,11 +42,12 @@ void Canvas::render() {
     this->rootLayer->render();
 }
 
-void Canvas::updateTransform(Eigen::Matrix3d transform) {
-    
-    if (this->transform.isApprox(transform))
-        return;
+void Canvas::updateViewMatrix(Eigen::Matrix4d view) {
 
-    this->rootLayer->updateCurveTransform(transform);
-    this->transform = transform;
+    this->rootLayer->updateViewMatrix(view);
+}
+
+void Canvas::updateProjectionMatrix(Eigen::Matrix4d projection) {
+
+    this->rootLayer->updateProjectionMatrix(projection);
 }

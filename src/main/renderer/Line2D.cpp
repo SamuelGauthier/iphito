@@ -15,7 +15,9 @@
 Line2D::Line2D(Eigen::Vector2d startPoint, Eigen::Vector2d endPoint, double width,
                Eigen::Vector3d color) :
     startPoint{startPoint}, endPoint{endPoint}, width{width}, color{color},
-    transform{Eigen::Matrix3d::Identity()}, isDirty{true} {
+    transform{Eigen::Matrix3d::Identity()},
+    model{Eigen::Matrix4d::Identity()}, view{Eigen::Matrix4d::Identity()},
+    projection{Eigen::Matrix4d::Identity()} {
 
     if(!Utils::isGlfwInitialized())
         throw std::runtime_error("Please initialize GLFW.");
@@ -112,41 +114,31 @@ void Line2D::recomputeVerticesAndIndices() {
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(0);
 
-    this->isDirty = false;
 }
 
 void Line2D::render() {
 
-    if (this->hasToBeRedrawn()) {
-        this->recomputeVerticesAndIndices();
-    }
+    this->shader->useProgram();
+    this->shader->setMatrix4("model", this->model);
+    this->shader->setMatrix4("view", this->view);
+    this->shader->setMatrix4("projection", this->projection);
 
-    glUseProgram(this->shader->getProgramID());
     glBindVertexArray(this->vertexArrayObjectID);
     glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, NULL);
     glBindVertexArray(0);
 }
 
-void Line2D::updateTransform(Eigen::Matrix3d& transform) {
+void Line2D::updateModelMatrix(Eigen::Matrix4d model) {
 
-    if (transform.isApprox(Eigen::Matrix3d::Identity())) {
-        if (this->isDirty)
-            this->isDirty = false;
-        return;
-    }
-
-    this->transform(0, 2) += transform(0, 2);
-    this->transform(1, 2) += transform(1, 2);
-
-    this->transform(0, 0) += transform(0, 0);
-    this->transform(1, 1) += transform(1, 1);
-
-    if (this->transform(0, 0) < 0.0) {
-        this->transform(0, 0) = 0.0;
-        this->transform(1, 1) = 0.0;
-    }
-
-    this->isDirty = true;
+    this->model = model;
 }
 
-bool Line2D::hasToBeRedrawn() { return this->isDirty; }
+void Line2D::updateViewMatrix(Eigen::Matrix4d view) {
+
+    this->view = view;
+}
+
+void Line2D::updateProjectionMatrix(Eigen::Matrix4d projection) {
+
+    this->projection = projection;
+}

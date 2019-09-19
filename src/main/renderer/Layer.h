@@ -37,7 +37,8 @@ public:
     bool removeCurve(unsigned long long id);
     bool removeLayer(unsigned long long id);
     void render();
-    void updateCurveTransform(Eigen::Matrix3d transform);
+    void updateViewMatrix(Eigen::Matrix4d view);
+    void updateProjectionMatrix(Eigen::Matrix4d projection);
         
 
 private:

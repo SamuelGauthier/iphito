@@ -6,6 +6,7 @@
  * @date 2019-03-16
  */
 #ifndef HERMITE52D
+#define HERMITE52D
 
 #include <memory>
 #include <eigen3/Eigen/Core>
@@ -27,7 +28,6 @@ public:
     
     void render();
     bool hasToBeRedrawn();
-    void updateTransform(Eigen::Matrix3d& transform);    
 
 private:
     std::shared_ptr<Hermite5> curve;
@@ -42,5 +42,4 @@ private:
     std::shared_ptr<Point2D> endControlPoint;
 };
 
-#define HERMITE52D
 #endif /* ifndef HERMITE52D */

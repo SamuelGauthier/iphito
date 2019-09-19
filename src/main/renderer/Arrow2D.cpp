@@ -13,7 +13,8 @@
 Arrow2D::Arrow2D(Eigen::Vector2d position, Eigen::Vector2d direction,
                  double length, double width, Eigen::Vector3d color) :
     position{position}, direction{direction}, length{length}, width{width/2.0},
-    color{color}, transform{Eigen::Matrix3d::Identity()}, isDirty{true} {
+    color{color}, model{Eigen::Matrix4d::Identity()},
+    view{Eigen::Matrix4d::Identity()}, projection{Eigen::Matrix4d::Identity()} {
     
     this->direction.normalize();
     if(!Utils::isGlfwInitialized())
@@ -25,7 +26,7 @@ Arrow2D::Arrow2D(Eigen::Vector2d position, Eigen::Vector2d direction,
     this->shader.reset(new Shader("../src/shaders/basic.vert",
                                   "../src/shaders/basic.frag"));
 
-    glUseProgram(this->shader->getProgramID());
+    this->shader->useProgram();
 
     int colorLocation = glGetUniformLocation(this->shader->getProgramID(),
                                              "color");
@@ -52,16 +53,7 @@ void Arrow2D::recomputeVerticesAndIndices() {
     this->vertices = std::vector<GLfloat>();
     this->indices = std::vector<GLuint>();
 
-    // transform position
-    Eigen::Vector3d transformedPosition;
-    transformedPosition << this->position, 1.0;
-    transformedPosition = this->transform * transformedPosition;
-
-    Eigen::Vector2d position;
-    position << transformedPosition[0], transformedPosition[1];
-
-    // scale direction
-    // scale length
+    Eigen::Vector2d position = this->position;
 
     Eigen::Vector2d d = this->direction;
     std::swap(d[0], d[1]);
@@ -71,8 +63,7 @@ void Arrow2D::recomputeVerticesAndIndices() {
     Eigen::Vector2d v1 = position + (this->width * d);
     Eigen::Vector2d v2 = position - (this->width * d);
 
-    double updatedLength = this->length * this->transform(0, 0);
-    Eigen::Vector2d frontAnchor = position + (this->direction * updatedLength);
+    Eigen::Vector2d frontAnchor = position + (this->direction * this->length);
 
     Eigen::Vector2d v3 = frontAnchor + (this->width * d);
     Eigen::Vector2d v4 = frontAnchor - (this->width * d);
@@ -130,42 +121,32 @@ void Arrow2D::recomputeVerticesAndIndices() {
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(0);
-
-    this->isDirty = false;
 }
 
 void Arrow2D::render() {
 
-    if (this->hasToBeRedrawn()) {
-        this->recomputeVerticesAndIndices();
-    }
+    this->shader->useProgram();
+    this->shader->setMatrix4("model", this->model);
+    this->shader->setMatrix4("view", this->view);
+    this->shader->setMatrix4("projection", this->projection);
 
-    glUseProgram(this->shader->getProgramID());
     glBindVertexArray(this->vertexArrayObjectID);
     glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, NULL);
     glBindVertexArray(0);
 }
 
-void Arrow2D::updateTransform(Eigen::Matrix3d& transform) {
-
-    if (transform.isApprox(Eigen::Matrix3d::Identity())) {
-        if (this->isDirty)
-            this->isDirty = false;
-        return;
-    }
-
-    this->transform(0, 2) += transform(0, 2);
-    this->transform(1, 2) += transform(1, 2);
-
-    this->transform(0, 0) += transform(0, 0);
-    this->transform(1, 1) += transform(1, 1);
-
-    if (this->transform(0, 0) < 0.0) {
-        this->transform(0, 0) = 0.0;
-        this->transform(1, 1) = 0.0;
-    }
-
-    this->isDirty = true;
+void Arrow2D::updateModelMatrix(Eigen::Matrix4d model) {
+    
+    this->model = model;
 }
 
-bool Arrow2D::hasToBeRedrawn() { return this->isDirty; }
+void Arrow2D::updateViewMatrix(Eigen::Matrix4d view) {
+    
+    this->view = view;
+}
+
+void Arrow2D::updateProjectionMatrix(Eigen::Matrix4d projection) {
+
+    this->projection = projection;
+}
+

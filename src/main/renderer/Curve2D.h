@@ -28,13 +28,14 @@ public:
             Eigen::Matrix3d transform = Eigen::Matrix3d::Identity());
     void recomputeVerticesAndIndices();
     unsigned long long getID();
-    /* void updateTransform(Eigen::Matrix3d& transform); */
+    void updateModelMatrix(Eigen::Matrix4d model);
+    void updateViewMatrix(Eigen::Matrix4d view);
+    void updateProjectionMatrix(Eigen::Matrix4d projection);
     
 
     virtual ~Curve2D() = 0;
     virtual void render() = 0;
     virtual bool hasToBeRedrawn() = 0;
-    virtual void updateTransform(Eigen::Matrix3d& transform) = 0;
     
 
 protected:
@@ -51,9 +52,13 @@ protected:
     double curveWidth;
     Eigen::Vector3d curveColor;
 
-    Eigen::Matrix3d transform;
-
     bool isDirty;
+    bool viewMatrixUpdate;
+    bool projectionMatrixUpdate;
+
+    Eigen::Matrix4d model;
+    Eigen::Matrix4d view;
+    Eigen::Matrix4d projection;
 
 private:
     static std::atomic<unsigned long long> nextID;

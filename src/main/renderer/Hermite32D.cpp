@@ -32,11 +32,12 @@ Hermite32D::Hermite32D(std::shared_ptr<Hermite3> curve, double curveWidth,
             new Arrow2D(endControlPoint, endTangentVector,
                         endTangentVector.norm(), curveWidth, tangentColor));
 
-    // TODO: Remove ugly hardwritten radius
     this->startControlPoint.reset(new Point2D(startControlPoint,
-                                              this->controlPointsColor, 0.015));
+                                              this->controlPointsColor,
+                                              curveWidth));
     this->endControlPoint.reset(new Point2D(endControlPoint,
-                                              this->controlPointsColor, 0.015));
+                                            this->controlPointsColor,
+                                            curveWidth));
 }
 
 Hermite32D::~Hermite32D() {
@@ -50,11 +51,33 @@ void Hermite32D::render() {
         Curve2D::recomputeVerticesAndIndices();
     }
 
+    if (Curve2D::viewMatrixUpdate) {
+        this->startTangent->updateViewMatrix(Curve2D::view);
+        this->endTangent->updateViewMatrix(Curve2D::view);
+
+        this->startControlPoint->updateViewMatrix(Curve2D::view);
+        this->endControlPoint->updateViewMatrix(Curve2D::view);
+        Curve2D::viewMatrixUpdate = false;
+    }
+
+    if (Curve2D::projectionMatrixUpdate) {
+        this->startTangent->updateProjectionMatrix(Curve2D::projection);
+        this->endTangent->updateProjectionMatrix(Curve2D::projection);
+
+        this->startControlPoint->updateProjectionMatrix(Curve2D::projection);
+        this->endControlPoint->updateProjectionMatrix(Curve2D::projection);
+        Curve2D::projectionMatrixUpdate = false;
+    }
+
     this->startTangent->render();
     this->endTangent->render();
 
-    glUseProgram(this->shader->getProgramID());
-    glBindVertexArray(this->vertexArrayObjectID);
+    Curve2D::shader->useProgram();
+    Curve2D::shader->setMatrix4("model", Curve2D::model);
+    Curve2D::shader->setMatrix4("view", Curve2D::view);
+    Curve2D::shader->setMatrix4("projection", Curve2D::projection);
+
+    glBindVertexArray(Curve2D::vertexArrayObjectID);
     glDrawElements(GL_TRIANGLES, Curve2D::indices.size(), GL_UNSIGNED_INT,
                    NULL);
     glBindVertexArray(0);
@@ -63,34 +86,4 @@ void Hermite32D::render() {
     this->endControlPoint->render();
 }
 
-bool Hermite32D::hasToBeRedrawn() { return this->isDirty; }
-
-void Hermite32D::updateTransform(Eigen::Matrix3d& transform) {
-
-    Logger::Instance()->debug("[Hermite32D] Updating transform");
-
-    if (transform.isApprox(Eigen::Matrix3d::Identity())) {
-        if (this->hasToBeRedrawn())
-            this->isDirty = false;
-        return;
-    }
-
-    this->transform(0, 2) += transform(0, 2);
-    this->transform(1, 2) += transform(1, 2);
-
-    this->transform(0, 0) += transform(0, 0);
-    this->transform(1, 1) += transform(1, 1);
-
-    if (this->transform(0, 0) < 0.0) {
-        this->transform(0, 0) = 0.0;
-        this->transform(1, 1) = 0.0;
-    }
-
-    this->isDirty = true;
-
-    this->startTangent->updateTransform(transform);
-    this->endTangent->updateTransform(transform);
-    this->startControlPoint->updateTransform(transform);
-    this->endControlPoint->updateTransform(transform);
-
-}
+bool Hermite32D::hasToBeRedrawn() { return Curve2D::isDirty; }

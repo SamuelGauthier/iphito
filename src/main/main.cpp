@@ -24,7 +24,6 @@ int main(int argc, char *argv[])
     int HEIGHT = 640;
 
 
-    std::unique_ptr<Layer> rootLayer(new Layer());
     Eigen::Vector2d p1(0, 0);
     Eigen::Vector2d t1(1, 2);
     Eigen::Vector2d s1(-4, 0);
@@ -58,6 +57,7 @@ int main(int argc, char *argv[])
         std::unique_ptr<Curve2D> h52D(new Hermite52D(std::move(h5), curveWidth,
                     curveColor, tangentColor, secondDerivativeColor,
                     controlPointsColor));
+        std::unique_ptr<Layer> rootLayer(new Layer());
         rootLayer->addCurve(c2D);
         rootLayer->addCurve(b2D);
         rootLayer->addCurve(h52D);

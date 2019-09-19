@@ -5,12 +5,12 @@
  * @version 0.1.0
  * @date 2018-11-21
  */
-
 #ifndef SHADER_H
 #define SHADER_H value
 
 #include <string>
 #include <GL/glew.h>
+#include <eigen3/Eigen/Core>
 
 class Shader {
 
@@ -20,7 +20,10 @@ public:
     Shader(std::string vertexShaderPath, std::string fragmentShaderPath);
     ~Shader();
 
+    void setMatrix4(const std::string& name, const Eigen::Matrix4d& matrix);
+
     GLuint getProgramID();
+    void useProgram();
     
 private:
 
