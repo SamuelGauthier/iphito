@@ -26,9 +26,5 @@ public:
     static Eigen::Matrix4d lookAt(Eigen::Vector3d position,
                                   Eigen::Vector3d target,
                                   Eigen::Vector3d up);
-
-private:
-    /* data */
 };
-
 #endif /* ifndef CAMERA_H */
