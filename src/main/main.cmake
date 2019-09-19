@@ -28,6 +28,7 @@ set(MATH_H
 set(RENDERER_DIR ./renderer/)
 
 set(RENDERER_SRC
+    Camera.cpp
     Canvas.cpp
     Window.cpp
     Shader.cpp
@@ -42,6 +43,7 @@ set(RENDERER_SRC
     )
 
 set(RENDERER_H
+    Camera.h
     Canvas.h
     Window.h
     Shader.h
