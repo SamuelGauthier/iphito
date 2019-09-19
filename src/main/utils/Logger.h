@@ -6,7 +6,7 @@
  * @date 2018-11-17
  */
 #ifndef LOGGER_H
-#define LOGGER_H value
+#define LOGGER_H
 
 #include <memory>
 #include <mutex>

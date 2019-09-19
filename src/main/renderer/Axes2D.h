@@ -6,6 +6,7 @@
  * @date 2019-09-19
  */
 #ifndef AXES2D_H
+#define AXES2D_H
 
 #include <eigen3/Eigen/Core>
 #include <memory>
@@ -37,5 +38,4 @@ private:
     std::unique_ptr<Arrow2D> yAxis;
 };
 
-#define AXES2D_H
 #endif /* ifndef AXES2D_H */
