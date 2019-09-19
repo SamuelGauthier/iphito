@@ -1,0 +1,41 @@
+/**
+ * @file Axes2D.h
+ * @brief Describes an 2D axes system
+ * @author Samuel Gauthier
+ * @version 1.0
+ * @date 2019-09-19
+ */
+#ifndef AXES2D_H
+
+#include <eigen3/Eigen/Core>
+#include <memory>
+#include "Arrow2D.h"
+
+class Axes2D {
+
+public:
+    Axes2D() = delete;
+    Axes2D(Eigen::Vector2d position, Eigen::Vector2d xDirection,
+           Eigen::Vector2d yDirection, Eigen::Vector3d color,
+           double axisLength, double axisWidth);
+    ~Axes2D();
+    
+    void render();
+    void updateModelMatrix(Eigen::Matrix4d model);
+    void updateViewMatrix(Eigen::Matrix4d view);
+    void updateProjectionMatrix(Eigen::Matrix4d projection);
+
+private:
+    Eigen::Vector2d position;
+    Eigen::Vector2d xDirection;
+    Eigen::Vector2d yDirection;
+    Eigen::Vector3d color;
+    double axisLength;
+    double axisWidth;
+
+    std::unique_ptr<Arrow2D> xAxis;
+    std::unique_ptr<Arrow2D> yAxis;
+};
+
+#define AXES2D_H
+#endif /* ifndef AXES2D_H */

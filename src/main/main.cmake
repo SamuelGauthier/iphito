@@ -40,6 +40,7 @@ set(RENDERER_SRC
     Arrow2D.cpp
     Point2D.cpp
     Line2D.cpp
+    Axes2D.cpp
     )
 
 set(RENDERER_H
@@ -55,6 +56,7 @@ set(RENDERER_H
     Arrow2D.h
     Point2D.h
     Line2D.h
+    Axes2D.h
     )
 
 list(TRANSFORM UTILS_SRC PREPEND ${UTILS_DIR})
