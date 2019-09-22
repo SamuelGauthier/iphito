@@ -31,3 +31,5 @@ The following list is sorted by order of priority:
 #. [] Export to pdf format
 #. [] Option to add text of points and vectors
 #. [] Option to make width of curves fixed with zoom
+#. [] Fix scrolling
+#. [] Try to implement an "infinite" zoom
