@@ -27,9 +27,15 @@ Todo
 The following list is sorted by order of priority:
 
 #. [] Command line interface
+   View curves: :code:`iphito file.iphy`
+   Command line tool :code:`iphito`
+   Export: :code:`iphtio infile.iphy outfile.pdf`
+
 #. [] File loading and saving
 #. [] Export to pdf format
 #. [] Option to add text of points and vectors
 #. [] Option to make width of curves fixed with zoom
 #. [] Fix scrolling
 #. [] Try to implement an "infinite" zoom
+#. [] Find better way to make curves look smooth (heuristic parallel curve)
+#. [] Refractor and clean up dependencies when possible
