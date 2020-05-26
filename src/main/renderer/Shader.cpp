@@ -16,6 +16,10 @@
 #include "utils/Utils.h"
 #include "utils/Logger.h"
 
+namespace iphito::renderer {
+
+using namespace iphito::utils;
+
 Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath) {
 
     if(!Utils::isGlfwInitialized())
@@ -134,3 +138,4 @@ void Shader::compileShader(GLuint& shaderID, std::string& shaderCode,
 
 }
 
+} /* namespace iphito::renderer */

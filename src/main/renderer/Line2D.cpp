@@ -12,6 +12,10 @@
 #include "utils/Utils.h"
 #include "utils/Logger.h"
 
+namespace iphito::renderer {
+
+using namespace iphito::utils;
+
 Line2D::Line2D(Eigen::Vector2d startPoint, Eigen::Vector2d endPoint, double width,
                Eigen::Vector3d color) :
     startPoint{startPoint}, endPoint{endPoint}, width{width}, color{color},
@@ -142,3 +146,5 @@ void Line2D::updateProjectionMatrix(Eigen::Matrix4d projection) {
 
     this->projection = projection;
 }
+
+} /* namespace iphito::renderer */

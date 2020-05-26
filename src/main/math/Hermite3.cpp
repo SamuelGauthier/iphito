@@ -8,11 +8,10 @@
 #include <vector>
 #include <sstream>
 #include <eigen3/Eigen/Core>
-#include <GL/glew.h>
 
 #include "Hermite3.h"
 
-#include "renderer/Shader.h"
+namespace iphito::math {
 
 const Eigen::Matrix4d Hermite3::C = (Eigen::Matrix4d() << 
                                       2.0, -3.0,  0.0,  1.0,
@@ -134,3 +133,6 @@ Eigen::Vector2d Hermite3::getEndTangentVector() {
 Eigen::Matrix2Xd Hermite3::getCurveMatrix() {
     return this->B;
 }
+
+} /* namespace iphito::math */
+

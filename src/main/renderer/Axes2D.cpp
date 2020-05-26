@@ -7,6 +7,8 @@
  */
 #include "Axes2D.h"
 
+namespace iphito::renderer {
+
 Axes2D::Axes2D(Eigen::Vector2d position, Eigen::Vector2d xDirection,
                Eigen::Vector2d yDirection, Eigen::Vector3d color,
                double axisLength, double axisWidth) :
@@ -46,3 +48,5 @@ void Axes2D::updateProjectionMatrix(Eigen::Matrix4d projection) {
     this->xAxis->updateProjectionMatrix(projection);
     this->yAxis->updateProjectionMatrix(projection);
 }
+
+} /* namespace iphito::renderer */

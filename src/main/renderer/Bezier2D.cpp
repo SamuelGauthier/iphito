@@ -10,6 +10,10 @@
 #include "Bezier2D.h"
 #include "utils/Logger.h"
 
+namespace iphito::renderer {
+
+using namespace iphito::math;
+
 Bezier2D::Bezier2D(std::shared_ptr<Bezier> curve, double curveWidth,
                    Eigen::Vector3d curveColor,
                    Eigen::Vector3d controlPointsColor,
@@ -85,3 +89,5 @@ void Bezier2D::render() {
 }
 
 bool Bezier2D::hasToBeRedrawn() { return Curve2D::isDirty; }
+
+} /* namespace iphito::renderer */

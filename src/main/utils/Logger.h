@@ -13,6 +13,8 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
+namespace iphito::utils {
+
 class Logger {
 
 public:
@@ -35,5 +37,8 @@ private:
     std::shared_ptr<spdlog::logger> logger;
     /* static std::mutex mutex; */
 };
+
+} /* namespace iphito::utils */
+
 
 #endif /* ifndef LOGGER_H */

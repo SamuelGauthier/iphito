@@ -17,6 +17,10 @@
 #include "renderer/Window.h"
 #include "utils/Logger.h"
 
+using namespace iphito::math;
+using namespace iphito::renderer;
+using namespace iphito::utils;
+
 int main(int argc, char *argv[])
 {
 

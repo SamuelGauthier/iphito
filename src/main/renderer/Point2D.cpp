@@ -12,6 +12,10 @@
 #include "utils/Utils.h"
 #include "utils/Logger.h"
 
+namespace iphito::renderer {
+
+using namespace iphito::utils;
+
 inline std::mt19937_64 Point2D::engine = std::mt19937_64();
 inline std::uniform_real_distribution<double> Point2D::distribution(0.0, 1.0);
 
@@ -224,3 +228,6 @@ void Point2D::updateProjectionMatrix(Eigen::Matrix4d projection) {
     this->projection = projection;
     this->isDirty = true;
 }
+
+} /* namespace iphito::renderer */
+

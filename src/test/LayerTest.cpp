@@ -10,6 +10,8 @@
 #include "catch.h"
 #include "renderer/Layer.h"
 
+using namespace iphito::renderer;
+
 TEST_CASE("layers have an unique ID", "[Layer]") {
 
     Layer l1;

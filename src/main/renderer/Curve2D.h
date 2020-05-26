@@ -18,12 +18,14 @@
 #include "math/Curve.h"
 #include "Shader.h"
 
+namespace iphito::renderer {
+
 class Curve2D {
 
 public:
     Curve2D() = delete;
 
-    Curve2D(std::shared_ptr<Curve> curve, double curveWidth = 1.0,
+    Curve2D(std::shared_ptr<iphito::math::Curve> curve, double curveWidth = 1.0,
             Eigen::Vector3d curveColor = Eigen::Vector3d(0.0, 0.0, 0.0),
             Eigen::Matrix3d transform = Eigen::Matrix3d::Identity());
     void recomputeVerticesAndIndices();
@@ -40,7 +42,7 @@ public:
 
 protected:
 
-    std::shared_ptr<Curve> curve;
+    std::shared_ptr<iphito::math::Curve> curve;
 
     std::unique_ptr<Shader> shader;
     std::vector<GLfloat> vertices;
@@ -75,5 +77,7 @@ private:
 };
 
 inline Curve2D::~Curve2D() {}
+
+} /* namespace iphito::renderer */
 
 #endif /* ifndef CURVE3D_H */

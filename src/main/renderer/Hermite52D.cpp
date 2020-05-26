@@ -10,6 +10,10 @@
 #include "Hermite52D.h"
 #include "utils/Logger.h"
 
+namespace iphito::renderer {
+
+using namespace iphito::math;
+
 Hermite52D::Hermite52D(std::shared_ptr<Hermite5> curve,
                        double curveWidth, Eigen::Vector3d curveColor,
                        Eigen::Vector3d tangentColor,
@@ -106,3 +110,4 @@ void Hermite52D::render() {
 
 bool Hermite52D::hasToBeRedrawn() { return Curve2D::isDirty; }
 
+} /* namespace iphito::renderer */

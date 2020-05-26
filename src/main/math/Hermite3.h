@@ -13,6 +13,8 @@
 
 #include "Curve.h"
 
+namespace iphito::math {
+
 class Hermite3 : public Curve {
 
 public:
@@ -51,5 +53,8 @@ private:
 
     void recomputeB();
 };
+
+} /* namespace iphito::math */
+
 
 #endif /* ifndef HERMITE3_H */

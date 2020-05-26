@@ -8,6 +8,8 @@
 #include <vector>
 #include "Layer.h"
 
+namespace iphito::renderer {
+
 std::atomic<unsigned long long> Layer::nextID = 0;
 
 Layer::Layer(std::vector<std::unique_ptr<Layer>> children, 
@@ -138,3 +140,5 @@ void Layer::updateProjectionMatrix(Eigen::Matrix4d projection) {
         i->second->updateProjectionMatrix(projection);
     }
 }
+
+} /* namespace iphito::renderer */

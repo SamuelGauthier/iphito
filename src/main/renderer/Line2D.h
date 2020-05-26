@@ -15,6 +15,8 @@
 
 #include "Shader.h"
 
+namespace iphito::renderer {
+
 class Line2D {
 
 public:
@@ -48,5 +50,7 @@ private:
 
     void recomputeVerticesAndIndices();
 };
+
+} /* namespace iphito::renderer */
 
 #endif /* ifndef LINE2D_H */

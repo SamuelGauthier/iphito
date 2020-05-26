@@ -9,6 +9,8 @@
 
 #include <eigen3/Eigen/Dense>
 
+namespace iphito::renderer {
+
 Eigen::Matrix4d Camera::orthographic(double left, double right,
                                      double bottom, double top,
                                      double zNear, double zFar) {
@@ -74,3 +76,6 @@ Eigen::Matrix4d Camera::lookAt(Eigen::Vector3d position, Eigen::Vector3d target,
     Eigen::Matrix4d lookAt = cameraXYZ * cameraPosition;
     return lookAt;
 }
+
+} /* namespace iphito::renderer */
+

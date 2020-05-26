@@ -12,6 +12,8 @@
 
 #include "Curve.h"
 
+namespace iphito::math {
+
 class Hermite5 : public Curve {
 
 public:
@@ -63,5 +65,7 @@ private:
     Eigen::Matrix2Xd B;
     static const Eigen::MatrixXd C;
 };
+
+} /* namespace iphito::math */
 
 #endif /* ifndef HERMITE5_H */

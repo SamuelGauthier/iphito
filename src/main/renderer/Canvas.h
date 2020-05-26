@@ -14,6 +14,8 @@
 
 #include "Layer.h"
 
+namespace iphito::renderer {
+
 class Canvas {
 
 public:
@@ -37,5 +39,7 @@ private:
     GLuint vertexArrayObjectID;
     Eigen::Matrix3d transform;
 };
+
+} /* namespace iphito::renderer */
 
 #endif /* ifndef CANVAS_H */

@@ -8,6 +8,8 @@
 #include "catch.h"
 #include "renderer/Canvas.h"
 
+using namespace iphito::renderer;
+
 TEST_CASE("canvas size", "[Canvas]") {
     Canvas c = Canvas(3, 4);
 

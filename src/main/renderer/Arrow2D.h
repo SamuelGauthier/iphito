@@ -15,6 +15,8 @@
 
 #include "Shader.h"
 
+namespace iphito::renderer {
+
 class Arrow2D {
 
 public:
@@ -47,5 +49,7 @@ private:
     
     void recomputeVerticesAndIndices();
 };
+
+} /* namespace iphito::renderer */
 
 #endif /* ifndef ARROW2D_H */

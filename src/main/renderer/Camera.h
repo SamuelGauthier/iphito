@@ -10,6 +10,8 @@
 
 #include <eigen3/Eigen/Core>
 
+namespace iphito::renderer {
+
 class Camera {
 
 public:
@@ -27,4 +29,7 @@ public:
                                   Eigen::Vector3d target,
                                   Eigen::Vector3d up);
 };
+
+} /* namespace iphito::renderer */
+
 #endif /* ifndef CAMERA_H */

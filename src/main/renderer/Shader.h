@@ -12,6 +12,8 @@
 #include <GL/glew.h>
 #include <eigen3/Eigen/Core>
 
+namespace iphito::renderer {
+
 class Shader {
 
 public:
@@ -37,5 +39,7 @@ private:
     void compileShader(GLuint& shaderID, std::string& shaderCode,
                        std::string logInfo = "");
 };
+
+} /* namespace iphito::renderer */
 
 #endif /* ifndef SHADER_H */

@@ -10,6 +10,10 @@
 
 #include "utils/Utils.h"
 
+namespace iphito::renderer {
+
+using namespace iphito::utils;
+
 Canvas::Canvas(unsigned int width, unsigned int height) : width{width},
     height{height}, rootLayer{new Layer()},
     transform{Eigen::Matrix3d::Identity()} {
@@ -51,3 +55,5 @@ void Canvas::updateProjectionMatrix(Eigen::Matrix4d projection) {
 
     this->rootLayer->updateProjectionMatrix(projection);
 }
+
+} /* namespace iphito::renderer */

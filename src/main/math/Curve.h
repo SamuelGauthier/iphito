@@ -11,6 +11,8 @@
 #include <atomic>
 #include <eigen3/Eigen/Core>
 
+namespace iphito::math {
+
 class Curve {
 
 public:
@@ -21,5 +23,7 @@ public:
 };
 
 inline Curve::~Curve() {}
+
+} /* namespace iphito::math */
 
 #endif /* ifndef CURVE_H */

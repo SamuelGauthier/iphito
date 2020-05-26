@@ -14,6 +14,8 @@
 
 #include "Utils.h"
 
+namespace iphito::utils {
+
 const std::vector<unsigned long long> Utils::factorials = {
     1,
     1,
@@ -108,3 +110,5 @@ const bool Utils::nearlyEqual(double a, double b, double epsilon) {
                 std::numeric_limits<double>::max()) < epsilon;
     }
 }
+
+} /* namespace iphito::utils */

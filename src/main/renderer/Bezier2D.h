@@ -17,11 +17,13 @@
 #include "Point2D.h"
 #include "Line2D.h"
 
+namespace iphito::renderer {
+
 class Bezier2D : public Curve2D {
 
 public:
     Bezier2D() = delete;
-    Bezier2D(std::shared_ptr<Bezier> curve, double curveWidth,
+    Bezier2D(std::shared_ptr<iphito::math::Bezier> curve, double curveWidth,
              Eigen::Vector3d curveColor, Eigen::Vector3d controlPointsColor,
              Eigen::Vector3d controlPolygonColor);
     ~Bezier2D();
@@ -30,12 +32,13 @@ public:
     bool hasToBeRedrawn();
 
 private:
-    std::shared_ptr<Bezier> curve;
+    std::shared_ptr<iphito::math::Bezier> curve;
     Eigen::Vector3d controlPointsColor;
     Eigen::Vector3d controlPolygonColor;
     std::vector<std::unique_ptr<Point2D>> controlPoints;
     std::vector<std::unique_ptr<Line2D>> controlPolygon;
 };
 
+} /* namespace iphito::renderer */
 
 #endif /* ifndef BEZIER2D_H */

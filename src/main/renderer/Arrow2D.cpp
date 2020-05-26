@@ -10,6 +10,10 @@
 #include "utils/Utils.h"
 #include "utils/Logger.h"
 
+namespace iphito::renderer {
+
+using namespace iphito::utils;
+
 Arrow2D::Arrow2D(Eigen::Vector2d position, Eigen::Vector2d direction,
                  double length, double width, Eigen::Vector3d color) :
     position{position}, direction{direction}, length{length}, width{width/2.0},
@@ -150,3 +154,4 @@ void Arrow2D::updateProjectionMatrix(Eigen::Matrix4d projection) {
     this->projection = projection;
 }
 
+} /* namespace iphito::renderer */

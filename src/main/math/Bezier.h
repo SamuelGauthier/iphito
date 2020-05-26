@@ -15,6 +15,8 @@
 
 #include "Curve.h"
 
+namespace iphito::math {
+
 class Bezier : public Curve {
 
 public:
@@ -31,5 +33,7 @@ private:
     std::map<int, std::pair<Eigen::Vector2d, double>> pointsAndBernstein;
     int degree;
 };
+
+} /* namespace iphito::math */
 
 #endif /* ifndef BEZIER_H */

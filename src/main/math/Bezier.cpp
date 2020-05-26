@@ -10,6 +10,10 @@
 #include "Bezier.h"
 #include "utils/Utils.h"
 
+namespace iphito::math {
+
+using namespace iphito::utils;
+
 Bezier::Bezier(std::vector<Eigen::Vector2d> points) : degree{0} {
 
     if(points.size() <= 1) {
@@ -69,9 +73,10 @@ std::vector<Eigen::Vector2d> Bezier::getPoints() {
     return controlPoints;
 }
 
-
 std::map<int, std::pair<Eigen::Vector2d, double>>
 Bezier::getPointsAndBernstein() {
 
     return this->pointsAndBernstein;
 }
+
+} /* namespace iphito::math */

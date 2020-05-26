@@ -17,6 +17,8 @@
 #include "Arrow2D.h"
 #include "Axes2D.h"
 
+namespace iphito::renderer {
+
 struct DestroyGLFWWindow{
     void operator()(GLFWwindow* ptr){
          glfwDestroyWindow(ptr);
@@ -74,4 +76,7 @@ private:
     inline static double zoomFactor = 1.0;
 
 };
+
+} /* namespace iphito::renderer */
+
 #endif /* ifndef WINDOW_H */

@@ -16,11 +16,13 @@
 #include "Arrow2D.h"
 #include "Point2D.h"
 
+namespace iphito::renderer {
+
 class Hermite52D : public Curve2D {
 
 public:
     Hermite52D() = delete;
-    Hermite52D(std::shared_ptr<Hermite5> curve, double curveWidth,
+    Hermite52D(std::shared_ptr<iphito::math::Hermite5> curve, double curveWidth,
                Eigen::Vector3d curveColor, Eigen::Vector3d tangentColor,
                Eigen::Vector3d secondDerivativeColor,
                Eigen::Vector3d controlPointsColor);
@@ -30,7 +32,7 @@ public:
     bool hasToBeRedrawn();
 
 private:
-    std::shared_ptr<Hermite5> curve;
+    std::shared_ptr<iphito::math::Hermite5> curve;
     Eigen::Vector3d tangentColor;
     Eigen::Vector3d secondDerivativeColor;
     Eigen::Vector3d controlPointsColor;
@@ -41,5 +43,7 @@ private:
     std::shared_ptr<Point2D> startControlPoint;
     std::shared_ptr<Point2D> endControlPoint;
 };
+
+} /* namespace iphito::renderer */
 
 #endif /* ifndef HERMITE52D */

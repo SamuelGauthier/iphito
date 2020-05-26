@@ -10,6 +10,8 @@
 #include "catch.h"
 #include "math/Hermite5.h"
 
+using namespace iphito::math;
+
 const Eigen::Vector2d p1(0, 0);
 const Eigen::Vector2d p2(0, 1);
 const Eigen::Vector2d v1(-1, 1);

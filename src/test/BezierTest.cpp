@@ -14,6 +14,9 @@
 #include "math/Bezier.h"
 #include "utils/Utils.h"
 
+using namespace iphito::math;
+using namespace iphito::utils;
+
 const Eigen::Vector2d p0(-1, 0);
 const Eigen::Vector2d p1(0, 1);
 const Eigen::Vector2d p2(2, 0);

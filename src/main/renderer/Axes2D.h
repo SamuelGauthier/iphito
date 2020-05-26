@@ -12,6 +12,8 @@
 #include <memory>
 #include "Arrow2D.h"
 
+namespace iphito::renderer {
+
 class Axes2D {
 
 public:
@@ -37,5 +39,7 @@ private:
     std::unique_ptr<Arrow2D> xAxis;
     std::unique_ptr<Arrow2D> yAxis;
 };
+
+} /* namespace iphito::renderer */
 
 #endif /* ifndef AXES2D_H */

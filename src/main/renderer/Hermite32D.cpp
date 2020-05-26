@@ -11,6 +11,10 @@
 #include "Hermite32D.h"
 #include "utils/Logger.h"
 
+namespace iphito::renderer {
+
+using namespace iphito::math;
+
 Hermite32D::Hermite32D(std::shared_ptr<Hermite3> curve, double curveWidth,
                        Eigen::Vector3d curveColor,
                        Eigen::Vector3d tangentColor,
@@ -87,3 +91,6 @@ void Hermite32D::render() {
 }
 
 bool Hermite32D::hasToBeRedrawn() { return Curve2D::isDirty; }
+
+} /* namespace iphito::renderer */
+

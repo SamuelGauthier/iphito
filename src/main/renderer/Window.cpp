@@ -16,6 +16,9 @@
 #include "utils/Logger.h"
 #include "utils/Utils.h"
 
+namespace iphito::renderer {
+
+using namespace iphito::utils;
 
 Window::Window(int x, int y, std::string title) :
     x{x}, y{y}, title{title}, canvas{nullptr} {
@@ -247,3 +250,5 @@ void Window::updateProjectionMatrix() {
                                             -2 * hRatio, 2 * hRatio,
                                             0.1, 100);
 }
+
+} /* namespace iphito::renderer */

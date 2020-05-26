@@ -7,6 +7,8 @@
  */
 #include "Hermite5.h"
 
+namespace iphito::math {
+
 const Eigen::MatrixXd Hermite5::C = (Eigen::MatrixXd(6,6) <<
                                       -6,  15,  -10,   0, 0, 1,
                                       -3,   8,   -6,   0, 1, 0,
@@ -28,7 +30,6 @@ Hermite5::Hermite5(Eigen::Vector2d startControlPoint,
     endControlPoint{endControlPoint},
     endVelocityVector{endVelocityVector},
     endAccelerationVector{endAccelerationVector},
-    /* id{Curve::getNextID()}, */
     B{(Eigen::Matrix2Xd(2, 6) << startControlPoint, startVelocityVector,
             startAccelerationVector, endAccelerationVector, endVelocityVector,
             endControlPoint).finished() * this->C}
@@ -221,3 +222,4 @@ Eigen::Matrix2Xd Hermite5::getCurveMatrix() {
     return this->B;
 }
 
+} /* namespace iphito::math */

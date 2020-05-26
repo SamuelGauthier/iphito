@@ -12,6 +12,11 @@
 #include "utils/Logger.h"
 #include "utils/Utils.h"
 
+namespace iphito::renderer {
+
+using namespace iphito::math;
+using namespace iphito::utils;
+
 inline std::atomic<unsigned long long> Curve2D::nextID = 0;
 inline std::mt19937_64 Curve2D::engine = std::mt19937_64();
 inline std::uniform_real_distribution<double> Curve2D::distribution(0.0, 1.0);
@@ -267,3 +272,5 @@ void Curve2D::updateProjectionMatrix(Eigen::Matrix4d projection) {
     this->projectionMatrixUpdate = true;
     this->isDirty = true;
 }
+
+} /* namespace iphito::renderer */

@@ -11,6 +11,8 @@
 
 #include "Logger.h"
 
+namespace iphito::utils {
+
 std::shared_ptr<Logger> Logger::instance = nullptr;
 
 std::shared_ptr<Logger>& Logger::Instance() {
@@ -53,3 +55,5 @@ void Logger::critical(std::string message) {
 void Logger::warn(std::string message) {
     logger->warn(message);
 }
+
+} /* namespace iphito::utils */

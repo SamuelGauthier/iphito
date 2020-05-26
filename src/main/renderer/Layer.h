@@ -17,6 +17,8 @@
 
 #include "Curve2D.h"
 
+namespace iphito::renderer {
+
 class Layer {
 
 public:
@@ -47,5 +49,7 @@ private:
     std::map<unsigned long long, std::unique_ptr<Layer>> children;
     std::map<unsigned long long, std::unique_ptr<Curve2D>> curves;
 };
+
+} /* namespace iphito::renderer */
 
 #endif /* ifndef LAYER_H */

@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+namespace iphito::utils {
+
 class Utils {
 
 public:
@@ -30,5 +32,7 @@ private:
     static bool glfwInitialized;
     static bool glewInitialized;
 };
+
+} /* namespace iphito::utils */
 
 #endif /* ifndef UTILS_H */

@@ -16,6 +16,8 @@
 
 #include "Shader.h"
 
+namespace iphito::renderer {
+
 class Point2D {
 
 public:
@@ -56,5 +58,7 @@ private:
     Eigen::Vector2d evaluateCircleAt(double t);
     void recomputeVerticesAndIndices();
 };
+
+} /* namespace iphito::renderer */
 
 #endif /* ifndef POINT2D_H */
