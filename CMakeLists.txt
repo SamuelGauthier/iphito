@@ -4,7 +4,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithAsserts;RelWithDebInfo" CACHE
         INTERNAL "Build configs")
     message("Generated with config types: ${CMAKE_CONFIGURATION_TYPES}")
-    project("Iphito")
+    project("iphito")
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 endif()
 
@@ -47,6 +47,12 @@ find_package(Eigen3 REQUIRED)
 
 # spdlog
 find_package(spdlog REQUIRED)
+
+# # Bison
+# find_package(bison REQUIRED)
+
+# # Flex
+# find_package(flex REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(src/main ../bin/main)

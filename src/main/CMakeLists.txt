@@ -1,15 +1,37 @@
 include(main.cmake)
 
-add_executable(iphito main.cpp ${TARGET_SRC} ${TARGET_H})
+# BISON_TARGET(iphitoParser
+#     ./cli/Parser.yy
+#     ${CMAKE_CURRENT_BINARY_DIR}/Parser.tab.cc
+#     )
 
-target_link_libraries(iphito
+# FLEX_TARGET(iphitoLexer
+#     ./cli/Lexer.l
+#     ${CMAKE_CURRENT_BINARY_DIR}/Lexer.yy.cc
+#     )
+# ADD_FLEX_BISON_DEPENDENCY(iphitoLexer iphitoParser)
+
+add_executable(${PROJECT_NAME}
+    main.cpp
+    ${TARGET_SRC}
+    ${TARGET_H}
+    # ${FLEX_iphitoLexer_OUTPUTS}
+    # ${BISON_iphitoParser_OUTPUTS}
+)
+
+target_link_libraries(${PROJECT_NAME}
     OpenGL::GL
     GLEW::GLEW
     glfw
     spdlog::spdlog
 )
 
-target_include_directories(iphito PRIVATE ${UTILS_DIR})
-target_include_directories(iphito PRIVATE ${MATH_DIR})
-target_include_directories(iphito PRIVATE ${RENDERER_DIR})
-target_include_directories(iphito PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE
+    .
+    ${UTILS_DIR}
+    ${MATH_DIR}
+    ${RENDERER_DIR}
+    ${CLI_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+)

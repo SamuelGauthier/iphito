@@ -59,21 +59,37 @@ set(RENDERER_H
     Axes2D.h
     )
 
+set(CLI_DIR ./cli/)
+
+set(CLI_SRC
+    Parser.cpp
+    ASTNode.cpp
+    )
+
+set(CLI_H
+    Parser.h
+    ASTNode.h
+    )
+
 list(TRANSFORM UTILS_SRC PREPEND ${UTILS_DIR})
 list(TRANSFORM UTILS_H PREPEND ${UTILS_DIR})
 list(TRANSFORM MATH_SRC PREPEND ${MATH_DIR})
 list(TRANSFORM MATH_H PREPEND ${MATH_DIR})
 list(TRANSFORM RENDERER_SRC PREPEND ${RENDERER_DIR})
 list(TRANSFORM RENDERER_H PREPEND ${RENDERER_DIR})
+list(TRANSFORM CLI_SRC PREPEND ${CLI_DIR})
+list(TRANSFORM CLI_H PREPEND ${CLI_DIR})
 
 set(TARGET_H
     ${UTILS_H}
     ${MATH_H}
     ${RENDERER_H}
+    ${CLI_H}
     )
 
 set(TARGET_SRC
     ${UTILS_SRC}
     ${MATH_SRC}
     ${RENDERER_SRC}
+    ${CLI_SRC}
     )
