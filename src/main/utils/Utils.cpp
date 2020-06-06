@@ -5,6 +5,7 @@
  * @version 0.1.0
  * @date 2018-11-27
  */
+#include <iostream>
 #include <algorithm>
 #include <cmath>
 #include <fstream>
@@ -90,6 +91,18 @@ const std::string Utils::readFile(std::string filePath) {
     }
 
     return content;
+}
+
+const std::string Utils::readInput() {
+
+    std::string input = "";
+    std::string currentInput = "";
+
+    while (std::getline(std::cin, currentInput)) {
+        input += currentInput + "\n";
+    }
+
+    return input;
 }
 
 const bool Utils::nearlyEqual(double a, double b, double epsilon) {

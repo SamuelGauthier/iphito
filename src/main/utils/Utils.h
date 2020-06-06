@@ -25,6 +25,7 @@ public:
     static void setGlfwInitialized();
     static void setGlewInitialized();
     static const std::string readFile(std::string filePath);
+    static const std::string readInput();
     static const bool nearlyEqual(double a, double b, double epsilon = 0.00001);
 
 private:

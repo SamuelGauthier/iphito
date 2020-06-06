@@ -26,20 +26,18 @@ public:
 
     bool parse();
 
-    bool bezierCurve(std::string& errorMessage);
-    bool bezierName(std::string& errorMessage);
+    bool bezierCurve();
+    bool hermite3Curve();
+    bool hermite5Curve();
+    bool comment();
 
     bool listPoints2D(std::vector<Eigen::Vector2d>& points, 
                       std::string& errorMessage);
     bool point2D(Eigen::Vector2d& point, std::string& errorMessage);
 
-    bool character(char c, std::string& errorMessage);
-    bool leftSquareBracket(std::string& errorMessage);
-    bool rightSquareBracket(std::string& errorMessage);
-    bool leftParanthesis(std::string& errorMessage);
-    bool rightParanthesis(std::string& errorMessage);
+    bool string(const std::string s, std::string& errorMessage);
+    bool character(const char c, std::string& errorMessage);
     bool number(double& number, std::string& errorMessage);
-    bool comma(std::string& errorMessage);
 
     std::shared_ptr<ASTNode> getRootNode();
 

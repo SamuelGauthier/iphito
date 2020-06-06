@@ -5,10 +5,11 @@
  * @version 1.0
  * @date 2020-06-03
  */
-
 #include "Parser.h"
 
 #include "math/Bezier.h"
+#include "math/Hermite3.h"
+#include "math/Hermite5.h"
 #include "utils/Logger.h"
 
 namespace iphito::parser {
@@ -20,21 +21,28 @@ Parser::Parser(std::string input) : inputStream{input}, root{new ASTNode()} {}
 
 bool Parser::parse() {
 
-    std::string errorMessage = "";
-
-    if (!bezierCurve(errorMessage)) {
-        return false;
+    if (bezierCurve()) {
+        return true;
+    }
+    else if (hermite3Curve()) {
+        return true;
+    }
+    else if (hermite5Curve()) {
+        return true;
+    }
+    else if (comment()) {
+        return true;
     }
 
-    return true;
+    return false;
 }
 
-bool Parser::bezierCurve(std::string& errorMessage) {
+bool Parser::bezierCurve() {
 
+    std::string errorMessage = "";
     std::vector<Eigen::Vector2d> points;
 
-    if (!bezierName(errorMessage)) {
-        Logger::Instance()->critical(errorMessage);
+    if (!string("bezier", errorMessage)) {
         return false;
     }
     if (!character('[', errorMessage)) {
@@ -57,23 +65,148 @@ bool Parser::bezierCurve(std::string& errorMessage) {
     return true;
 }
 
-bool Parser::bezierName(std::string& errorMessage) {
+bool Parser::hermite3Curve() {
 
-    std::string bezierName = "bezier";
-    int bezierNameSize = bezierName.size();
-
-    std::string actualName(bezierNameSize, ' ');
-
-    this->inputStream.read(&actualName[0], bezierNameSize);
-    actualName = this->toLower(actualName);
-
-    if (actualName != bezierName) {
-
-        for (int i = 0; i < bezierNameSize; i++) {
-            this->inputStream.unget();
-        }
-
+    std::string errorMessage = "";
+    if (!string("hermite3", errorMessage)) {
         return false;
+    }
+    if (!character('[', errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+
+    Eigen::Vector2d point1;
+    Eigen::Vector2d tangent1;
+    Eigen::Vector2d point2;
+    Eigen::Vector2d tangent2;
+
+    if (!point2D(point1, errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+    if (!character(',', errorMessage)) {
+        return false;
+    }
+    if (!point2D(tangent1, errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+    if (!character(',', errorMessage)) {
+        return false;
+    }
+    if (!point2D(point2, errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+    if (!character(',', errorMessage)) {
+        return false;
+    }
+    if (!point2D(tangent2, errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+
+    if (!character(']', errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+
+    std::shared_ptr<Hermite3> hermite3(new Hermite3(point1, tangent1,
+                                                    point2, tangent2));
+    std::shared_ptr<ASTNode> node(new ASTNode(NodeType::Hermite3, hermite3));
+    this->root->addChild(node);
+
+    return true;
+}
+
+bool Parser::hermite5Curve() {
+
+    std::string errorMessage = "";
+    if (!string("hermite5", errorMessage)) {
+        return false;
+    }
+    if (!character('[', errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+
+    Eigen::Vector2d point1;
+    Eigen::Vector2d tangent1;
+    Eigen::Vector2d secondDerivative1;
+    Eigen::Vector2d point2;
+    Eigen::Vector2d tangent2;
+    Eigen::Vector2d secondDerivative2;
+
+    if (!point2D(point1, errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+    if (!character(',', errorMessage)) {
+        return false;
+    }
+    if (!point2D(tangent1, errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+    if (!character(',', errorMessage)) {
+        return false;
+    }
+    if (!point2D(secondDerivative1, errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+    if (!character(',', errorMessage)) {
+        return false;
+    }
+    if (!point2D(point2, errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+    if (!character(',', errorMessage)) {
+        return false;
+    }
+    if (!point2D(tangent2, errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+    if (!character(',', errorMessage)) {
+        return false;
+    }
+    if (!point2D(secondDerivative2, errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+
+    if (!character(']', errorMessage)) {
+        Logger::Instance()->critical(errorMessage);
+        return false;
+    }
+
+    std::shared_ptr<Hermite5> hermite5(new Hermite5(point1, tangent1,
+                secondDerivative1, point2, tangent2, secondDerivative2));
+    std::shared_ptr<ASTNode> node(new ASTNode(NodeType::Hermite5, hermite5));
+    this->root->addChild(node);
+
+    return true;
+}
+
+bool Parser::comment() {
+
+    std::string errorMessage = "";
+
+    if(!character('#', errorMessage)) {
+        return false;
+    }
+
+    std::string complete = "";
+    
+    char current = this->inputStream.get();
+    complete.push_back(current);
+
+    while (current != '\n' && this->inputStream) {
+        current = this->inputStream.get();
+        complete.push_back(current);
     }
 
     return true;
@@ -94,10 +227,12 @@ bool Parser::listPoints2D(std::vector<Eigen::Vector2d>& points,
     points.push_back(p);
 
     while (point2D(p, errorMessage)) {
+
+        points.push_back(p);
+
         if (!character(',', errorMessage)) {
             return true;
         }
-        points.push_back(p);
     }
     
     return false;
@@ -130,73 +265,62 @@ bool Parser::point2D(Eigen::Vector2d& point, std::string& errorMessage) {
     return true;
 }
 
-bool Parser::character(char c, std::string& errorMessage) {
+bool Parser::string(const std::string s, std::string& errorMessage) {
+
+    std::string expectedName = s;
+    int expectedNameSize = expectedName.size();
+
+    std::string actualName;
+
+    for (int i = 0; i < expectedNameSize; i++) {
+
+        char actual = this->inputStream.get();
+
+        if (std::isspace(actual)) {
+            while (std::isspace(actual)) {
+                actual = this->inputStream.get();
+            }
+        }
+
+        if (actual == s[i]) {
+            actualName.push_back(actual);
+            continue;
+        }
+        else {
+            break;
+        }
+    }
+
+    actualName = this->toLower(actualName);
+
+    if (actualName != expectedName) {
+
+        errorMessage = "Expected '" + expectedName + "' but found '" +
+                       actualName + "'";
+
+        for (int i = 0; i < actualName.size() + 1; i++) {
+            this->inputStream.unget();
+        }
+
+        return false;
+    }
+
+    return true;
+}
+
+bool Parser::character(const char c, std::string& errorMessage) {
 
     char actual = this->inputStream.get();
+
+    if (!std::isspace(c)) {
+        while (std::isspace(actual) && this->inputStream) {
+            actual = this->inputStream.get(); 
+        }
+    }
 
     if (actual != c) {
-        errorMessage = "syntax error: expected '" + std::to_string(c)
-                       + "' but got '" + std::to_string(actual) + "'";
-        this->inputStream.unget();
-
-        return false;
-    }
-
-    return true;
-}
-
-bool Parser::leftSquareBracket(std::string& errorMessage) {
-
-    char actual = this->inputStream.get();
-
-    if (actual != '[') {
-        errorMessage = "syntax error: expected '[' but got '" + 
-                       std::to_string(actual) + "'";
-        this->inputStream.unget();
-
-        return false;
-    }
-
-    return true;
-}
-
-bool Parser::rightSquareBracket(std::string& errorMessage) {
-
-    char actual = this->inputStream.get();
-
-    if (actual != ']') {
-        errorMessage = "syntax error: expected ']' but got '" + 
-                       std::to_string(actual) + "'";
-        this->inputStream.unget();
-
-        return false;
-    }
-
-    return true;
-}
-
-bool Parser::leftParanthesis(std::string& errorMessage) {
-
-    char actual = this->inputStream.get();
-
-    if (actual != '(') {
-        errorMessage = "syntax error: expected '(' but got '" + 
-                       std::to_string(actual) + "'";
-        this->inputStream.unget();
-
-        return false;
-    }
-
-    return true;
-}
-
-bool Parser::rightParanthesis(std::string& errorMessage) {
-
-    char actual = this->inputStream.get();
-
-    if (actual != ')') {
-        errorMessage = "syntax error: expected ')' but got '" + 
-                       std::to_string(actual) + "'";
+        errorMessage = "syntax error: expected '" + std::string(1, c)
+                       + "' but got '" + std::string(1, actual) + "'";
         this->inputStream.unget();
 
         return false;
@@ -210,12 +334,20 @@ bool Parser::number(double& n, std::string& errorMessage) {
     std::string number = "";
 
     char sign = this->inputStream.peek();
+    while (std::isspace(sign) && this->inputStream) {
+        this->inputStream.get();
+        sign = this->inputStream.peek();
+    }
+
     if (sign == '-') {
         number += sign;
         this->inputStream.get();
     }
 
     char digit = inputStream.get();
+    while (std::isspace(digit) && this->inputStream) {
+        digit = this->inputStream.get();
+    }
     while ((digit >= '0' && digit <= '9') || digit == '.') {
         number += digit;
         digit = this->inputStream.get();
@@ -231,23 +363,6 @@ bool Parser::number(double& n, std::string& errorMessage) {
     n = stod(number);
     this->inputStream.unget();
     return true;
-}
-
-bool Parser::comma(std::string& errorMessage) {
-
-    char actual = this->inputStream.get();
-
-    if (actual != ',') {
-
-        errorMessage = "syntax error: expected ',' but got '";
-        errorMessage.push_back(actual);
-
-        this->inputStream.unget();
-        return false;
-    }
-
-    return true;
-
 }
 
 std::shared_ptr<ASTNode> Parser::getRootNode() {

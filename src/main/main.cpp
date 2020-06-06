@@ -18,6 +18,7 @@
 #include "renderer/Shader.h"
 #include "renderer/Window.h"
 #include "utils/Logger.h"
+#include "utils/Utils.h"
 
 using namespace iphito::parser;
 using namespace iphito::math;
@@ -30,68 +31,59 @@ int main(int argc, char *argv[])
     int WIDTH = 640;
     int HEIGHT = 640;
 
-
-    /* Eigen::Vector2d p1(0, 0); */
-    /* Eigen::Vector2d t1(1, 2); */
-    /* Eigen::Vector2d s1(-4, 0); */
-    /* Eigen::Vector2d p2(0.25, 0); */
-    /* Eigen::Vector2d t2(1, -2); */
-    /* Eigen::Vector2d s2(4, 0); */
-    /* std::unique_ptr<Hermite3> c1(new Hermite3(p1, t1, p2, t2)); */
-    /* std::unique_ptr<Hermite5> h5(new Hermite5(p1, t1, s1, p2, t2, s2)); */
-
-    Eigen::Vector3d curveColor(1.0, 0.0, 0.0);
-    Eigen::Vector3d tangentColor(0.0, 0.0, 1.0);
-    Eigen::Vector3d controlPointsColor(0.0, 1.0, 0.0);
-    Eigen::Vector3d secondDerivativeColor(0.0, 1.0, 1.0);
-    double curveWidth = 0.01;
-
-    /* std::vector<Eigen::Vector2d> points = { Eigen::Vector2d(-0.5, 0), */
-    /*                                         Eigen::Vector2d(-0.7, 0.6), */
-    /*                                         Eigen::Vector2d(0.0, 0.9), */
-    /*                                         Eigen::Vector2d(0.7, 0.6), */
-    /*                                         Eigen::Vector2d(0.5, 0) */
-    /*                                       }; */
-    /* std::unique_ptr<Bezier> b1(new Bezier(points)); */
-
-    std::string input = "";
-    std::string currentInput = "";
-    while (std::cin >> currentInput) {
-        input += currentInput;
-    }
+    std::string input = Utils::readInput();
 
     Parser parser(input);
-    bool parsingSuccessfull = parser.parse();
-    if (!parsingSuccessfull) {
-        Logger::Instance()->critical("Error during parsing of input");
-        return 1;
-    }
-
-    std::shared_ptr<ASTNode> rootNode = parser.getRootNode();
+    while (parser.parse()) {}
 
     try{
         Window w(WIDTH, HEIGHT, "iphito");
         std::unique_ptr<Canvas> canvas(new Canvas(WIDTH, HEIGHT));
         std::unique_ptr<Layer> rootLayer(new Layer());
-        /* std::unique_ptr<Curve2D> c2D(new Hermite32D(std::move(c1), curveWidth, */
-        /*             curveColor, tangentColor, controlPointsColor)); */
-        /* std::unique_ptr<Curve2D> b2D(new Bezier2D(std::move(b1), curveWidth, */
-        /*             curveColor, controlPointsColor, controlPointsColor)); */
-        /* std::unique_ptr<Curve2D> h52D(new Hermite52D(std::move(h5), curveWidth, */
-        /*             curveColor, tangentColor, secondDerivativeColor, */
-        /*             controlPointsColor)); */
-        /* rootLayer->addCurve(c2D); */
-        /* rootLayer->addCurve(b2D); */
-        /* rootLayer->addCurve(h52D); */
-        Logger::Instance()->critical(std::to_string(rootNode->getChildren().size()));
 
+        Eigen::Vector3d curveColor(1.0, 0.0, 0.0);
+        Eigen::Vector3d tangentColor(0.0, 0.0, 1.0);
+        Eigen::Vector3d controlPointsColor(0.0, 1.0, 0.0);
+        Eigen::Vector3d secondDerivativeColor(0.0, 1.0, 1.0);
+        double curveWidth = 0.01;
+
+        std::shared_ptr<ASTNode> rootNode = parser.getRootNode();
         for (auto& i : rootNode->getChildren()) {
-            if (i->getNodeType() == NodeType::Bezier) {
-                auto bezier = std::static_pointer_cast<Bezier>(i->getCurve());
-                std::unique_ptr<Curve2D> bezier2D(new Bezier2D(bezier,
-                            curveWidth, curveColor, controlPointsColor,
-                            controlPointsColor));
-                rootLayer->addCurve(bezier2D);
+            auto nodeType = i->getNodeType();
+
+            switch (nodeType) {
+                case NodeType::Bezier:
+                    {
+                        auto bezier = std::static_pointer_cast<Bezier>(i->getCurve());
+                        std::unique_ptr<Curve2D> bezier2D(new Bezier2D(bezier,
+                                    curveWidth, curveColor, controlPointsColor,
+                                    controlPointsColor));
+                        rootLayer->addCurve(bezier2D);
+                    }
+                    break;
+                case NodeType::Hermite3:
+                    {
+                        auto hermite3 = std::static_pointer_cast<Hermite3>(i->getCurve());
+                        std::unique_ptr<Curve2D> hermite32D(new Hermite32D(
+                                    hermite3, curveWidth, curveColor,
+                                    tangentColor, controlPointsColor));
+                        rootLayer->addCurve(hermite32D);
+                    }
+                    break;
+                case NodeType::Hermite5:
+                    {
+                        auto hermite5 = std::static_pointer_cast<Hermite5>(i->getCurve());
+                        std::unique_ptr<Curve2D> hermite52D(new Hermite52D(
+                                    hermite5, curveWidth, curveColor,
+                                    tangentColor, secondDerivativeColor,
+                                    controlPointsColor));
+                        rootLayer->addCurve(hermite52D);
+                    }
+                    break;
+                 case NodeType::Root:
+                 default:
+                    break;
+
             }
         }
 
