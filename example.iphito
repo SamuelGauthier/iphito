@@ -1,5 +1,5 @@
 # Iphito example file
-# This is a line commnent
+# This is a comment line
 
 bezier [ (-0.5, 0), (-0.7, 0.6), (0.0, 0.9), (0.7, 0.6), (0.5, 0) ]
 hermite3 [ (0, 0), (1, 2), (0.25, 0), (1, -2) ]
