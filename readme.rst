@@ -18,6 +18,13 @@ Iphito
 This small cross-platform curve editor and visualizer supports displaying cubic,
 quintic Hermite and Bézier curves.
 
+
+Requirements
+------------
+
+* a c++ compiler that supports >= c++17
+* (optional) the *Ninja* build system
+
 Build
 -----
 
