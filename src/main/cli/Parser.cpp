@@ -221,10 +221,20 @@ bool Parser::listPoints2D(std::vector<Eigen::Vector2d>& points,
         return false;
     }
     if (!character(',', errorMessage)) {
-        return true;
+        return false;
     }
 
     points.push_back(p);
+
+    if (!point2D(p, errorMessage)) {
+        return false;
+    }
+
+    points.push_back(p);
+
+    if (!character(',', errorMessage)) {
+        return true;
+    }
 
     while (point2D(p, errorMessage)) {
 
@@ -348,9 +358,19 @@ bool Parser::number(double& n, std::string& errorMessage) {
     while (std::isspace(digit) && this->inputStream) {
         digit = this->inputStream.get();
     }
-    while ((digit >= '0' && digit <= '9') || digit == '.') {
+    while (digit >= '0' && digit <= '9') {
         number += digit;
         digit = this->inputStream.get();
+    }
+
+    if(digit == '.') {
+        number += digit;
+        digit = this->inputStream.get();
+
+        while (digit >= '0' && digit <= '9') {
+            number += digit;
+            digit = this->inputStream.get();
+        }
     }
 
     if (number.empty()) {
