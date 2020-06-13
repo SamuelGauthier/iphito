@@ -12,6 +12,7 @@
 #include "renderer/Bezier2D.h"
 #include "renderer/Canvas.h"
 #include "renderer/Curve2D.h"
+#include "renderer/Curve2DFactory.h"
 #include "renderer/Hermite32D.h"
 #include "renderer/Hermite52D.h"
 #include "renderer/Layer.h"
@@ -25,9 +26,7 @@ using namespace iphito::math;
 using namespace iphito::renderer;
 using namespace iphito::utils;
 
-int main(int argc, char *argv[])
-{
-
+void renderCurves() {
     int WIDTH = 640;
     int HEIGHT = 640;
 
@@ -39,7 +38,9 @@ int main(int argc, char *argv[])
     try{
         Window w(WIDTH, HEIGHT, "iphito");
         std::unique_ptr<Canvas> canvas(new Canvas(WIDTH, HEIGHT));
-        std::unique_ptr<Layer> rootLayer(new Layer());
+
+        std::shared_ptr<ASTNode> rootNode = parser.getRootNode();
+        Curve2DFactory curve2DFactory(rootNode);
 
         Eigen::Vector3d curveColor(1.0, 0.0, 0.0);
         Eigen::Vector3d tangentColor(0.0, 0.0, 1.0);
@@ -47,45 +48,13 @@ int main(int argc, char *argv[])
         Eigen::Vector3d secondDerivativeColor(0.0, 1.0, 1.0);
         double curveWidth = 0.01;
 
-        std::shared_ptr<ASTNode> rootNode = parser.getRootNode();
-        for (auto& i : rootNode->getChildren()) {
-            auto nodeType = i->getNodeType();
+        curve2DFactory.setCurveColor(curveColor);
+        curve2DFactory.setTangentColor(tangentColor);
+        curve2DFactory.setControlPointsColor(controlPointsColor);
+        curve2DFactory.setSecondDerivativeColor(secondDerivativeColor);
+        curve2DFactory.setCurveWidth(curveWidth);
 
-            switch (nodeType) {
-                case NodeType::Bezier:
-                    {
-                        auto bezier = std::static_pointer_cast<Bezier>(i->getCurve());
-                        std::unique_ptr<Curve2D> bezier2D(new Bezier2D(bezier,
-                                    curveWidth, curveColor, controlPointsColor,
-                                    controlPointsColor));
-                        rootLayer->addCurve(bezier2D);
-                    }
-                    break;
-                case NodeType::Hermite3:
-                    {
-                        auto hermite3 = std::static_pointer_cast<Hermite3>(i->getCurve());
-                        std::unique_ptr<Curve2D> hermite32D(new Hermite32D(
-                                    hermite3, curveWidth, curveColor,
-                                    tangentColor, controlPointsColor));
-                        rootLayer->addCurve(hermite32D);
-                    }
-                    break;
-                case NodeType::Hermite5:
-                    {
-                        auto hermite5 = std::static_pointer_cast<Hermite5>(i->getCurve());
-                        std::unique_ptr<Curve2D> hermite52D(new Hermite52D(
-                                    hermite5, curveWidth, curveColor,
-                                    tangentColor, secondDerivativeColor,
-                                    controlPointsColor));
-                        rootLayer->addCurve(hermite52D);
-                    }
-                    break;
-                 case NodeType::Root:
-                 default:
-                    break;
-
-            }
-        }
+        std::unique_ptr<Layer> rootLayer = curve2DFactory.getRootLayer();
 
         canvas->setRootLayer(std::move(rootLayer));
         w.setCanvas(canvas);
@@ -97,6 +66,52 @@ int main(int argc, char *argv[])
     }
 
     Logger::Instance()->info("Quitting...");
+}
+
+void printUsage() {
+
+    std::cout << "iphito" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Usage:" << std::endl;
+    std::cout << "  iphito <curve definition>" << std::endl;
+    std::cout << "  iphito (-e|--export) <input file name>" << std::endl;
+    std::cout << "  iphito -v | --version" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Options:" << std::endl;
+    std::cout << "  -e --export\tExport iphito file to postscript." << std::endl;
+    std::cout << "  -v --version\tShow version." << std::endl;
+}
+
+int main(int argc, char *argv[])
+{
+    if (argc == 1) {
+        renderCurves();
+    }
+    else if (argc == 2) {
+        std::string version(argv[1]);
+
+        if (version == "-v" || version == "--version") {
+            std::cout << "1.0.0" << std::endl;
+        }
+        else {
+            printUsage();
+        }
+    }
+    else if (argc == 3) {
+        std::string exportFlag(argv[1]);
+        std::string inputFileName(argv[2]);
+
+        if (exportFlag == "-e" || exportFlag == "--export") {
+            // TODO
+        }
+        else {
+            printUsage();
+        }
+    }
+    else {
+        printUsage();
+    }
+
 
     return 0;
 }
