@@ -41,6 +41,7 @@ set(RENDERER_SRC
     Point2D.cpp
     Line2D.cpp
     Axes2D.cpp
+    Curve2DFactory.cpp
     )
 
 set(RENDERER_H
@@ -57,6 +58,7 @@ set(RENDERER_H
     Point2D.h
     Line2D.h
     Axes2D.h
+    Curve2DFactory.h
     )
 
 set(CLI_DIR ./cli/)
