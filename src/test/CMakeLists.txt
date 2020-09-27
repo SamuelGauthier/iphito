@@ -4,10 +4,11 @@ set(TEST_PROJECT_NAME test)
 
 set(TEST_TARGET_SRC
     LayerTest.cpp
-    CanvasTest.cpp
+    # CanvasTest.cpp # For now it doesn't make sense
     Hermite3Test.cpp
     Hermite5Test.cpp
     BezierTest.cpp
+    ParserTest.cpp
     )
 
 include_directories(${CMAKE_SOURCE_DIR}/src/main)

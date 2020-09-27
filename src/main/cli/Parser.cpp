@@ -380,7 +380,14 @@ bool Parser::number(double& n, std::string& errorMessage) {
         return false;
     }
 
-    n = stod(number);
+    try {
+        n = stod(number);
+    }
+    catch (std::exception e) {
+        errorMessage = "Cannot convert string to double"; 
+        return false;
+    }
+
     this->inputStream.unget();
     return true;
 }

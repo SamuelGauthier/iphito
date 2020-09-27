@@ -25,6 +25,13 @@ public:
     Parser(std::string input);
 
     bool parse();
+    std::shared_ptr<ASTNode> getRootNode();
+
+private:
+    std::stringstream inputStream;
+    std::shared_ptr<ASTNode> root;
+
+    std::string toLower(std::string s);
 
     bool bezierCurve();
     bool hermite3Curve();
@@ -38,14 +45,6 @@ public:
     bool string(const std::string s, std::string& errorMessage);
     bool character(const char c, std::string& errorMessage);
     bool number(double& number, std::string& errorMessage);
-
-    std::shared_ptr<ASTNode> getRootNode();
-
-private:
-    std::stringstream inputStream;
-    std::shared_ptr<ASTNode> root;
-
-    std::string toLower(std::string s);
 };
 
 } /* namespace cli */
