@@ -56,19 +56,24 @@ private:
     std::string title;
     std::unique_ptr<Canvas> canvas;
     smart_GLFWwindow window;
-    Eigen::Matrix4d projection;
-    Eigen::Matrix4d view;
     std::unique_ptr<Axes2D> axes;
 
     inline static bool leftMouseButtonPressed = false;
+    inline static bool rightMouseButtonPressed = false;
     inline static bool mouseScrolling = false;
     inline static bool windowResizing = false;
     inline static Eigen::Vector2d mousePosition = Eigen::Vector2d::Zero();
+
+    inline static Eigen::Matrix4d view = Eigen::Matrix4d::Zero();
+    inline static Eigen::Matrix4d projection = Eigen::Matrix4d::Zero();
+    inline static Eigen::Matrix4d viewInverse = Eigen::Matrix4d::Zero();
+    inline static Eigen::Matrix4d projectionInverse = Eigen::Matrix4d::Zero();
 
     inline static Eigen::Vector3d cameraPosition = Eigen::Vector3d(0, 0, 1);
     inline static Eigen::Vector3d cameraTarget = Eigen::Vector3d(0, 0, 0);
     inline static Eigen::Vector3d cameraUp = Eigen::Vector3d(0, 1, 0);
 
+    inline static int scale = 2;
     inline static int currentWindowWidth = 1;
     inline static int currentWindowHeight = 1;
     inline static double initialWindowWidth = 1;

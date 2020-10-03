@@ -46,12 +46,12 @@ void Canvas::render() {
     this->rootLayer->render();
 }
 
-void Canvas::updateViewMatrix(Eigen::Matrix4d view) {
+void Canvas::updateViewMatrix(const Eigen::Matrix4d& view) {
 
     this->rootLayer->updateViewMatrix(view);
 }
 
-void Canvas::updateProjectionMatrix(Eigen::Matrix4d projection) {
+void Canvas::updateProjectionMatrix(const Eigen::Matrix4d& projection) {
 
     this->rootLayer->updateProjectionMatrix(projection);
 }

@@ -7,6 +7,7 @@
  */
 #include <iostream>
 #include <stdexcept>
+#include <eigen3/Eigen/Dense>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -72,7 +73,7 @@ Window::Window(int x, int y, std::string title) :
     /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    /* this->view = Camera::lookAt(Window::cameraPosition, Window::cameraTarget, */
+    /* Window::view = Camera::lookAt(Window::cameraPosition, Window::cameraTarget, */
     /*                             Window::cameraUp); */
     updateViewMatrix();
     updateProjectionMatrix();
@@ -101,15 +102,15 @@ void Window::render() {
         if(Window::mouseScrolling || Window::windowResizing)
         {
             this->updateProjectionMatrix();
-            this->axes->updateProjectionMatrix(this->projection);
-            this->canvas->updateProjectionMatrix(this->projection);
+            this->axes->updateProjectionMatrix(Window::projection);
+            this->canvas->updateProjectionMatrix(Window::projection);
             Window::mouseScrolling = false;
             Window::windowResizing = false;
         }
         if (Window::leftMouseButtonPressed) {
             this->updateViewMatrix();
-            this->axes->updateViewMatrix(this->view);
-            this->canvas->updateViewMatrix(this->view);
+            this->axes->updateViewMatrix(Window::view);
+            this->canvas->updateViewMatrix(Window::view);
             /* Window::windowResizing = false; */
         }
 
@@ -129,8 +130,8 @@ void Window::setCanvas(std::unique_ptr<Canvas>& canvas) {
     this->canvas = std::move(canvas);
     // TODO: This is ugly doing it here but we cannot do it in the constructor
     // because the canvas pointer is not set yet
-    this->canvas->updateViewMatrix(this->view);
-    this->canvas->updateProjectionMatrix(this->projection);
+    this->canvas->updateViewMatrix(Window::view);
+    this->canvas->updateProjectionMatrix(Window::projection);
 }
 
 void Window::setMouseCallbacks() {
@@ -142,7 +143,6 @@ void Window::setMouseCallbacks() {
 void Window::mouseButtonCallback(GLFWwindow* window, int button, int action,
                                  int modifiers) {
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
-    /* if (button == GLFW_MOUSE_BUTTON_MIDDLE) { */
 
         if (action == GLFW_PRESS) {
             Window::leftMouseButtonPressed = true;
@@ -158,15 +158,22 @@ void Window::mouseButtonCallback(GLFWwindow* window, int button, int action,
 void Window::cursorPositionCallback(GLFWwindow* window, double xPosition,
                                     double yPosition) {
     if(Window::leftMouseButtonPressed) {
-        /* Logger::Instance()->debug("[Window] Panning..."); */
-
         Eigen::Vector2d previousMousePosition = Window::mousePosition;
         Window::updateMousePosition(window);
         Eigen::Vector2d translationVector = Window::mousePosition -
                                             previousMousePosition;
+        translationVector *= Window::scale;
 
-        Eigen::Vector3d cameraTranslation(translationVector(0),
-                                          translationVector(1), 0);
+        Eigen::Vector4d cameraTranslationScreen(translationVector(0),
+                                                translationVector(1), 1, 0);
+
+        Eigen::Vector4d cameraTranslationWorld = Window::viewInverse *
+                                                 Window::projectionInverse *
+                                                 cameraTranslationScreen;
+
+        Eigen::Vector3d cameraTranslation(cameraTranslationWorld(0),
+                                          cameraTranslationWorld(1), 0);
+
         Window::cameraPosition += cameraTranslation;
         Window::cameraTarget += cameraTranslation;
     }
@@ -230,14 +237,15 @@ void Window::initializeAxes() {
 
     this->axes.reset(new Axes2D(Eigen::Vector2d::Zero(), xDir, yDir, white,
                                 axisLength, axisWidth));
-    this->axes->updateViewMatrix(this->view);
-    this->axes->updateProjectionMatrix(this->projection);
+    this->axes->updateViewMatrix(Window::view);
+    this->axes->updateProjectionMatrix(Window::projection);
 }
 
 void Window::updateViewMatrix() {
 
-    this->view = Camera::lookAt(Window::cameraPosition, Window::cameraTarget,
+    Window::view = Camera::lookAt(Window::cameraPosition, Window::cameraTarget,
                                 Window::cameraUp);
+    Window::viewInverse = Window::view.inverse();
 }
 
 void Window::updateProjectionMatrix() {
@@ -246,9 +254,12 @@ void Window::updateProjectionMatrix() {
     double hRatio = Window::currentWindowHeight / Window::initialWindowHeight;
     wRatio *= Window::zoomFactor;
     hRatio *= Window::zoomFactor;
-    this->projection = Camera::orthographic(-2 * wRatio, 2 * wRatio,
-                                            -2 * hRatio, 2 * hRatio,
-                                            0.1, 100);
+    Window::projection = Camera::orthographic(-Window::scale * wRatio,
+                                              Window::scale * wRatio,
+                                              -Window::scale * hRatio,
+                                              Window::scale * hRatio,
+                                              0.1, 100);
+    Window::projectionInverse = Window::projection.inverse();
 }
 
 } /* namespace iphito::renderer */
