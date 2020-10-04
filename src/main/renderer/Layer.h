@@ -22,7 +22,6 @@ namespace iphito::renderer {
 class Layer {
 
 public:
-    //Layer();
     Layer(std::vector<std::unique_ptr<Layer>> children =
             std::vector<std::unique_ptr<Layer>>(),
           std::vector<std::unique_ptr<Curve2D>> curves =
@@ -39,8 +38,8 @@ public:
     bool removeCurve(unsigned long long id);
     bool removeLayer(unsigned long long id);
     void render();
-    void updateViewMatrix(Eigen::Matrix4d view);
-    void updateProjectionMatrix(Eigen::Matrix4d projection);
+    void updateViewMatrix(const Eigen::Matrix4d& view);
+    void updateProjectionMatrix(const Eigen::Matrix4d& projection);
         
 
 private:

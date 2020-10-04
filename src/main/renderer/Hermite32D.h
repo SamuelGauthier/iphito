@@ -23,8 +23,9 @@ class Hermite32D : public Curve2D {
 public:
     Hermite32D() = delete;
     Hermite32D(std::shared_ptr<iphito::math::Hermite3> curve, double curveWidth,
-               Eigen::Vector3d curveColor, Eigen::Vector3d tangentColor,
-               Eigen::Vector3d controlPointsColor);
+               const Eigen::Vector3d& curveColor,
+               const Eigen::Vector3d& tangentColor,
+               const Eigen::Vector3d& controlPointsColor);
     ~Hermite32D();
     
     void render();

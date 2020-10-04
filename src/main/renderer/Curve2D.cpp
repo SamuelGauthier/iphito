@@ -22,7 +22,8 @@ inline std::mt19937_64 Curve2D::engine = std::mt19937_64();
 inline std::uniform_real_distribution<double> Curve2D::distribution(0.0, 1.0);
 
 Curve2D::Curve2D(std::shared_ptr<Curve> curve, double curveWidth,
-                 Eigen::Vector3d curveColor, Eigen::Matrix3d transform) :
+                 const Eigen::Vector3d& curveColor,
+                 const Eigen::Matrix3d& transform) :
     curve{curve}, curveWidth{curveWidth/2.0}, curveColor{curveColor}, 
     isDirty{true}, viewMatrixUpdate{true}, projectionMatrixUpdate{true}, 
     id{this->nextID.fetch_add(1)}, samplePoints{std::vector<Eigen::Vector2d>()},
@@ -255,18 +256,18 @@ void Curve2D::updateSamplePoints(Eigen::Matrix3d& transform) {
     }
 }
 
-void Curve2D::updateModelMatrix(Eigen::Matrix4d model) {
+void Curve2D::updateModelMatrix(const Eigen::Matrix4d& model) {
     
     this->model = model;
 }
 
-void Curve2D::updateViewMatrix(Eigen::Matrix4d view) {
+void Curve2D::updateViewMatrix(const Eigen::Matrix4d& view) {
     
     this->view = view;
     this->viewMatrixUpdate = true;
 }
 
-void Curve2D::updateProjectionMatrix(Eigen::Matrix4d projection) {
+void Curve2D::updateProjectionMatrix(const Eigen::Matrix4d& projection) {
 
     this->projection = projection;
     this->projectionMatrixUpdate = true;

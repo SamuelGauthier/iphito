@@ -14,8 +14,9 @@ namespace iphito::renderer {
 
 using namespace iphito::utils;
 
-Arrow2D::Arrow2D(Eigen::Vector2d position, Eigen::Vector2d direction,
-                 double length, double width, Eigen::Vector3d color) :
+Arrow2D::Arrow2D(const Eigen::Vector2d& position,
+                 const Eigen::Vector2d& direction, double length, double width,
+                 const Eigen::Vector3d& color) :
     position{position}, direction{direction}, length{length}, width{width/2.0},
     color{color}, model{Eigen::Matrix4d::Identity()},
     view{Eigen::Matrix4d::Identity()}, projection{Eigen::Matrix4d::Identity()} {
@@ -139,17 +140,17 @@ void Arrow2D::render() {
     glBindVertexArray(0);
 }
 
-void Arrow2D::updateModelMatrix(Eigen::Matrix4d model) {
+void Arrow2D::updateModelMatrix(const Eigen::Matrix4d& model) {
     
     this->model = model;
 }
 
-void Arrow2D::updateViewMatrix(Eigen::Matrix4d view) {
+void Arrow2D::updateViewMatrix(const Eigen::Matrix4d& view) {
     
     this->view = view;
 }
 
-void Arrow2D::updateProjectionMatrix(Eigen::Matrix4d projection) {
+void Arrow2D::updateProjectionMatrix(const Eigen::Matrix4d& projection) {
 
     this->projection = projection;
 }

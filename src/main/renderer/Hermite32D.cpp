@@ -16,9 +16,9 @@ namespace iphito::renderer {
 using namespace iphito::math;
 
 Hermite32D::Hermite32D(std::shared_ptr<Hermite3> curve, double curveWidth,
-                       Eigen::Vector3d curveColor,
-                       Eigen::Vector3d tangentColor,
-                       Eigen::Vector3d controlPointsColor) :
+                       const Eigen::Vector3d& curveColor,
+                       const Eigen::Vector3d& tangentColor,
+                       const Eigen::Vector3d& controlPointsColor) :
     curve{curve}, Curve2D(curve, curveWidth, curveColor),
     tangentColor{tangentColor}, controlPointsColor{controlPointsColor} {
 

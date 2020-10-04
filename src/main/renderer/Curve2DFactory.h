@@ -21,10 +21,10 @@ class Curve2DFactory {
 public:
     Curve2DFactory(std::shared_ptr<parser::ASTNode> rootNode);
 
-    void setCurveColor(Eigen::Vector3d curveColor);
-    void setTangentColor(Eigen::Vector3d tangentColor);
-    void setControlPointsColor(Eigen::Vector3d controlPointsColor);
-    void setSecondDerivativeColor(Eigen::Vector3d secondDerivativeColor);
+    void setCurveColor(const Eigen::Vector3d& curveColor);
+    void setTangentColor(const Eigen::Vector3d& tangentColor);
+    void setControlPointsColor(const Eigen::Vector3d& controlPointsColor);
+    void setSecondDerivativeColor(const Eigen::Vector3d& secondDerivativeColor);
     void setCurveWidth(double width);
 
     std::unique_ptr<Layer> getRootLayer();

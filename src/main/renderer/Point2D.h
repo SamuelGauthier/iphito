@@ -22,15 +22,15 @@ class Point2D {
 
 public:
     Point2D() = delete;
-    Point2D(Eigen::Vector2d center, Eigen::Vector3d color, double radius,
-            double width = 0.0);
+    Point2D(const Eigen::Vector2d& center, const Eigen::Vector3d& color,
+            double radius, double width = 0.0);
     ~Point2D();
 
     void render();
     bool hasToBeRedrawn();
-    void updateModelMatrix(Eigen::Matrix4d model);
-    void updateViewMatrix(Eigen::Matrix4d view);
-    void updateProjectionMatrix(Eigen::Matrix4d projection);
+    void updateModelMatrix(const Eigen::Matrix4d& model);
+    void updateViewMatrix(const Eigen::Matrix4d& view);
+    void updateProjectionMatrix(const Eigen::Matrix4d& projection);
 
 private:
     Eigen::Vector3d center;

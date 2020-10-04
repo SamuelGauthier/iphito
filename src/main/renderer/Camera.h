@@ -25,9 +25,9 @@ public:
     static Eigen::Matrix3d orthographic(double left, double right,
                                         double bottom, double top);
 
-    static Eigen::Matrix4d lookAt(Eigen::Vector3d position,
-                                  Eigen::Vector3d target,
-                                  Eigen::Vector3d up);
+    static Eigen::Matrix4d lookAt(const Eigen::Vector3d& position,
+                                  const Eigen::Vector3d& target,
+                                  const Eigen::Vector3d& up);
 };
 
 } /* namespace iphito::renderer */

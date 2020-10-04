@@ -24,8 +24,9 @@ class Bezier2D : public Curve2D {
 public:
     Bezier2D() = delete;
     Bezier2D(std::shared_ptr<iphito::math::Bezier> curve, double curveWidth,
-             Eigen::Vector3d curveColor, Eigen::Vector3d controlPointsColor,
-             Eigen::Vector3d controlPolygonColor);
+             const Eigen::Vector3d& curveColor,
+             const Eigen::Vector3d& controlPointsColor,
+             const Eigen::Vector3d& controlPolygonColor);
     ~Bezier2D();
     
     void render();

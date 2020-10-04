@@ -25,7 +25,7 @@ Curve2DFactory::Curve2DFactory(std::shared_ptr<ASTNode> rootNode) :
     rootNode{rootNode} {
 }
 
-void Curve2DFactory::setCurveColor(Eigen::Vector3d curveColor) {
+void Curve2DFactory::setCurveColor(const Eigen::Vector3d& curveColor) {
 
     if (curveColor[0] < 0.0 || curveColor[1] < 0.0 || curveColor[2] < 0.0) {
         Logger::Instance()->critical("cannot set color with negative values");
@@ -35,7 +35,7 @@ void Curve2DFactory::setCurveColor(Eigen::Vector3d curveColor) {
     this->curveColor = curveColor;
 }
 
-void Curve2DFactory::setTangentColor(Eigen::Vector3d tangentColor) {
+void Curve2DFactory::setTangentColor(const Eigen::Vector3d& tangentColor) {
 
     if (tangentColor[0] < 0.0 || tangentColor[1] < 0.0 ||
         tangentColor[2] < 0.0) {
@@ -46,7 +46,7 @@ void Curve2DFactory::setTangentColor(Eigen::Vector3d tangentColor) {
     this->tangentColor = tangentColor;
 }
 
-void Curve2DFactory::setControlPointsColor(Eigen::Vector3d controlPointsColor) {
+void Curve2DFactory::setControlPointsColor(const Eigen::Vector3d& controlPointsColor) {
 
     if (controlPointsColor[0] < 0.0 || controlPointsColor[1] < 0.0 ||
         controlPointsColor[2] < 0.0) {
@@ -57,7 +57,7 @@ void Curve2DFactory::setControlPointsColor(Eigen::Vector3d controlPointsColor) {
     this->controlPointsColor = controlPointsColor;
 }
 
-void Curve2DFactory::setSecondDerivativeColor(Eigen::Vector3d secondDerivativeColor) {
+void Curve2DFactory::setSecondDerivativeColor(const Eigen::Vector3d& secondDerivativeColor) {
 
     if (secondDerivativeColor[0] < 0.0 ||
         secondDerivativeColor[1] < 0.0 ||

@@ -127,14 +127,14 @@ void Layer::render() {
     }
 }
 
-void Layer::updateViewMatrix(Eigen::Matrix4d view) {
+void Layer::updateViewMatrix(const Eigen::Matrix4d& view) {
 
     for(auto i = this->curves.rbegin(); i != this->curves.rend(); i++) {
         i->second->updateViewMatrix(view);
     }
 }
 
-void Layer::updateProjectionMatrix(Eigen::Matrix4d projection) {
+void Layer::updateProjectionMatrix(const Eigen::Matrix4d& projection) {
 
     for(auto i = this->curves.rbegin(); i != this->curves.rend(); i++) {
         i->second->updateProjectionMatrix(projection);

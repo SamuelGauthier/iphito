@@ -47,8 +47,9 @@ Eigen::Matrix3d Camera::orthographic(double left, double right,
     return camera;
 }
 
-Eigen::Matrix4d Camera::lookAt(Eigen::Vector3d position, Eigen::Vector3d target,
-                               Eigen::Vector3d up) {
+Eigen::Matrix4d Camera::lookAt(const Eigen::Vector3d& position,
+                               const Eigen::Vector3d& target,
+                               const Eigen::Vector3d& up) {
 
     // Camera "direction" vector
     Eigen::Vector3d cameraZ = (position - target);

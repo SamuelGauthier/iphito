@@ -16,8 +16,9 @@ namespace iphito::renderer {
 
 using namespace iphito::utils;
 
-Line2D::Line2D(Eigen::Vector2d startPoint, Eigen::Vector2d endPoint, double width,
-               Eigen::Vector3d color) :
+Line2D::Line2D(const Eigen::Vector2d& startPoint,
+               const Eigen::Vector2d& endPoint, double width,
+               const Eigen::Vector3d& color) :
     startPoint{startPoint}, endPoint{endPoint}, width{width}, color{color},
     transform{Eigen::Matrix3d::Identity()},
     model{Eigen::Matrix4d::Identity()}, view{Eigen::Matrix4d::Identity()},
@@ -132,17 +133,17 @@ void Line2D::render() {
     glBindVertexArray(0);
 }
 
-void Line2D::updateModelMatrix(Eigen::Matrix4d model) {
+void Line2D::updateModelMatrix(const Eigen::Matrix4d& model) {
 
     this->model = model;
 }
 
-void Line2D::updateViewMatrix(Eigen::Matrix4d view) {
+void Line2D::updateViewMatrix(const Eigen::Matrix4d& view) {
 
     this->view = view;
 }
 
-void Line2D::updateProjectionMatrix(Eigen::Matrix4d projection) {
+void Line2D::updateProjectionMatrix(const Eigen::Matrix4d& projection) {
 
     this->projection = projection;
 }

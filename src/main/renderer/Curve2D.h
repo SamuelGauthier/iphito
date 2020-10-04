@@ -26,13 +26,13 @@ public:
     Curve2D() = delete;
 
     Curve2D(std::shared_ptr<iphito::math::Curve> curve, double curveWidth = 1.0,
-            Eigen::Vector3d curveColor = Eigen::Vector3d(0.0, 0.0, 0.0),
-            Eigen::Matrix3d transform = Eigen::Matrix3d::Identity());
+            const Eigen::Vector3d& curveColor = Eigen::Vector3d(0.0, 0.0, 0.0),
+            const Eigen::Matrix3d& transform = Eigen::Matrix3d::Identity());
     void recomputeVerticesAndIndices();
     unsigned long long getID();
-    void updateModelMatrix(Eigen::Matrix4d model);
-    void updateViewMatrix(Eigen::Matrix4d view);
-    void updateProjectionMatrix(Eigen::Matrix4d projection);
+    void updateModelMatrix(const Eigen::Matrix4d& model);
+    void updateViewMatrix(const Eigen::Matrix4d& view);
+    void updateProjectionMatrix(const Eigen::Matrix4d& projection);
     
 
     virtual ~Curve2D() = 0;

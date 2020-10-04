@@ -18,15 +18,15 @@ class Axes2D {
 
 public:
     Axes2D() = delete;
-    Axes2D(Eigen::Vector2d position, Eigen::Vector2d xDirection,
-           Eigen::Vector2d yDirection, Eigen::Vector3d color,
+    Axes2D(const Eigen::Vector2d& position, const Eigen::Vector2d& xDirection,
+           const Eigen::Vector2d& yDirection, const Eigen::Vector3d& color,
            double axisLength, double axisWidth);
     ~Axes2D();
     
     void render();
-    void updateModelMatrix(Eigen::Matrix4d model);
-    void updateViewMatrix(Eigen::Matrix4d view);
-    void updateProjectionMatrix(Eigen::Matrix4d projection);
+    void updateModelMatrix(const Eigen::Matrix4d& model);
+    void updateViewMatrix(const Eigen::Matrix4d& view);
+    void updateProjectionMatrix(const Eigen::Matrix4d& projection);
 
 private:
     Eigen::Vector2d position;

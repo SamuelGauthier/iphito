@@ -19,8 +19,8 @@ using namespace iphito::utils;
 inline std::mt19937_64 Point2D::engine = std::mt19937_64();
 inline std::uniform_real_distribution<double> Point2D::distribution(0.0, 1.0);
 
-Point2D::Point2D(Eigen::Vector2d center, Eigen::Vector3d color, double radius,
-                 double width) :
+Point2D::Point2D(const Eigen::Vector2d& center, const Eigen::Vector3d& color,
+                 double radius, double width) :
     center{(Eigen::Vector3d() << center, 1.0).finished()}, color{color},
     radius{radius}, width{width}, model{Eigen::Matrix4d::Identity()},
     view{Eigen::Matrix4d::Identity()}, projection{Eigen::Matrix4d::Identity()},
@@ -213,17 +213,17 @@ void Point2D::render() {
 
 bool Point2D::hasToBeRedrawn() { return this->isDirty; }
 
-void Point2D::updateModelMatrix(Eigen::Matrix4d model) {
+void Point2D::updateModelMatrix(const Eigen::Matrix4d& model) {
     
     this->model = model;
 }
 
-void Point2D::updateViewMatrix(Eigen::Matrix4d view) {
+void Point2D::updateViewMatrix(const Eigen::Matrix4d& view) {
     
     this->view = view;
 }
 
-void Point2D::updateProjectionMatrix(Eigen::Matrix4d projection) {
+void Point2D::updateProjectionMatrix(const Eigen::Matrix4d& projection) {
 
     this->projection = projection;
     this->isDirty = true;

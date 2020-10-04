@@ -15,9 +15,9 @@ namespace iphito::renderer {
 using namespace iphito::math;
 
 Bezier2D::Bezier2D(std::shared_ptr<Bezier> curve, double curveWidth,
-                   Eigen::Vector3d curveColor,
-                   Eigen::Vector3d controlPointsColor,
-                   Eigen::Vector3d controlPolygonColor) :
+                   const Eigen::Vector3d& curveColor,
+                   const Eigen::Vector3d& controlPointsColor,
+                   const Eigen::Vector3d& controlPolygonColor) :
     curve{curve}, Curve2D(curve, curveWidth, curveColor),
     controlPointsColor{controlPointsColor},
     controlPolygonColor{controlPolygonColor} {

@@ -15,10 +15,10 @@ namespace iphito::renderer {
 using namespace iphito::math;
 
 Hermite52D::Hermite52D(std::shared_ptr<Hermite5> curve,
-                       double curveWidth, Eigen::Vector3d curveColor,
-                       Eigen::Vector3d tangentColor,
-                       Eigen::Vector3d secondDerivativeColor,
-                       Eigen::Vector3d controlPointsColor) :
+                       double curveWidth, const Eigen::Vector3d& curveColor,
+                       const Eigen::Vector3d& tangentColor,
+                       const Eigen::Vector3d& secondDerivativeColor,
+                       const Eigen::Vector3d& controlPointsColor) :
     curve{curve}, Curve2D(curve, curveWidth, curveColor),
     tangentColor{tangentColor}, secondDerivativeColor{secondDerivativeColor},
     controlPointsColor{controlPointsColor} {
