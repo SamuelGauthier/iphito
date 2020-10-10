@@ -6,7 +6,7 @@
  * @date 2020-09-15
  */
 #include <iostream>
-#include "catch.h"
+#include <catch2/catch.hpp>
 #include "cli/Parser.h"
 
 using namespace iphito::parser;

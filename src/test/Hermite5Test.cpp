@@ -7,7 +7,7 @@
  */
 #include <eigen3/Eigen/Core>
 
-#include "catch.h"
+#include <catch2/catch.hpp>
 #include "math/Hermite5.h"
 
 using namespace iphito::math;

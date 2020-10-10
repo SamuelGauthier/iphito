@@ -8,8 +8,8 @@
 #include <eigen3/Eigen/Core>
 #include <memory>
 #include <vector>
+#include <catch2/catch.hpp>
 
-#include "catch.h"
 #include "math/Curve.h"
 #include "math/Bezier.h"
 #include "utils/Utils.h"

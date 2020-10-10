@@ -27,11 +27,13 @@ add_executable(${TEST_PROJECT_NAME}
     )
 
 target_link_libraries(${TEST_PROJECT_NAME}
-    Catch2
-    OpenGL::GL
-    GLEW::GLEW
-    glfw
-    spdlog::spdlog
+    CONAN_PKG::catch2
+    CONAN_PKG::docopt.cpp
+    CONAN_PKG::spdlog
+    CONAN_PKG::opengl
+    CONAN_PKG::glfw
+    CONAN_PKG::glew
+    CONAN_PKG::eigen
     )
 
 target_include_directories(${TEST_PROJECT_NAME} PRIVATE

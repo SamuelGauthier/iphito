@@ -5,7 +5,7 @@
  * @version 1.0
  * @date 2018-10-01
  */
-#include "catch.h"
+#include <catch2/catch.hpp>
 #include "renderer/Canvas.h"
 
 using namespace iphito::renderer;

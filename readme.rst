@@ -23,6 +23,7 @@ Requirements
 ------------
 
 * a c++ compiler that supports >= c++17
+* conan
 * (optional) the *Ninja* build system
 
 Build
@@ -44,24 +45,10 @@ Usage
 
     $ iphito < "bezier [ (-0.5, 0), (-0.7, 0.6), (0.0, 0.9), (0.7, 0.6), (0.5, 0) ]"
     $ # or with the curve definitions inside a file
-    $ iphito example.iphito
+    $ iphito < example.iphito
 
 use
 
 * :code:`bezier` for Bézier curves
 * :code:`hermite3` for cubic Hermite curves
 * :code:`hermite5` for quintic Hermite curves
-
-Todo
-----
-
-The following list is sorted by order of priority:
-
-#. [] Fix scrolling
-#. [] Export to pdf format
-#. [] Implement an infinite grid background
-#. [] Command line interface
-#. [] Option to add text of values of points and vectors
-#. [] Option to make width of curves fixed with zoom
-#. [] Find a better way to make curves look smooth (heuristic parallel curve)
-#. [] Transition from OpenGL to Vulkan

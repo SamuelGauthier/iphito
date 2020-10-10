@@ -7,7 +7,7 @@
  */
 #include <memory>
 #include <vector>
-#include "catch.h"
+#include <catch2/catch.hpp>
 #include "renderer/Layer.h"
 
 using namespace iphito::renderer;

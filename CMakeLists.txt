@@ -28,31 +28,22 @@ endif ()
 
 include(CMakePrintHelpers)
 
-# Catch2
-set(CATCH_INCLUDE_DIR src/external)
-add_library(Catch2 INTERFACE)
-target_include_directories(Catch2 INTERFACE ${CATCH_INCLUDE_DIR})
+set(CONAN_EXTRA_REQUIRES "")
+set(CONAN_EXTRA_OPTIONS "")
 
-# OpenGL
-find_package(OpenGL REQUIRED)
+set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES}
+    catch2/2.13.1
+    docopt.cpp/0.6.3 
+    spdlog/1.8.0
+    #
+    opengl/system
+    glfw/3.3.2
+    glew/2.1.0
+    eigen/3.3.7
+    )
 
-# GLFW
-find_package(GLFW3 REQUIRED)
-
-# GLEW
-find_package(GLEW REQUIRED)
-
-# Eigen3
-find_package(Eigen3 REQUIRED)
-
-# spdlog
-find_package(spdlog REQUIRED)
-
-# # Bison
-# find_package(bison REQUIRED)
-
-# # Flex
-# find_package(flex REQUIRED)
+include(cmake/Conan.cmake)
+run_conan()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(src/main ../bin/main)
