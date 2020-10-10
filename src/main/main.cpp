@@ -1,9 +1,13 @@
+#include <filesystem>
+#include <fstream>
 #include <iostream>
+#include <iterator>
+#include <limits>
+#include <map>
 #include <memory>
 #include <stdexcept>
 #include <eigen3/Eigen/Core>
-#include <limits>
-#include <map>
+#include <docopt/docopt.h>
 
 #include "cli/Parser.h"
 #include "cli/ASTNode.h"
@@ -26,11 +30,26 @@ using namespace iphito::math;
 using namespace iphito::renderer;
 using namespace iphito::utils;
 
-void renderCurves() {
+static constexpr auto USAGE =
+R"(
+Usage:
+    iphito show <curve_definition>
+    iphito (-f | --file ) <curve_definition_file_path>
+    iphito (-e | --export) <curve_definition>
+    iphito (-v | --version)
+    iphito (-h | --help)
+Options:
+    -f --file       Use file with curve definition
+    -e --export     Export curves in ps format.
+    -v --version    Show version.
+    -h --help       Show this screen.
+)";
+
+void renderCurves(const std::string& curves) {
     int WIDTH = 640;
     int HEIGHT = 640;
 
-    std::string input = Utils::readInput();
+    std::string input = curves;// Utils::readInput();
 
     Parser parser(input);
     while (parser.parse()) {}
@@ -68,50 +87,31 @@ void renderCurves() {
     Logger::Instance()->info("Quitting...");
 }
 
-void printUsage() {
-
-    std::cout << "iphito" << std::endl;
-    std::cout << std::endl;
-    std::cout << "Usage:" << std::endl;
-    std::cout << "  iphito <curve definition>" << std::endl;
-    std::cout << "  iphito (-e|--export) <input file name>" << std::endl;
-    std::cout << "  iphito -v | --version" << std::endl;
-    std::cout << std::endl;
-    std::cout << "Options:" << std::endl;
-    std::cout << "  -e --export\tExport iphito file to postscript." << std::endl;
-    std::cout << "  -v --version\tShow version." << std::endl;
-}
-
 int main(int argc, char *argv[])
 {
-    if (argc == 1) {
-        renderCurves();
-    }
-    else if (argc == 2) {
-        std::string version(argv[1]);
+    std::map<std::string, docopt::value> args = docopt::docopt(USAGE,
+            { std::next(argv), std::next(argv, argc) },
+            true,
+            "1.0.0");
 
-        if (version == "-v" || version == "--version") {
-            std::cout << "1.0.0" << std::endl;
-        }
-        else {
-            printUsage();
-        }
+    if (args["show"].asBool()) {
+        auto curve = args["<curve_definition>"].asString();
+        renderCurves(curve);
     }
-    else if (argc == 3) {
-        std::string exportFlag(argv[1]);
-        std::string inputFileName(argv[2]);
-
-        if (exportFlag == "-e" || exportFlag == "--export") {
-            // TODO
-        }
-        else {
-            printUsage();
-        }
+    else if (args["--file"].asBool()) {
+        // TODO: requirements macOS >= 10.15
+        /* std::filesystem::path filePath = */
+        /*     args["<curve_definition_file_path>"].asString(); */
+        /* if (std::filesystem::exists(filePath)) { */
+            auto fileName = args["<curve_definition_file_path>"].asString();
+            std::ifstream inputStream(fileName);
+            std::string fileContent(std::istreambuf_iterator<char>{inputStream}, {});
+            renderCurves(fileContent);
+        /* } */
+        /* else { */
+        /*     Logger::Instance()->critical("input file does not exist!"); */
+        /* } */
     }
-    else {
-        printUsage();
-    }
-
 
     return 0;
 }
