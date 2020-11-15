@@ -13,9 +13,10 @@
 #include <eigen3/Eigen/Core>
 #include <GLFW/glfw3.h>
 
-#include "Canvas.h"
 #include "Arrow2D.h"
 #include "Axes2D.h"
+#include "Canvas.h"
+#include "Grid.h"
 
 namespace iphito::renderer {
 
@@ -50,6 +51,8 @@ private:
     void updateViewMatrix();
     void updateProjectionMatrix();
     void initializeAxes();
+    void initializeGrid();
+    void updateGridAABB();
 
     int x;
     int y;
@@ -57,6 +60,7 @@ private:
     std::unique_ptr<Canvas> canvas;
     smart_GLFWwindow window;
     std::unique_ptr<Axes2D> axes;
+    std::unique_ptr<Grid> grid;
 
     inline static bool leftMouseButtonPressed = false;
     inline static bool rightMouseButtonPressed = false;

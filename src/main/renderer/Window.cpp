@@ -73,12 +73,12 @@ Window::Window(int x, int y, std::string title) :
     /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    /* Window::view = Camera::lookAt(Window::cameraPosition, Window::cameraTarget, */
-    /*                             Window::cameraUp); */
     updateViewMatrix();
     updateProjectionMatrix();
 
     initializeAxes();
+    initializeGrid();
+    updateGridAABB();
 }
 
 Window::~Window() {
@@ -102,6 +102,8 @@ void Window::render() {
         if(Window::mouseScrolling || Window::windowResizing)
         {
             this->updateProjectionMatrix();
+            this->updateGridAABB();
+            this->grid->updateProjectionMatrix(Window::projection);
             this->axes->updateProjectionMatrix(Window::projection);
             this->canvas->updateProjectionMatrix(Window::projection);
             Window::mouseScrolling = false;
@@ -109,11 +111,14 @@ void Window::render() {
         }
         if (Window::leftMouseButtonPressed) {
             this->updateViewMatrix();
+            this->updateGridAABB();
+            this->grid->updateViewMatrix(Window::view);
             this->axes->updateViewMatrix(Window::view);
             this->canvas->updateViewMatrix(Window::view);
             /* Window::windowResizing = false; */
         }
 
+        this->grid->render();
         this->axes->render();
         this->canvas->render();
 
@@ -239,6 +244,32 @@ void Window::initializeAxes() {
                                 axisLength, axisWidth));
     this->axes->updateViewMatrix(Window::view);
     this->axes->updateProjectionMatrix(Window::projection);
+}
+
+void Window::initializeGrid() {
+
+    Eigen::Vector3d white(0.4, 0.4, 0.4);
+
+    this->grid.reset(new Grid(white));
+    this->grid->updateViewMatrix(Window::view);
+    this->grid->updateProjectionMatrix(Window::projection);
+}
+
+void Window::updateGridAABB() {
+    double wRatio = Window::currentWindowWidth / Window::initialWindowWidth;
+    double hRatio = Window::currentWindowHeight / Window::initialWindowHeight;
+    wRatio *= Window::scale * Window::zoomFactor;
+    hRatio *= Window::scale * Window::zoomFactor;
+
+    Eigen::Vector2d min;
+    Eigen::Vector2d max;
+
+    min[0] = Window::cameraTarget[0] - wRatio;
+    min[1] = Window::cameraTarget[1] - hRatio;
+    max[0] = Window::cameraTarget[0] + wRatio;
+    max[1] = Window::cameraTarget[1] + hRatio;
+
+    this->grid->setViewAABB(AABB(min, max));
 }
 
 void Window::updateViewMatrix() {
