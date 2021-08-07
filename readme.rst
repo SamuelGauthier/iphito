@@ -15,8 +15,8 @@ Iphito
 
 .. sectnum::
 
-This small cross-platform curve editor and visualizer supports displaying cubic,
-quintic Hermite and Bézier curves.
+This small cross-platform curve visualizer supports displaying cubic, quintic
+Hermite and Bézier curves.
 
 
 Requirements
@@ -43,9 +43,9 @@ Usage
 
 .. code:: bash
 
-    $ iphito < "bezier [ (-0.5, 0), (-0.7, 0.6), (0.0, 0.9), (0.7, 0.6), (0.5, 0) ]"
+    $ iphito show "bezier [ (-0.5, 0), (-0.7, 0.6), (0.0, 0.9), (0.7, 0.6), (0.5, 0) ]"
     $ # or with the curve definitions inside a file
-    $ iphito < example.iphito
+    $ iphito -f example.iphito
 
 use
 
