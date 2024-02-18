@@ -16,6 +16,7 @@ set(MATH_SRC
     Hermite3.cpp
     Hermite5.cpp
     Bezier.cpp
+    Line.cpp
     )
 
 set(MATH_H
@@ -23,6 +24,7 @@ set(MATH_H
     Hermite3.h
     Hermite5.h
     Bezier.h
+    Line.h
     )
 
 set(RENDERER_DIR ./renderer/)

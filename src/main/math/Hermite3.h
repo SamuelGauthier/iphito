@@ -22,7 +22,8 @@ public:
              Eigen::Vector2d endPoint, Eigen::Vector2d endTangentVector);
     ~Hermite3();
 
-    Eigen::Vector2d evaluateAt(double t);
+    Eigen::Vector2d evaluateAt(double t) override;
+    std::unique_ptr<Curve> offsetBy(double amount) override;
 
     void setStartControlPoint(Eigen::Vector2d p);
     void setEndControlPoint(Eigen::Vector2d p);

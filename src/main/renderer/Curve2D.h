@@ -70,6 +70,7 @@ private:
     std::vector<Eigen::Vector2d> samplePoints;
 
     void sampleCurve(double a, double b);
+    void sampleCurve(double a, double b, const iphito::math::Curve& curve);
     bool isFlat(Eigen::Vector2d a, Eigen::Vector2d b, Eigen::Vector2d m);
     void verticesFromSamplePoints(std::vector<Eigen::Vector2d>& samplePoints);
     void indicesFromVertices();

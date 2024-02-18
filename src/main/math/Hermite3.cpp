@@ -41,6 +41,17 @@ Eigen::Vector2d Hermite3::evaluateAt(double t) {
     return this->B*v;
 }
 
+std::unique_ptr<Curve> Hermite3::offsetBy(double amount) {
+
+    Eigen::Vector2d offsetedStartControlPoint = this->startPoint;// + direction;
+    Eigen::Vector2d offsetedEndControlPoint = this->endPoint;// + direction;
+
+    return std::make_unique<Hermite3>(offsetedStartControlPoint,
+                                      this->startTangentVector,
+                                      offsetedEndControlPoint,
+                                      this->endTangentVector);
+}
+
 void Hermite3::setStartControlPoint(Eigen::Vector2d p) {
 
     this->startPoint = p;

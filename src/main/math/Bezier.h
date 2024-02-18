@@ -11,6 +11,7 @@
 #include <vector>
 #include <utility>
 #include <map>
+#include <memory>
 #include <eigen3/Eigen/Core>
 
 #include "Curve.h"
@@ -23,7 +24,8 @@ public:
     Bezier(std::vector<Eigen::Vector2d> points);
     ~Bezier();
     
-    Eigen::Vector2d evaluateAt(double t);
+    Eigen::Vector2d evaluateAt(double t) override;
+    std::unique_ptr<Curve> offsetBy(double amount) override;
 
     void setPoints(std::vector<Eigen::Vector2d>& points);
     std::vector<Eigen::Vector2d> getPoints();

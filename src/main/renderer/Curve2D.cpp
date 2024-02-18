@@ -57,7 +57,15 @@ void Curve2D::recomputeVerticesAndIndices() {
     this->vertices = std::vector<GLfloat>();
     this->indices = std::vector<GLuint>();
     this->samplePoints = std::vector<Eigen::Vector2d>();
+
+    std::unique_ptr<Curve> upper = this->curve->offsetBy(this->curveWidth);
+    std::unique_ptr<Curve> lower = this->curve->offsetBy(-this->curveWidth);
     sampleCurve(0.0, 1.0);
+
+    Logger::Instance()->debug(std::to_string(this->samplePoints.size()));
+
+    /* sampleCurve(0.0, 1.0, *upper.get()); */
+    /* sampleCurve(0.0, 1.0, *lower.get()); */
 
     verticesFromSamplePoints(this->samplePoints);
     indicesFromVertices();
@@ -134,6 +142,60 @@ void Curve2D::sampleCurve(double a, double b) {
     else{
         sampleCurve(a, m);
         sampleCurve(m, b);
+    }
+}
+
+void Curve2D::sampleCurve(double a, double b, const iphito::math::Curve& curve) {
+
+    double t = 0.45 + 0.1 * Curve2D::distribution(Curve2D::engine);
+    double m = a + t * (b - a);
+
+    Eigen::Vector4d pa3D;
+    Eigen::Vector4d pb3D;
+    Eigen::Vector4d pm3D;
+    pa3D << this->curve->evaluateAt(a), 1.0, 0.0;
+    pb3D << this->curve->evaluateAt(b), 1.0, 0.0;
+    pm3D << this->curve->evaluateAt(m), 1.0, 0.0;
+
+    Eigen::Vector2d pa;
+    Eigen::Vector2d pb;
+    Eigen::Vector2d pm;
+    pa << pa3D[0], pa3D[1];
+    pb << pb3D[0], pb3D[1];
+    pm << pm3D[0], pm3D[1];
+
+    pa3D = this->projection * this->view * this->model * pa3D;
+    pb3D = this->projection * this->view * this->model * pb3D;
+    pm3D = this->projection * this->view * this->model * pm3D;
+    Eigen::Vector2d paScreen;
+    Eigen::Vector2d pbScreen;
+    Eigen::Vector2d pmScreen;
+    paScreen << pa3D[0], pa3D[1];
+    pbScreen << pb3D[0], pb3D[1];
+    pmScreen << pm3D[0], pm3D[1];
+
+
+    if(isFlat(paScreen, pbScreen, pmScreen)) {
+        if(!samplePoints.empty()) {
+            Eigen::Vector2d back = this->samplePoints.back();
+            if(!(Utils::nearlyEqual(back[0], pa[0]) && 
+                 Utils::nearlyEqual(back[1], pa[1]))) {
+
+                this->samplePoints.push_back(pa);
+                this->samplePoints.push_back(pb);
+            }
+            else {
+                this->samplePoints.push_back(pb);
+            }
+        }
+        else {
+            this->samplePoints.push_back(pa);
+            this->samplePoints.push_back(pb);
+        }
+    }
+    else{
+        sampleCurve(a, m, curve);
+        sampleCurve(m, b, curve);
     }
 }
 

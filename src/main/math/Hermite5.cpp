@@ -48,6 +48,19 @@ Eigen::Vector2d Hermite5::evaluateAt(double t) {
     return this->B*v;
 }
 
+std::unique_ptr<Curve> Hermite5::offsetBy(double amount) {
+
+    Eigen::Vector2d offsetedStartControlPoint = this->startControlPoint;//+ direction;
+    Eigen::Vector2d offsetedEndControlPoint = this->startControlPoint;//+ direction;
+
+    return std::make_unique<Hermite5>(offsetedStartControlPoint,
+                                      this->startVelocityVector,
+                                      this->startAccelerationVector,
+                                      offsetedEndControlPoint,
+                                      this->endVelocityVector,
+                                      this->endAccelerationVector);
+}
+
 void Hermite5::setStartControlPoint(Eigen::Vector2d p) {
 
     this->startControlPoint = p;

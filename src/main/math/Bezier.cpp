@@ -8,6 +8,7 @@
 #include <stdexcept>
 
 #include "Bezier.h"
+#include "Line.h"
 #include "utils/Utils.h"
 
 namespace iphito::math {
@@ -49,6 +50,56 @@ Eigen::Vector2d Bezier::evaluateAt(double t) {
     }
 
     return sum;
+}
+
+std::unique_ptr<Curve> Bezier::offsetBy(double amount) {
+
+    std::vector<Eigen::Vector2d> controlPoints = this->getPoints();
+    auto controlPointsSize = controlPoints.size();
+
+    std::vector<Eigen::Vector2d> newControlPoints;
+
+    for (int i = 0; i < controlPointsSize-1; i++) {
+        Eigen::Vector2d line = controlPoints[i] - controlPoints[i+1];
+
+        double x = line[0];
+        double y = line[1];
+        line[0] = -y;
+        line[1] = x;
+
+        line.normalize();
+
+        newControlPoints.push_back(controlPoints[i] + amount * line);
+        newControlPoints.push_back(controlPoints[i+1] + amount * line);
+    }
+
+    std::vector<Eigen::Vector2d> prunedNewControlPoints;
+
+    for (int i = 0; i < newControlPoints.size(); i += 4) {
+
+        if (i == 0) {
+            prunedNewControlPoints.push_back(newControlPoints[i]);
+        }
+
+        if (i+2 >= newControlPoints.size()) {
+            prunedNewControlPoints.push_back(newControlPoints[i+1]);
+            continue;
+        }
+
+        Line a(newControlPoints[i], newControlPoints[i+1]);
+        Line b(newControlPoints[i+2], newControlPoints[i+3]);
+        
+        Eigen::Vector2d intersection;
+        if (a.intersect(b, intersection)) {
+            prunedNewControlPoints.push_back(intersection);
+        }
+
+        if (i + 3 == newControlPoints.size() - 1) {
+            prunedNewControlPoints.push_back(newControlPoints[i+3]);
+        }
+    }
+
+    return std::make_unique<Bezier>(prunedNewControlPoints);
 }
 
 void Bezier::setPoints(std::vector<Eigen::Vector2d>& points) {

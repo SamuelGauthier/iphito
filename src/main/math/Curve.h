@@ -9,6 +9,7 @@
 #define CURVE_H
 
 #include <atomic>
+#include <memory>
 #include <eigen3/Eigen/Core>
 
 namespace iphito::math {
@@ -19,6 +20,7 @@ public:
     virtual ~Curve() = 0;
     virtual Eigen::Vector2d evaluateAt(double t) = 0;
     virtual Eigen::Vector2d operator()(double t) { return this->evaluateAt(t); }
+    virtual std::unique_ptr<Curve> offsetBy(double amount) = 0;
     
 };
 
