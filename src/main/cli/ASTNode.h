@@ -11,8 +11,8 @@
 #include <memory>
 #include <vector>
 
-#include "math/Curve.h"
-#include "renderer/Curve2D.h"
+#include "src/main/math/Curve.h"
+#include "src/main/renderer/Curve2D.h"
 
 namespace iphito::parser {
 

@@ -8,7 +8,7 @@
 #include <iostream>
 
 #include "Bezier2D.h"
-#include "utils/Logger.h"
+#include "src/main/utils/Logger.h"
 
 namespace iphito::renderer {
 

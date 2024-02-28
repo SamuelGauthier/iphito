@@ -13,8 +13,8 @@
 
 #include "Shader.h"
 
-#include "utils/Utils.h"
-#include "utils/Logger.h"
+#include "src/main/utils/Utils.h"
+#include "src/main/utils/Logger.h"
 
 namespace iphito::renderer {
 

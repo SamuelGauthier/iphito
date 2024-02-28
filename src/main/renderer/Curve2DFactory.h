@@ -9,9 +9,9 @@
 #define CURVE2D_FACTORY
 
 #include <memory>
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
-#include "cli/ASTNode.h"
+#include "src/main/cli/ASTNode.h"
 #include "Layer.h"
 
 namespace iphito::renderer {

@@ -10,7 +10,7 @@
 
 #include <string>
 #include <memory>
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 #include <GLFW/glfw3.h>
 
 #include "Arrow2D.h"

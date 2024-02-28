@@ -11,6 +11,8 @@
 
 #include "Logger.h"
 
+#include <spdlog/sinks/stdout_color_sinks.h>
+
 namespace iphito::utils {
 
 std::shared_ptr<Logger> Logger::instance = nullptr;
@@ -31,7 +33,7 @@ std::shared_ptr<Logger>& Logger::Instance() {
 
 Logger::Logger() {
     
-    this->logger = spdlog::stdout_color_st("console");
+    this->logger = spdlog::stdout_color_mt("console");
     this->logger->set_level(spdlog::level::debug);
 }
 

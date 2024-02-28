@@ -13,7 +13,7 @@
 #include <memory>
 #include <vector>
 
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
 #include "Curve2D.h"
 

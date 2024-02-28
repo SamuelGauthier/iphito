@@ -8,7 +8,7 @@
 #ifndef AXES2D_H
 #define AXES2D_H
 
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 #include <memory>
 #include "Arrow2D.h"
 

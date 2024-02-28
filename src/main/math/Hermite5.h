@@ -8,7 +8,7 @@
 #ifndef HERMITE5_H
 #define HERMITE5_H
 
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
 #include "Curve.h"
 

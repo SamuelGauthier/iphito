@@ -12,7 +12,7 @@
 #include <utility>
 #include <map>
 #include <memory>
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
 #include "Curve.h"
 

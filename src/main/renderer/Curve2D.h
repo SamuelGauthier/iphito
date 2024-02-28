@@ -12,10 +12,10 @@
 #include <memory>
 #include <random>
 #include <vector>
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 #include <GL/glew.h>
 
-#include "math/Curve.h"
+#include "src/main/math/Curve.h"
 #include "Shader.h"
 
 namespace iphito::renderer {

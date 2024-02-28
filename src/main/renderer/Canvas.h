@@ -9,7 +9,7 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 #include <GL/glew.h>
 
 #include "Layer.h"

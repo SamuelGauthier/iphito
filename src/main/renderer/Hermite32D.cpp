@@ -9,7 +9,7 @@
 #include <GL/glew.h>
 
 #include "Hermite32D.h"
-#include "utils/Logger.h"
+#include "src/main/utils/Logger.h"
 
 namespace iphito::renderer {
 

@@ -8,7 +8,7 @@
 #ifndef LINE_H
 #define LINE_H
 
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
 namespace iphito::math {
 

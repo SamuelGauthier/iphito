@@ -23,29 +23,28 @@ Requirements
 ------------
 
 * a c++ compiler that supports >= c++17
-* conan
-* (optional) the *Ninja* build system
+* Meson and Ninja
 
 Build
 -----
 
 .. code:: bash
 
-   $ md build bin
-   $ cd build
-   $ cmake -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
-   $ ../bin; ninja -C ../build
+   $ meson setup build
+   $ meson compile -C build
 
-The built executable will then be in :code:`bin/main/`.
+The built executable will then be in :code:`build/`.
 
 Usage
 -----
+
+Inside the :code:`build` folder, execute:
 
 .. code:: bash
 
     $ iphito show "bezier [ (-0.5, 0), (-0.7, 0.6), (0.0, 0.9), (0.7, 0.6), (0.5, 0) ]"
     $ # or with the curve definitions inside a file
-    $ iphito -f example.iphito
+    $ iphito -f ../example.iphito
 
 use
 

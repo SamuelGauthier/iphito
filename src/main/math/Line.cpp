@@ -6,9 +6,9 @@
  * @date 2020-12-13
  */
 #include "Line.h"
-#include "utils/Utils.h"
+#include "src/main/utils/Utils.h"
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 namespace iphito::math {
 

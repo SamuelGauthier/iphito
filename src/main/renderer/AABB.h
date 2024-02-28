@@ -1,7 +1,7 @@
 #ifndef AABB_H
 #define AABB_H
 
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
 namespace iphito::renderer {
 

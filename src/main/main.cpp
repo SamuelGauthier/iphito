@@ -6,24 +6,24 @@
 #include <map>
 #include <memory>
 #include <stdexcept>
-#include <eigen3/Eigen/Core>
-#include <docopt/docopt.h>
+#include <Eigen/Core>
+#include <docopt.h>
 
-#include "cli/Parser.h"
-#include "cli/ASTNode.h"
-#include "math/Bezier.h"
-#include "math/Hermite3.h"
-#include "renderer/Bezier2D.h"
-#include "renderer/Canvas.h"
-#include "renderer/Curve2D.h"
-#include "renderer/Curve2DFactory.h"
-#include "renderer/Hermite32D.h"
-#include "renderer/Hermite52D.h"
-#include "renderer/Layer.h"
-#include "renderer/Shader.h"
-#include "renderer/Window.h"
-#include "utils/Logger.h"
-#include "utils/Utils.h"
+#include "src/main/cli/Parser.h"
+#include "src/main/cli/ASTNode.h"
+#include "src/main/math/Bezier.h"
+#include "src/main/math/Hermite3.h"
+#include "src/main/renderer/Bezier2D.h"
+#include "src/main/renderer/Canvas.h"
+#include "src/main/renderer/Curve2D.h"
+#include "src/main/renderer/Curve2DFactory.h"
+#include "src/main/renderer/Hermite32D.h"
+#include "src/main/renderer/Hermite52D.h"
+#include "src/main/renderer/Layer.h"
+#include "src/main/renderer/Shader.h"
+#include "src/main/renderer/Window.h"
+#include "src/main/utils/Logger.h"
+#include "src/main/utils/Utils.h"
 
 using namespace iphito::parser;
 using namespace iphito::math;

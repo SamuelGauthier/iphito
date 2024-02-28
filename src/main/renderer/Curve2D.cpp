@@ -9,8 +9,8 @@
 #include <sstream>
 #include "Curve2D.h"
 
-#include "utils/Logger.h"
-#include "utils/Utils.h"
+#include "src/main/utils/Logger.h"
+#include "src/main/utils/Utils.h"
 
 namespace iphito::renderer {
 

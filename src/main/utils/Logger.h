@@ -11,7 +11,6 @@
 #include <memory>
 #include <mutex>
 #include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace iphito::utils {
 

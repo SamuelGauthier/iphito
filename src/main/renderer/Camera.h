@@ -8,7 +8,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
 namespace iphito::renderer {
 

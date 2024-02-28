@@ -12,10 +12,10 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
-#include "cli/ASTNode.h"
-#include "math/Curve.h"
+#include "src/main/cli/ASTNode.h"
+#include "src/main/math/Curve.h"
 
 namespace iphito::parser {
 

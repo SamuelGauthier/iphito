@@ -8,7 +8,7 @@
 #include <GL/glew.h>
 
 #include "Hermite52D.h"
-#include "utils/Logger.h"
+#include "src/main/utils/Logger.h"
 
 namespace iphito::renderer {
 

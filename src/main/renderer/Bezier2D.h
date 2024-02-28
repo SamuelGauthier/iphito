@@ -9,9 +9,9 @@
 #define BEZIER2D_H
 
 #include <memory>
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
-#include "math/Bezier.h"
+#include "src/main/math/Bezier.h"
 #include "Curve2D.h"
 #include "Arrow2D.h"
 #include "Point2D.h"

@@ -7,15 +7,15 @@
  */
 #include <iostream>
 #include <stdexcept>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include "Window.h"
 
 #include "Camera.h"
-#include "utils/Logger.h"
-#include "utils/Utils.h"
+#include "src/main/utils/Logger.h"
+#include "src/main/utils/Utils.h"
 
 namespace iphito::renderer {
 

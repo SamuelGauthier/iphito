@@ -7,7 +7,7 @@
  */
 #include <vector>
 #include <sstream>
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
 #include "Hermite3.h"
 

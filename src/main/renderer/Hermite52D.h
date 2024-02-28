@@ -9,9 +9,9 @@
 #define HERMITE52D
 
 #include <memory>
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
-#include "math/Hermite5.h"
+#include "src/main/math/Hermite5.h"
 #include "Curve2D.h"
 #include "Arrow2D.h"
 #include "Point2D.h"

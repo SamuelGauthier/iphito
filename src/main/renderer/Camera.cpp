@@ -7,7 +7,7 @@
  */
 #include "Camera.h"
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 namespace iphito::renderer {
 

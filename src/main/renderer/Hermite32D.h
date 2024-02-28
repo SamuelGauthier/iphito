@@ -9,9 +9,9 @@
 #define HERMITE32D_H
 
 #include <memory>
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
-#include "math/Hermite3.h"
+#include "src/main/math/Hermite3.h"
 #include "Curve2D.h"
 #include "Arrow2D.h"
 #include "Point2D.h"

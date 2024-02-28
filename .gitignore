@@ -78,3 +78,12 @@ Temporary Items
 # End of https://www.gitignore.io/api/osx,c++,cmake
 
 todo.rst
+
+# Ignore all files in subprojects/ directory
+subprojects/*
+# Except for the wraps
+!subprojects/*.wrap
+
+tags
+
+.cache

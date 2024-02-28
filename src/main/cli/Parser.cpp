@@ -7,10 +7,10 @@
  */
 #include "Parser.h"
 
-#include "math/Bezier.h"
-#include "math/Hermite3.h"
-#include "math/Hermite5.h"
-#include "utils/Logger.h"
+#include "src/main/math/Bezier.h"
+#include "src/main/math/Hermite3.h"
+#include "src/main/math/Hermite5.h"
+#include "src/main/utils/Logger.h"
 
 namespace iphito::parser {
 

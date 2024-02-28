@@ -8,9 +8,9 @@
 #include "ASTNode.h"
 
 #include <iostream>
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 
-#include "renderer/Bezier2D.h"
+#include "src/main/renderer/Bezier2D.h"
 
 namespace iphito::parser {
 

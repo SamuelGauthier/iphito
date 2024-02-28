@@ -8,7 +8,7 @@
 
 #include "Canvas.h"
 
-#include "utils/Utils.h"
+#include "src/main/utils/Utils.h"
 
 namespace iphito::renderer {
 
